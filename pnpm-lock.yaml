@@ -8,12 +8,18 @@ dependencies:
   '@libsql/client':
     specifier: ^0.3.2
     version: 0.3.2
+  '@lucia-auth/adapter-sqlite':
+    specifier: ^2.0.0
+    version: 2.0.0(@libsql/client@0.3.2)(lucia@2.4.2)
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
   drizzle-orm:
     specifier: ^0.28.5
     version: 0.28.5(@libsql/client@0.3.2)(postgres@3.3.5)
+  lucia:
+    specifier: ^2.4.2
+    version: 2.4.2
   postgres:
     specifier: ^3.3.5
     version: 3.3.5
@@ -424,6 +430,22 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
+
+  /@lucia-auth/adapter-sqlite@2.0.0(@libsql/client@0.3.2)(lucia@2.4.2):
+    resolution: {integrity: sha512-Hiy8WND/1mi25r0M2ruSml+Ab5GJLr4XZEHApYw1lxybF+VlPUyX7oTtIVCSgvq/SWiP/tvnyPwnXAPmNr8/bg==}
+    peerDependencies:
+      '@libsql/client': ^0.3.0
+      better-sqlite3: ^8.0.0
+      lucia: ^2.0.0
+    peerDependenciesMeta:
+      '@libsql/client':
+        optional: true
+      better-sqlite3:
+        optional: true
+    dependencies:
+      '@libsql/client': 0.3.2
+      lucia: 2.4.2
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
@@ -1759,6 +1781,10 @@ packages:
     dependencies:
       es5-ext: 0.10.62
     dev: true
+
+  /lucia@2.4.2:
+    resolution: {integrity: sha512-JJMAxrsjNXS5WUNe/u9+ahIXM+RNHTL2+RRtzUo1lZgUQL7oFsOgckikdjUPmGaEKrmQfUznxg20L/Ghba3Fjg==}
+    dev: false
 
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
