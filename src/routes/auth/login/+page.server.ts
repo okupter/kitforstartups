@@ -13,7 +13,7 @@ export const load = async ({ locals }) => {
 };
 
 export const actions = {
-	default: async ({ locals, request }) => {
+	loginUser: async ({ locals, request }) => {
 		const formData = Object.fromEntries(await request.formData());
 
 		// TODO: validation
@@ -48,5 +48,23 @@ export const actions = {
 		}
 
 		throw redirect(302, '/');
+	},
+
+	logout: async ({ locals }) => {
+		const session = await locals.auth.validate();
+
+		if (!session) {
+			return fail(401, {
+				message: 'Unauthorized'
+			});
+		}
+
+		// Invalidate session
+		await auth.invalidateSession(session.sessionId);
+
+		// Remove cookie
+		locals.auth.setSession(null);
+
+		throw redirect(302, '/auth/login');
 	}
 };
