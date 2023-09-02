@@ -1,5 +1,6 @@
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
+import { LuciaError } from 'lucia';
 
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -12,7 +13,7 @@ export const load = async ({ locals }) => {
 };
 
 export const actions = {
-	signupUser: async ({ locals, request }) => {
+	default: async ({ locals, request }) => {
 		const formData = Object.fromEntries(await request.formData());
 
 		// TODO: validation
@@ -22,16 +23,7 @@ export const actions = {
 		};
 
 		try {
-			const user = await auth.createUser({
-				key: {
-					providerId: 'email',
-					providerUserId: email,
-					password // this is hashed by Lucia
-				},
-				attributes: {
-					email
-				}
-			});
+			const user = await auth.useKey('email', email, password);
 			const session = await auth.createSession({
 				userId: user.userId,
 				attributes: {}
@@ -40,8 +32,16 @@ export const actions = {
 			// Set session cookie
 			locals.auth.setSession(session);
 		} catch (e) {
-			console.log('error', e);
+			console.log(e);
 
+			if (
+				e instanceof LuciaError &&
+				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
+			) {
+				return fail(400, {
+					message: 'Incorrect email or password'
+				});
+			}
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});
