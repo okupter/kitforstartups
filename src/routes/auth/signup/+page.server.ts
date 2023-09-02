@@ -40,8 +40,6 @@ export const actions = {
 			// Set session cookie
 			locals.auth.setSession(session);
 		} catch (e) {
-			console.log('error', e);
-
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});

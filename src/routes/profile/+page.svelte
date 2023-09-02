@@ -10,4 +10,5 @@
 	<h1>Profile</h1>
 
 	<p>Email: {data.user?.email}</p>
+	<p>GitHub username: {data.user?.githubUsername}</p>
 </div>

@@ -1,6 +1,8 @@
 import { dev } from '$app/environment';
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
 import { dbClient } from '$lib/drizzle/client';
 import { libsql } from '@lucia-auth/adapter-sqlite';
+import { github } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 
@@ -16,8 +18,14 @@ export const auth = lucia({
 	getUserAttributes: (data) => {
 		return {
 			email: data.email,
+			githubUsername: data.github_username
 		};
 	}
+});
+
+export const githubAuth = github(auth, {
+	clientId: GITHUB_CLIENT_ID,
+	clientSecret: GITHUB_CLIENT_SECRET
 });
 
 export type Auth = typeof auth;

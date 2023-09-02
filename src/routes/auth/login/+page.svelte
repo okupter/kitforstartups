@@ -14,4 +14,8 @@
 
 		<button type="submit">Login</button>
 	</form>
+
+	<div>
+		<a href="/oauth/github">Login with GitHub</a>
+	</div>
 </div>
