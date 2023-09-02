@@ -1,8 +1,14 @@
 import { dev } from '$app/environment';
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
+import {
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
+	GOOGLE_OAUTH_CLIENT_ID,
+	GOOGLE_OAUTH_CLIENT_SECRET,
+	GOOGLE_OAUTH_REDIRECT_URI
+} from '$env/static/private';
 import { dbClient } from '$lib/drizzle/client';
 import { libsql } from '@lucia-auth/adapter-sqlite';
-import { github } from '@lucia-auth/oauth/providers';
+import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 
@@ -26,6 +32,18 @@ export const auth = lucia({
 export const githubAuth = github(auth, {
 	clientId: GITHUB_CLIENT_ID,
 	clientSecret: GITHUB_CLIENT_SECRET
+});
+
+export const googleAuth = google(auth, {
+	clientId: GOOGLE_OAUTH_CLIENT_ID,
+	clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
+	redirectUri: GOOGLE_OAUTH_REDIRECT_URI,
+	scope: [
+		'openid',
+		'https://www.googleapis.com/auth/userinfo.profile',
+		'https://www.googleapis.com/auth/userinfo.email'
+	],
+	accessType: 'offline'
 });
 
 export type Auth = typeof auth;
