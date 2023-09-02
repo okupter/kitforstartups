@@ -47,7 +47,7 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/');
+		throw redirect(302, '/profile');
 	},
 
 	logout: async ({ locals }) => {
