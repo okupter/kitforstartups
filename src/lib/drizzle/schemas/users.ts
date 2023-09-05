@@ -22,6 +22,14 @@ const userProfile = sqliteTable('user_profile', {
 	picture: text('picture', { length: 255 })
 });
 
+const emailVerification = sqliteTable('email_verification', {
+	id: text('id', { length: 255 }).primaryKey(),
+	userId: text('user_id', { length: 255 })
+		.notNull()
+		.references(() => user.id),
+	expires: blob('expires', { mode: 'bigint' }).notNull()
+});
+
 const userKey = sqliteTable('user_key', {
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
@@ -39,4 +47,5 @@ const userSession = sqliteTable('user_session', {
 	idleExpires: blob('idle_expires', { mode: 'bigint' }).notNull()
 });
 
-export { user, userKey, userProfile, userSession };
+export { emailVerification, user, userKey, userProfile, userSession };
+

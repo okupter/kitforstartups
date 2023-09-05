@@ -1,17 +1,7 @@
-import { updateUserProfileData } from '$lib/drizzle/models/users';
+import { generateEmailVerificationToken, updateUserProfileData } from '$lib/drizzle/models/users';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
-
-export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
-
-	if (session) {
-		throw redirect(302, '/');
-	}
-
-	return {};
-};
 
 export const actions = {
 	signupUser: async ({ locals, request }) => {
@@ -53,12 +43,17 @@ export const actions = {
 
 			// Set session cookie
 			locals.auth.setSession(session);
+
+			// Send verification email
+			const verificationToken = await generateEmailVerificationToken(user.userId);
+
+			console.log({ verificationToken });
 		} catch (e) {
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});
 		}
 
-		throw redirect(302, '/profile');
+		throw redirect(302, '/auth/email-verification');
 	}
 };
