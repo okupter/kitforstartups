@@ -1,4 +1,8 @@
-import { getUserByEmail, updateUserProfileData } from '$lib/drizzle/models/users';
+import {
+	getUserByEmail,
+	getUserProfileData,
+	updateUserProfileData
+} from '$lib/drizzle/models/users';
 import { auth, googleAuth } from '$lib/lucia';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
@@ -49,16 +53,16 @@ export const GET = async ({ url, cookies, locals }) => {
 
 		const user = await getUser();
 
+		const profileData = await getUserProfileData(user.userId);
+
 		// Update profile table with Google profile data
-		const updatedProfile = await updateUserProfileData({
+		await updateUserProfileData({
 			id: nanoid(),
 			userId: user.userId,
-			firstName: user.firstName || googleUser.given_name,
-			lastName: user.lastName || googleUser.family_name,
-			picture: user.picture || googleUser.picture
+			firstName: profileData?.firstName || googleUser.given_name,
+			lastName: profileData?.lastName || googleUser.family_name,
+			picture: profileData?.picture || googleUser.picture
 		});
-
-		console.log({ updatedProfile });
 
 		const session = await auth.createSession({
 			userId: user.userId,

@@ -17,9 +17,15 @@
 	</div>
 
 	<div>
-		<h2>From Google</h2>
+		<h2>Profile Data</h2>
 		<p>First Name: {data.profile?.firstName}</p>
 		<p>Last Name: {data.profile?.lastName}</p>
-		<img src={data.profile?.picture} alt={`${data.profile?.firstName} ${data.profile?.lastName}`} />
+
+		{#if data.profile?.picture}
+			<img
+				src={data.profile.picture}
+				alt={`${data.profile?.firstName} ${data.profile?.lastName}`}
+			/>
+		{/if}
 	</div>
 </div>

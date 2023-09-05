@@ -24,10 +24,7 @@ export const auth = lucia({
 	getUserAttributes: (data) => {
 		return {
 			email: data.email,
-			githubUsername: data.github_username,
-			firstName: data.first_name,
-			lastName: data.last_name,
-			picture: data.picture
+			githubUsername: data.github_username
 		};
 	}
 });

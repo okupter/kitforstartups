@@ -1,5 +1,7 @@
+import { updateUserProfileData } from '$lib/drizzle/models/users';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
+import { nanoid } from 'nanoid';
 
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -16,7 +18,9 @@ export const actions = {
 		const formData = Object.fromEntries(await request.formData());
 
 		// TODO: validation
-		const { email, password } = formData as {
+		const { firstName, lastName, email, password } = formData as {
+			firstName: string;
+			lastName: string;
 			email: string;
 			password: string;
 		};
@@ -32,6 +36,15 @@ export const actions = {
 					email
 				}
 			});
+
+			// Update user profile data
+			await updateUserProfileData({
+				id: nanoid(),
+				userId: user.userId,
+				firstName,
+				lastName
+			});
+
 			const session = await auth.createSession({
 				userId: user.userId,
 				attributes: {}
