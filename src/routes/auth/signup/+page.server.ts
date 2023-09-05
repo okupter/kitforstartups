@@ -1,10 +1,11 @@
 import { generateEmailVerificationToken, updateUserProfileData } from '$lib/drizzle/models/users';
+import { sendEmail } from '$lib/emails/resend';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 
 export const actions = {
-	signupUser: async ({ locals, request }) => {
+	signupUser: async ({ locals, request, url }) => {
 		const formData = Object.fromEntries(await request.formData());
 
 		// TODO: validation
@@ -47,8 +48,18 @@ export const actions = {
 			// Send verification email
 			const verificationToken = await generateEmailVerificationToken(user.userId);
 
-			console.log({ verificationToken });
+			const sender = 'KitForStartups <justin@updates.okupter.com>';
+			const recipient = firstName ? `${firstName}` : email;
+			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/auth/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
+
+			await sendEmail({
+				from: sender,
+				to: email,
+				subject: 'Verify Your Email Address',
+				html: emailHtml
+			});
 		} catch (e) {
+			console.log(e);
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});

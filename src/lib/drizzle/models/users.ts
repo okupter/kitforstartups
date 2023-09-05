@@ -4,7 +4,11 @@ import { emailVerification, userProfile } from '$lib/drizzle/schemas/users';
 import { eq } from 'drizzle-orm';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 
-const getUserByEmail = async (email: string) => {
+const getUserByEmail = async (email: string | undefined) => {
+	if (!email) {
+		return undefined;
+	}
+
 	return await drizzleClient.select().from(user).where(eq(user.email, email)).get();
 };
 
@@ -32,7 +36,11 @@ const getUserProfileData = async (userId: string | undefined) => {
 
 const EXPIRES_IN = 1000 * 60 * 60 * 2; // 2 hours
 
-const generateEmailVerificationToken = async (userId: string) => {
+const generateEmailVerificationToken = async (userId: string | undefined) => {
+	if (!userId) {
+		throw new Error('Invalid user ID');
+	}
+
 	const storedUserTokens = await drizzleClient
 		.select()
 		.from(emailVerification)
