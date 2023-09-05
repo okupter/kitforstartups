@@ -1,7 +1,8 @@
-import { getUserByEmail } from '$lib/drizzle/models/users';
+import { getUserByEmail, updateUserProfileData } from '$lib/drizzle/models/users';
 import { auth, googleAuth } from '$lib/lucia';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
+import { nanoid } from 'nanoid';
 
 export const GET = async ({ url, cookies, locals }) => {
 	const storedState = cookies.get('google_oauth_state');
@@ -18,11 +19,9 @@ export const GET = async ({ url, cookies, locals }) => {
 	try {
 		const { getExistingUser, googleUser, createUser, createKey } =
 			await googleAuth.validateCallback(code);
-		console.log('googleUser', googleUser);
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
-			console.log('existingUser', existingUser);
 
 			if (existingUser) {
 				return existingUser;
@@ -33,7 +32,6 @@ export const GET = async ({ url, cookies, locals }) => {
 			}
 
 			const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);
-			console.log('existingDatabaseUserWithEmail', existingDatabaseUserWithEmail);
 
 			if (existingDatabaseUserWithEmail) {
 				const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
@@ -50,6 +48,17 @@ export const GET = async ({ url, cookies, locals }) => {
 		};
 
 		const user = await getUser();
+
+		// Update profile table with Google profile data
+		const updatedProfile = await updateUserProfileData({
+			id: nanoid(),
+			userId: user.userId,
+			firstName: user.firstName || googleUser.given_name,
+			lastName: user.lastName || googleUser.family_name,
+			picture: user.picture || googleUser.picture
+		});
+
+		console.log({ updatedProfile });
 
 		const session = await auth.createSession({
 			userId: user.userId,

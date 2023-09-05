@@ -1,14 +1,13 @@
+import { getUserProfileData } from '$lib/drizzle/models/users';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
 
-	if (!session) {
-		throw redirect(302, '/auth/login');
-	}
-
-	return {};
+	return {
+		profile: await getUserProfileData(session?.user.userId)
+	};
 };
 
 export const actions = {
