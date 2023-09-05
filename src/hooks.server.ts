@@ -17,7 +17,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 		}
 
 		// If user is on the login or sign up page and they are logged in
-		// redirect them to the home page
+		// redirect them to the profile page
 		if (authRoutes.includes(event.url.pathname)) {
 			throw redirect(302, '/profile');
 		}
