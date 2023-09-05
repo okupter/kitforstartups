@@ -19,16 +19,13 @@ dependencies:
     version: 16.3.1
   drizzle-orm:
     specifier: ^0.28.5
-    version: 0.28.5(@libsql/client@0.3.2)(postgres@3.3.5)
+    version: 0.28.5(@libsql/client@0.3.2)
   lucia:
     specifier: ^2.4.2
     version: 2.4.2
   nanoid:
     specifier: ^4.0.2
     version: 4.0.2
-  postgres:
-    specifier: ^3.3.5
-    version: 3.3.5
   resend:
     specifier: ^1.0.0
     version: 1.0.0
@@ -1179,7 +1176,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.5(@libsql/client@0.3.2)(postgres@3.3.5):
+  /drizzle-orm@0.28.5(@libsql/client@0.3.2):
     resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -1242,7 +1239,6 @@ packages:
         optional: true
     dependencies:
       '@libsql/client': 0.3.2
-      postgres: 3.3.5
     dev: false
 
   /editorconfig@1.0.4:
@@ -2295,10 +2291,6 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: true
-
-  /postgres@3.3.5:
-    resolution: {integrity: sha512-+JD93VELV9gHkqpV5gdL5/70HdGtEw4/XE1S4BC8f1mcPmdib3K5XsKVbnR1XcAyC41zOnifJ+9YRKxdIsXiUw==}
-    dev: false
 
   /prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
