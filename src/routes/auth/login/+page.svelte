@@ -16,7 +16,7 @@
 	</form>
 
 	<div>
-		<a href="/oauth/github">Login with GitHub</a>
-		<a href="/oauth/google">Login with Google</a>
+		<a href="/api/oauth/github">Login with GitHub</a>
+		<a href="/api/oauth/google">Login with Google</a>
 	</div>
 </div>
