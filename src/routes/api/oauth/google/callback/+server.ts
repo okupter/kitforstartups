@@ -38,7 +38,11 @@ export const GET = async ({ url, cookies, locals }) => {
 			const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);
 
 			if (existingDatabaseUserWithEmail) {
-				const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
+				const user = auth.transformDatabaseUser({
+					...existingDatabaseUserWithEmail,
+					email_verified: existingDatabaseUserWithEmail.emailVerified
+				});
+
 				await createKey(user.userId);
 
 				return user;
@@ -46,12 +50,18 @@ export const GET = async ({ url, cookies, locals }) => {
 
 			return await createUser({
 				attributes: {
-					email: googleUser.email
+					email: googleUser.email,
+					email_verified: Boolean(googleUser.email_verified) || false
 				}
 			});
 		};
 
 		const user = await getUser();
+
+		// Update user attributes with Google email verified
+		if (!user.emailVerified && googleUser.email_verified) {
+			await auth.updateUserAttributes(user.userId, { email_verified: true });
+		}
 
 		const profileData = await getUserProfileData(user.userId);
 

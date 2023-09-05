@@ -33,7 +33,8 @@ export const actions = {
 					password // this is hashed by Lucia
 				},
 				attributes: {
-					email
+					email,
+					email_verified: false
 				}
 			});
 

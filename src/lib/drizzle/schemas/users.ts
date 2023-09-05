@@ -3,6 +3,7 @@ import { blob, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 const user = sqliteTable('auth_user', {
 	id: text('id', { length: 255 }).primaryKey(),
 	email: text('email').unique().notNull(),
+	emailVerified: blob('email_verified', { mode: 'json' }).$type<boolean>().default(false).notNull(),
 
 	// From GitHub
 	githubUsername: text('github_username', { length: 255 }).unique()
@@ -39,4 +40,3 @@ const userSession = sqliteTable('user_session', {
 });
 
 export { user, userKey, userProfile, userSession };
-

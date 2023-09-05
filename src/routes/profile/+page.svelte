@@ -10,6 +10,7 @@
 	<h1>Profile</h1>
 
 	<p>Email: {data.user?.email}</p>
+	<p>Email is verified: {Boolean(data.user?.emailVerified)}</p>
 
 	<div>
 		<h2>From GitHub</h2>

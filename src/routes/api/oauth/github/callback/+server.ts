@@ -33,7 +33,12 @@ export const GET = async ({ url, cookies, locals }) => {
 			const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);
 
 			if (existingDatabaseUserWithEmail) {
-				const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
+				const user = auth.transformDatabaseUser({
+					...existingDatabaseUserWithEmail,
+					email_verified: existingDatabaseUserWithEmail.emailVerified,
+					github_username: githubUser.login
+				});
+
 				await createKey(user.userId);
 
 				return user;
@@ -42,6 +47,7 @@ export const GET = async ({ url, cookies, locals }) => {
 			return await createUser({
 				attributes: {
 					email: githubUser.email,
+					email_verified: true,
 					github_username: githubUser.login
 				}
 			});
@@ -49,9 +55,13 @@ export const GET = async ({ url, cookies, locals }) => {
 
 		const user = await getUser();
 
-		// Update user attributes with GitHub username
+		// Update user attributes with GitHub username and email verified
 		if (!user.githubUsername) {
 			await auth.updateUserAttributes(user.userId, { github_username: githubUser.login });
+		}
+
+		if (!user.emailVerified) {
+			await auth.updateUserAttributes(user.userId, { email_verified: true });
 		}
 
 		const session = await auth.createSession({
