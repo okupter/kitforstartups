@@ -8,8 +8,6 @@ export const GET = async ({ url, cookies, locals }) => {
 	const state = url.searchParams.get('state');
 	const code = url.searchParams.get('code');
 
-	console.log({ storedState, state, code });
-
 	// Validate state
 	if (!storedState || !state || storedState !== state || !code) {
 		return new Response(null, {
@@ -20,8 +18,6 @@ export const GET = async ({ url, cookies, locals }) => {
 	try {
 		const { getExistingUser, githubUser, createUser, createKey } =
 			await githubAuth.validateCallback(code);
-
-		console.log({ githubUser });
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
@@ -53,8 +49,6 @@ export const GET = async ({ url, cookies, locals }) => {
 
 		const user = await getUser();
 
-		console.log({ user });
-
 		// Update user attributes with GitHub username
 		if (!user.githubUsername) {
 			await auth.updateUserAttributes(user.userId, { github_username: githubUser.login });
@@ -74,8 +68,6 @@ export const GET = async ({ url, cookies, locals }) => {
 			}
 		});
 	} catch (e) {
-		console.log(e);
-
 		if (e instanceof OAuthRequestError) {
 			// Invalid code
 			return new Response(null, {
