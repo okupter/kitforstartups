@@ -10,15 +10,15 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	const session = await event.locals.auth.validate();
 
 	if (session) {
-		// If user is on the sign up page and their email is not verified
-		// redirect them to the email verification page
-		if (event.url.pathname === '/auth/signup' && !session.user.emailVerified) {
-			throw redirect(302, '/email-verification');
-		}
-
-		// If user is on the login or sign up page and they are logged in
-		// redirect them to the profile page
 		if (authRoutes.includes(event.url.pathname)) {
+			// If user is on an auth page and their email is not verified
+			// redirect them to the email verification page
+			if (!session.user.emailVerified) {
+				throw redirect(302, '/email-verification');
+			}
+
+			// If user is on an auth page and they are logged in
+			// redirect them to the profile page
 			throw redirect(302, '/profile');
 		}
 	}
