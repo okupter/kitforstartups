@@ -59,9 +59,18 @@ export const GET = async ({ url, cookies, locals }) => {
 		await updateUserProfileData({
 			id: nanoid(),
 			userId: user.userId,
-			firstName: profileData?.firstName || googleUser.given_name,
-			lastName: profileData?.lastName || googleUser.family_name,
-			picture: profileData?.picture || googleUser.picture
+			firstName:
+				!profileData?.firstName || profileData?.firstName?.trim().length === 0
+					? googleUser.given_name
+					: profileData?.firstName,
+			lastName:
+				!profileData?.lastName || profileData?.lastName?.trim().length === 0
+					? googleUser.family_name
+					: profileData?.lastName,
+			picture:
+				!profileData?.picture || profileData?.picture?.trim().length === 0
+					? googleUser.picture
+					: profileData?.picture
 		});
 
 		const session = await auth.createSession({
