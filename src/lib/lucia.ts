@@ -1,12 +1,12 @@
 import { dev } from '$app/environment';
 import {
-	GITHUB_CLIENT_ID,
-	GITHUB_CLIENT_SECRET,
-	GOOGLE_OAUTH_CLIENT_ID,
-	GOOGLE_OAUTH_CLIENT_SECRET,
-	GOOGLE_OAUTH_REDIRECT_URI
+    GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET,
+    GOOGLE_OAUTH_CLIENT_ID,
+    GOOGLE_OAUTH_CLIENT_SECRET,
+    GOOGLE_OAUTH_REDIRECT_URI
 } from '$env/static/private';
-import { dbClient } from '$lib/drizzle/client';
+import { dbClient } from '$lib/drizzle/turso/client';
 import { libsql } from '@lucia-auth/adapter-sqlite';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';

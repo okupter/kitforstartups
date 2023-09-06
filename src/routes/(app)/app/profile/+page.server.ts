@@ -1,4 +1,4 @@
-import { getUserProfileData } from '$lib/drizzle/models/users';
+import { getUserProfileData } from '$lib/drizzle/turso/models/users';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 

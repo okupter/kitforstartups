@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/client';
-import { emailVerification, passwordResetToken } from '$lib/drizzle/schemas/users';
+import { drizzleClient } from '$lib/drizzle/turso/client';
+import { emailVerification, passwordResetToken } from '$lib/drizzle/turso/schema';
 import { eq } from 'drizzle-orm';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 
@@ -118,9 +118,8 @@ const validatePasswordResetToken = async (token: string) => {
 };
 
 export {
-    generateEmailVerificationToken,
-    generatePasswordResetToken,
-    validateEmailVerificationToken,
-    validatePasswordResetToken
+	generateEmailVerificationToken,
+	generatePasswordResetToken,
+	validateEmailVerificationToken,
+	validatePasswordResetToken
 };
-
