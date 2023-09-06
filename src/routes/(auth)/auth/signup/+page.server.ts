@@ -8,7 +8,7 @@ export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
 
 	if (session) {
-		throw redirect(302, '/profile');
+		throw redirect(302, '/app/profile');
 	}
 };
 
@@ -58,7 +58,7 @@ export const actions = {
 
 			const sender = 'KitForStartups <justin@updates.okupter.com>';
 			const recipient = firstName ? `${firstName}` : email;
-			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
+			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
 			await sendEmail({
 				from: sender,
@@ -73,6 +73,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/email-verification');
+		throw redirect(302, '/app/email-verification');
 	}
 };

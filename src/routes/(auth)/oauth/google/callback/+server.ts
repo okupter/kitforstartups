@@ -1,7 +1,7 @@
 import {
-	getUserByEmail,
-	getUserProfileData,
-	updateUserProfileData
+    getUserByEmail,
+    getUserProfileData,
+    updateUserProfileData
 } from '$lib/drizzle/models/users';
 import { auth, googleAuth } from '$lib/lucia';
 import { OAuthRequestError } from '@lucia-auth/oauth';
@@ -93,7 +93,7 @@ export const GET = async ({ url, cookies, locals }) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/profile'
+				Location: '/app/profile'
 			}
 		});
 	} catch (e) {

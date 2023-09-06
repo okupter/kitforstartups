@@ -9,9 +9,9 @@
 
 	<div class="flex gap-4">
 		{#if data.user}
-			<a href="/profile">Profile</a>
+			<a href="/app/profile">Profile</a>
 
-			<form method="post" action="/profile?/logout" use:enhance>
+			<form method="post" action="/app/profile?/logout" use:enhance>
 				<button type="submit">Log Out</button>
 			</form>
 		{:else}
