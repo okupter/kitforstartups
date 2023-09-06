@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { githubAuth } from '$lib/lucia/turso';
+import { githubAuth } from '$lib/lucia/mysql';
 import { redirect } from '@sveltejs/kit';
 
 export const GET = async ({ cookies }) => {

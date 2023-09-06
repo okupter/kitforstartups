@@ -1,5 +1,5 @@
 import { validateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { auth } from '$lib/lucia/turso';
+import { auth } from '$lib/lucia/mysql';
 
 export const GET = async ({ params, locals }) => {
 	const { token } = params;

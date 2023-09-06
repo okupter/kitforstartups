@@ -3,7 +3,7 @@ import {
     getUserProfileData,
     updateUserProfileData
 } from '$lib/drizzle/turso/models/users';
-import { auth, googleAuth } from '$lib/lucia/turso';
+import { auth, googleAuth } from '$lib/lucia/mysql';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';

@@ -1,5 +1,5 @@
 import { getUserProfileData } from '$lib/drizzle/turso/models/users';
-import { auth } from '$lib/lucia/turso';
+import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
