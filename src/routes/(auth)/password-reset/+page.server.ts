@@ -1,8 +1,5 @@
-import {
-	generatePasswordResetToken,
-	getUserByEmail,
-	getUserProfileData
-} from '$lib/drizzle/models/users';
+import { generatePasswordResetToken } from '$lib/drizzle/models/tokens';
+import { getUserByEmail, getUserProfileData } from '$lib/drizzle/models/users';
 import { sendEmail } from '$lib/emails/resend';
 import { fail, redirect } from '@sveltejs/kit';
 

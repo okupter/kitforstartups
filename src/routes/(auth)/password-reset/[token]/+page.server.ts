@@ -1,4 +1,4 @@
-import { validatePasswordResetToken } from '$lib/drizzle/models/users';
+import { validatePasswordResetToken } from '$lib/drizzle/models/tokens';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 

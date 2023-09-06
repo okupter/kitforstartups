@@ -1,8 +1,5 @@
-import {
-	generateEmailVerificationToken,
-	getUserByEmail,
-	getUserProfileData
-} from '$lib/drizzle/models/users';
+import { generateEmailVerificationToken } from '$lib/drizzle/models/tokens';
+import { getUserByEmail, getUserProfileData } from '$lib/drizzle/models/users';
 import { sendEmail } from '$lib/emails/resend';
 import { fail, redirect } from '@sveltejs/kit';
 

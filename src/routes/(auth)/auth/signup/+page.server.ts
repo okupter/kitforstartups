@@ -1,4 +1,5 @@
-import { generateEmailVerificationToken, updateUserProfileData } from '$lib/drizzle/models/users';
+import { generateEmailVerificationToken } from '$lib/drizzle/models/tokens';
+import { updateUserProfileData } from '$lib/drizzle/models/users';
 import { sendEmail } from '$lib/emails/resend';
 import { auth } from '$lib/lucia';
 import { fail, redirect } from '@sveltejs/kit';
