@@ -17,7 +17,7 @@ export const actions = {
 
 			const sender = 'KitForStartups <justin@updates.okupter.com>';
 			const recipient = profile?.firstName ? `${profile.firstName}` : user?.email;
-			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/auth/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
+			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
 			await sendEmail({
 				from: sender,

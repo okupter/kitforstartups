@@ -12,13 +12,13 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	if (session) {
 		if (authRoutes.includes(event.url.pathname)) {
 			if (!session.user.emailVerified) {
-				throw redirect(302, '/auth/email-verification');
+				throw redirect(302, '/email-verification');
 			}
 
 			throw redirect(302, '/profile');
 		}
 
-		if (event.url.pathname.startsWith('/auth/email-verification') && session.user.emailVerified) {
+		if (event.url.pathname.startsWith('/email-verification') && session.user.emailVerified) {
 			throw redirect(302, '/profile');
 		}
 	} else {
@@ -26,7 +26,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 			throw redirect(302, '/auth/login');
 		}
 
-		if (event.url.pathname.startsWith('/auth/email-verification')) {
+		if (event.url.pathname.startsWith('/email-verification')) {
 			throw redirect(302, '/auth/login');
 		}
 	}
