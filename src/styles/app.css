@@ -4,6 +4,41 @@
 
 @layer base {
 	body {
-		@apply font-inter;
+		@apply font-inter text-gray-800;
+	}
+}
+
+@layer components {
+	/* Actions */
+	.action-base {
+		@apply text-sm text-center w-full rounded-sm shadow-sm px-4 py-2;
+	}
+
+	.action-primary {
+		@apply bg-blue-600 text-white;
+		@apply hover:bg-blue-700;
+	}
+
+	.action-outline {
+		@apply border border-gray-900;
+		@apply hover:bg-gray-900 hover:text-white;
+	}
+
+	/* Forms */
+	form {
+		@apply space-y-4;
+	}
+
+	form .form-control {
+		@apply flex flex-col space-y-1;
+	}
+
+	form label {
+		@apply text-sm font-semibold text-gray-600;
+	}
+
+	form input {
+		@apply border border-gray-400 rounded-sm shadow-sm p-2 text-sm placeholder-gray-400;
+		@apply focus:outline-none focus:ring-1 focus:ring-blue-700;
 	}
 }
