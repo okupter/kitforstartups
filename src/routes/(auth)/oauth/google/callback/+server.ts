@@ -2,7 +2,7 @@ import {
     getUserByEmail,
     getUserProfileData,
     updateUserProfileData
-} from '$lib/drizzle/turso/models/users';
+} from '$lib/drizzle/mysql/models/users';
 import { auth, googleAuth } from '$lib/lucia/mysql';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';

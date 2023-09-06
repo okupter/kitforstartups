@@ -1,5 +1,5 @@
-import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { updateUserProfileData } from '$lib/drizzle/turso/models/users';
+import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
+import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/resend';
 import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';

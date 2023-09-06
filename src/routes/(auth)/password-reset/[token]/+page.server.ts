@@ -1,4 +1,4 @@
-import { validatePasswordResetToken } from '$lib/drizzle/turso/models/tokens';
+import { validatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';
 
