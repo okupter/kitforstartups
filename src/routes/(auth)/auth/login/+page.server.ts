@@ -2,14 +2,6 @@ import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';
 import { LuciaError } from 'lucia';
 
-export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
-
-	if (session) {
-		throw redirect(302, '/app/profile');
-	}
-};
-
 export const actions = {
 	loginUser: async ({ locals, request }) => {
 		const formData = Object.fromEntries(await request.formData());
