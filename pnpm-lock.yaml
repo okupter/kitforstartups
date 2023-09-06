@@ -11,6 +11,9 @@ dependencies:
   '@libsql/client':
     specifier: ^0.3.2
     version: 0.3.2
+  '@lucia-auth/adapter-mysql':
+    specifier: ^2.0.0
+    version: 2.0.0(lucia@2.4.2)(mysql2@3.6.0)
   '@lucia-auth/adapter-sqlite':
     specifier: ^2.0.0
     version: 2.0.0(@libsql/client@0.3.2)(lucia@2.4.2)
@@ -463,6 +466,22 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
+
+  /@lucia-auth/adapter-mysql@2.0.0(lucia@2.4.2)(mysql2@3.6.0):
+    resolution: {integrity: sha512-8a4JZ3VjDyRu/mAop2hEt/jOJO2HXwWIAid6a4wGiR8wgnlyOws9brRc+/wxQHSOlWUlrWemrfDvXLs5mMtkeQ==}
+    peerDependencies:
+      '@planetscale/database': ^1.0.0
+      lucia: ^2.0.0
+      mysql2: ^3.0.0
+    peerDependenciesMeta:
+      '@planetscale/database':
+        optional: true
+      mysql2:
+        optional: true
+    dependencies:
+      lucia: 2.4.2
+      mysql2: 3.6.0
     dev: false
 
   /@lucia-auth/adapter-sqlite@2.0.0(@libsql/client@0.3.2)(lucia@2.4.2):

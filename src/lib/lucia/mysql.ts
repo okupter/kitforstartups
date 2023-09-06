@@ -1,13 +1,13 @@
 import { dev } from '$app/environment';
 import {
-    GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET,
-    GOOGLE_OAUTH_CLIENT_ID,
-    GOOGLE_OAUTH_CLIENT_SECRET,
-    GOOGLE_OAUTH_REDIRECT_URI
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
+	GOOGLE_OAUTH_CLIENT_ID,
+	GOOGLE_OAUTH_CLIENT_SECRET,
+	GOOGLE_OAUTH_REDIRECT_URI
 } from '$env/static/private';
-import { dbClient } from '$lib/drizzle/turso/client';
-import { libsql } from '@lucia-auth/adapter-sqlite';
+import { connectionPool } from '$lib/drizzle/mysql/client';
+import { mysql2 } from '@lucia-auth/adapter-mysql';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
@@ -15,7 +15,7 @@ import { sveltekit } from 'lucia/middleware';
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
-	adapter: libsql(dbClient, {
+	adapter: mysql2(connectionPool, {
 		user: 'auth_user',
 		key: 'user_key',
 		session: 'user_session'
