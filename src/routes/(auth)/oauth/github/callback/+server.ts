@@ -1,5 +1,5 @@
 import { getUserByEmail } from '$lib/drizzle/turso/models/users';
-import { auth, githubAuth } from '$lib/lucia';
+import { auth, githubAuth } from '$lib/lucia/turso';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
 

@@ -1,4 +1,4 @@
-import { auth } from '$lib/lucia';
+import { auth } from '$lib/lucia/turso';
 
 export const handle = async ({ event, resolve }) => {
 	event.locals.auth = auth.handleRequest(event);

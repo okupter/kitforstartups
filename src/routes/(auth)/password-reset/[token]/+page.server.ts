@@ -1,5 +1,5 @@
 import { validatePasswordResetToken } from '$lib/drizzle/turso/models/tokens';
-import { auth } from '$lib/lucia';
+import { auth } from '$lib/lucia/turso';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
