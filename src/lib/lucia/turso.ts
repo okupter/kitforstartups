@@ -1,12 +1,6 @@
 import { dev } from '$app/environment';
-import {
-    GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET,
-    GOOGLE_OAUTH_CLIENT_ID,
-    GOOGLE_OAUTH_CLIENT_SECRET,
-    GOOGLE_OAUTH_REDIRECT_URI
-} from '$env/static/private';
 import { dbClient } from '$lib/drizzle/turso/client';
+import { githubAuthOptions, googleAuthOptions } from '$lib/lucia/utils';
 import { libsql } from '@lucia-auth/adapter-sqlite';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
@@ -30,21 +24,7 @@ export const auth = lucia({
 	}
 });
 
-export const githubAuth = github(auth, {
-	clientId: GITHUB_CLIENT_ID,
-	clientSecret: GITHUB_CLIENT_SECRET
-});
-
-export const googleAuth = google(auth, {
-	clientId: GOOGLE_OAUTH_CLIENT_ID,
-	clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
-	redirectUri: GOOGLE_OAUTH_REDIRECT_URI,
-	scope: [
-		'openid',
-		'https://www.googleapis.com/auth/userinfo.profile',
-		'https://www.googleapis.com/auth/userinfo.email'
-	],
-	accessType: 'offline'
-});
+export const githubAuth = github(auth, githubAuthOptions);
+export const googleAuth = google(auth, googleAuthOptions);
 
 export type Auth = typeof auth;
