@@ -1,9 +1,25 @@
 import {
-	GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET,
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
 	GOOGLE_OAUTH_CLIENT_ID,
 	GOOGLE_OAUTH_CLIENT_SECRET,
 	GOOGLE_OAUTH_REDIRECT_URI
 } from '$env/static/private';
+import type { UserSchema } from 'lucia';
+
+const adapterOptions = {
+	user: 'auth_user',
+	key: 'user_key',
+	session: 'user_session'
+};
+
+const generateUserAttributes = (data: UserSchema) => {
+	return {
+		email: data.email,
+		emailVerified: data.email_verified,
+		githubUsername: data.github_username
+	};
+};
 
 const googleAuthOptions = {
 	clientId: GOOGLE_OAUTH_CLIENT_ID,
@@ -22,5 +38,4 @@ const githubAuthOptions = {
 	clientSecret: GITHUB_CLIENT_SECRET
 };
 
-export { githubAuthOptions, googleAuthOptions };
-
+export { adapterOptions, generateUserAttributes, githubAuthOptions, googleAuthOptions };
