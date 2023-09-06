@@ -4,7 +4,15 @@ import {
 	getUserProfileData
 } from '$lib/drizzle/models/users';
 import { sendEmail } from '$lib/emails/resend';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+
+export const load = async ({ locals }) => {
+	const session = await locals.auth.validate();
+
+	if (session?.user.emailVerified) {
+		throw redirect(302, '/profile');
+	}
+};
 
 export const actions = {
 	resendEmailVerificationLink: async ({ locals, url }) => {

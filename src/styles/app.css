@@ -6,12 +6,17 @@
 	body {
 		@apply font-inter text-gray-800;
 	}
+
+	/* Headings */
+	h1 {
+		@apply text-4xl font-bold;
+	}
 }
 
 @layer components {
 	/* Actions */
 	.action-base {
-		@apply text-sm text-center w-full rounded-sm shadow-sm px-4 py-2;
+		@apply text-sm inline-flex items-center justify-center border w-full rounded-sm shadow-sm px-4 py-2;
 	}
 
 	.action-primary {
@@ -20,8 +25,13 @@
 	}
 
 	.action-outline {
-		@apply border border-gray-900;
+		@apply border-gray-900;
 		@apply hover:bg-gray-900 hover:text-white;
+	}
+
+	/* Containers */
+	.container-base {
+		@apply max-w-5xl mx-auto px-4;
 	}
 
 	/* Forms */

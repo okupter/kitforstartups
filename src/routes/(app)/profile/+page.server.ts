@@ -5,6 +5,10 @@ import { fail, redirect } from '@sveltejs/kit';
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
 
+	if (!session || !session.user.emailVerified) {
+		throw redirect(302, '/email-verification');
+	}
+
 	return {
 		profile: await getUserProfileData(session?.user.userId)
 	};
