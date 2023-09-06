@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  kitforstartups-mysql:
+    image: mysql:8.1.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: kitforstartups-mysql
+    ports:
+      - 3306:3306
