@@ -1,7 +1,7 @@
 import {
-    getUserByEmail,
-    getUserProfileData,
-    updateUserProfileData
+	getUserByEmail,
+	getUserProfileData,
+	updateUserProfileData
 } from '$lib/drizzle/mysql/models/users';
 import { auth, googleAuth } from '$lib/lucia/mysql';
 import { OAuthRequestError } from '@lucia-auth/oauth';

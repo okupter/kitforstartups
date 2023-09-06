@@ -7,11 +7,23 @@ const getUserByEmail = async (email: string | undefined) => {
 		return undefined;
 	}
 
-	return await drizzleClient.select().from(user).where(eq(user.email, email)).get();
+	const data = await drizzleClient.select().from(user).where(eq(user.email, email));
+
+	return data[0];
 };
 
 const updateUserProfileData = async (profileData: typeof userProfile.$inferInsert) => {
-	return await drizzleClient.update(userProfile).set(profileData).returning().get();
+	// Check if the user already has a profile
+	const existingProfileId = (await getUserProfileData(profileData.userId))?.id;
+
+	if (existingProfileId) {
+		await drizzleClient
+			.update(userProfile)
+			.set(profileData)
+			.where(eq(userProfile.id, existingProfileId));
+	}
+
+	await drizzleClient.insert(userProfile).values(profileData);
 };
 
 const getUserProfileData = async (userId: string | undefined) => {
@@ -19,7 +31,9 @@ const getUserProfileData = async (userId: string | undefined) => {
 		return undefined;
 	}
 
-	return await drizzleClient.select().from(userProfile).where(eq(userProfile.userId, userId)).get();
+	const data = await drizzleClient.select().from(userProfile).where(eq(userProfile.userId, userId));
+
+	return data[0];
 };
 
 export { getUserByEmail, getUserProfileData, updateUserProfileData };

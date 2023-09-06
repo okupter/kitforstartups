@@ -1,5 +1,5 @@
-import { emailVerification, passwordResetToken } from '$lib/drizzle/mysql/schema';
 import { drizzleClient } from '$lib/drizzle/turso/client';
+import { emailVerification, passwordResetToken } from '$lib/drizzle/turso/schema';
 import { eq } from 'drizzle-orm';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 
