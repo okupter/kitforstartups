@@ -21,6 +21,8 @@
 		<div class="form-control">
 			<label for="password">Password</label>
 			<input type="password" name="password" placeholder="Your password" required />
+
+			<a href="/password-reset" class="text-xs font-medium text-right text-blue-600 underline">Forgot your password?</a>
 		</div>
 
 		<button type="submit" class="action-base action-primary">Login</button>

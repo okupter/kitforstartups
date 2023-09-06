@@ -30,6 +30,14 @@ const emailVerification = sqliteTable('email_verification', {
 	expires: blob('expires', { mode: 'bigint' }).notNull()
 });
 
+const passwordResetToken = sqliteTable('password_reset_token', {
+	id: text('id', { length: 255 }).primaryKey(),
+	userId: text('user_id', { length: 255 })
+		.notNull()
+		.references(() => user.id),
+	expires: blob('expires', { mode: 'bigint' }).notNull()
+});
+
 const userKey = sqliteTable('user_key', {
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
@@ -47,5 +55,4 @@ const userSession = sqliteTable('user_session', {
 	idleExpires: blob('idle_expires', { mode: 'bigint' }).notNull()
 });
 
-export { emailVerification, user, userKey, userProfile, userSession };
-
+export { emailVerification, passwordResetToken, user, userKey, userProfile, userSession };
