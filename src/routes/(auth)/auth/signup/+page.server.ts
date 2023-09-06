@@ -51,7 +51,19 @@ export const actions = {
 
 			const sender = 'KitForStartups <justin@updates.okupter.com>';
 			const recipient = firstName ? `${firstName}` : email;
-			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
+			const emailHtml = `Hello ${recipient},
+			<br><br>
+			Thank you for signing up to KitForStartups! Please click the link below to verify your email address:
+			<br><br>
+			<a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a>
+			<br>
+			You can also copy directly into your browser:
+			<br><br>
+			<code>${url.origin}/app/email-verification/${verificationToken}</code>
+			<br><br>
+			Thanks,
+			<br>
+			Justin from KitForStartups`;
 
 			await sendEmail({
 				from: sender,
@@ -60,7 +72,6 @@ export const actions = {
 				html: emailHtml
 			});
 		} catch (e) {
-			console.log(e);
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});
