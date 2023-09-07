@@ -58,6 +58,9 @@ devDependencies:
   drizzle-kit:
     specifier: ^0.19.13
     version: 0.19.13
+  emailjs:
+    specifier: ^4.0.3
+    version: 4.0.3(typescript@5.2.2)
   eslint:
     specifier: ^8.28.0
     version: 8.48.0
@@ -1363,6 +1366,18 @@ packages:
 
   /electron-to-chromium@1.4.508:
     resolution: {integrity: sha512-FFa8QKjQK/A5QuFr2167myhMesGrhlOBD+3cYNxO9/S4XzHEXesyTD/1/xF644gC8buFPz3ca6G1LOQD0tZrrg==}
+    dev: true
+
+  /emailjs@4.0.3(typescript@5.2.2):
+    resolution: {integrity: sha512-1CDXoE3FxkSg7QRTlLsDCYG9elFNu/JQsYWu3Xfrk77ubbg5zYgFGg+JRUKQJ56mceM8o3rHHX0VB4wo9XsyLQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      typescript: '>=4.3.5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
     dev: true
 
   /end-of-stream@1.4.4:

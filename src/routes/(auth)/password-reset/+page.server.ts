@@ -1,6 +1,6 @@
 import { generatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
-import { sendResendEmail } from '$lib/emails/resend';
+import { sendEmail } from '$lib/emails/send';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
@@ -29,7 +29,7 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : storedUser.email;
 			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			await sendResendEmail({
+			await sendEmail({
 				from: sender,
 				to: storedUser.email as string,
 				subject: 'Password Reset',
