@@ -1,6 +1,6 @@
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
-import { sendEmail } from '$lib/emails/resend';
+import { sendResendEmail } from '$lib/emails/resend';
 import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
@@ -65,7 +65,7 @@ export const actions = {
 			<br>
 			Justin from KitForStartups`;
 
-			await sendEmail({
+			await sendResendEmail({
 				from: sender,
 				to: email,
 				subject: 'Verify Your Email Address',

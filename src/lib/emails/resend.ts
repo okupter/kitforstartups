@@ -1,7 +1,7 @@
 import { RESEND_API_KEY } from '$env/static/private';
 import { Resend } from 'resend';
 
-const sendEmail = async (options: { from: string; to: string; subject: string; html: string }) => {
+const sendResendEmail = async (options: { from: string; to: string; subject: string; html: string }) => {
 	const resend = new Resend(RESEND_API_KEY);
 
 	try {
@@ -13,4 +13,4 @@ const sendEmail = async (options: { from: string; to: string; subject: string; h
 	}
 };
 
-export { sendEmail };
+export { sendResendEmail };

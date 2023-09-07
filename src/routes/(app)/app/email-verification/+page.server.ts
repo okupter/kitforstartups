@@ -1,6 +1,6 @@
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
-import { sendEmail } from '$lib/emails/resend';
+import { sendResendEmail } from '$lib/emails/resend';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
@@ -23,7 +23,7 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : user.email;
 			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			await sendEmail({
+			await sendResendEmail({
 				from: sender,
 				to: user.email,
 				subject: 'Verify Your Email Address',
