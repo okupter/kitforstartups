@@ -29,8 +29,8 @@
 	</form>
 
 	<div class="flex flex-col mt-12 space-y-4 social-logins">
-		<a href="/api/oauth/github" class="action-base action-outline">Login with GitHub</a>
-		<a href="/api/oauth/google" class="action-base action-outline">Login with Google</a>
+		<a href="/oauth/github" class="action-base action-outline">Login with GitHub</a>
+		<a href="/oauth/google" class="action-base action-outline">Login with Google</a>
 	</div>
 </div>
 

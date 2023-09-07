@@ -19,7 +19,10 @@ const updateUserProfileData = async (profileData: typeof userProfile.$inferInser
 	if (existingProfileId) {
 		await drizzleClient
 			.update(userProfile)
-			.set(profileData)
+			.set({
+				...profileData,
+				id: existingProfileId
+			})
 			.where(eq(userProfile.id, existingProfileId));
 	}
 
