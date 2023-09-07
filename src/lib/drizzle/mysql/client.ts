@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import {
     ENABLE_DRIZZLE_LOGGER,
     MYSQL_DB_HOST,
@@ -16,7 +17,7 @@ const connectionPool = mysql.createPool({
 });
 
 const drizzleClient = drizzle(connectionPool, {
-	logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : import.meta.env.DEV
+	logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : dev
 });
 
 export { connectionPool, drizzleClient };
