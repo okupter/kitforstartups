@@ -56,13 +56,10 @@ export const GET = async ({ url, cookies, locals }) => {
 		const user = await getUser();
 
 		// Update user attributes with GitHub username and email verified
-		if (!user.githubUsername) {
-			await auth.updateUserAttributes(user.userId, { github_username: githubUser.login });
-		}
-
-		if (!user.emailVerified) {
-			await auth.updateUserAttributes(user.userId, { email_verified: true });
-		}
+		await auth.updateUserAttributes(user.userId, {
+			github_username: githubUser.login,
+			email_verified: true
+		});
 
 		const session = await auth.createSession({
 			userId: user.userId,

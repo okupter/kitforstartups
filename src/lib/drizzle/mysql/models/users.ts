@@ -13,20 +13,14 @@ const getUserByEmail = async (email: string | undefined) => {
 };
 
 const updateUserProfileData = async (profileData: typeof userProfile.$inferInsert) => {
-	// Check if the user already has a profile
-	const existingProfileId = (await getUserProfileData(profileData.userId))?.id;
-
-	if (existingProfileId) {
-		await drizzleClient
-			.update(userProfile)
-			.set({
-				...profileData,
-				id: existingProfileId
-			})
-			.where(eq(userProfile.id, existingProfileId));
-	}
-
-	await drizzleClient.insert(userProfile).values(profileData);
+	await drizzleClient
+		.insert(userProfile)
+		.values(profileData)
+		.onDuplicateKeyUpdate({
+			set: Object.fromEntries(
+				Object.entries(profileData).filter(([key]) => !['id', 'userId'].includes(key))
+			)
+		});
 };
 
 const getUserProfileData = async (userId: string | undefined) => {
