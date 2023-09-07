@@ -9,7 +9,13 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"generate-migrations:mysql": "drizzle-kit generate:mysql --config=src/lib/drizzle/mysql/drizzle.config.ts",
+		"generate-migrations:turso": "drizzle-kit generate:turso --config=src/lib/drizzle/turso/drizzle.config.ts",
+		"push:mysql": "drizzle-kit push:mysql --config=src/lib/drizzle/mysql/drizzle.config.ts",
+		"push:turso": "drizzle-kit push:turso --config=src/lib/drizzle/turso/drizzle.config.ts",
+		"migrate:mysql": "tsx src/lib/drizzle/mysql/migrations/migrate.ts",
+		"migrate:turso": "tsx src/lib/drizzle/turso/migrations/migrate.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
