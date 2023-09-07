@@ -1,5 +1,15 @@
+import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { auth } from '$lib/lucia/mysql';
 import { fail, redirect } from '@sveltejs/kit';
+
+export const load = async ({ locals }) => {
+	const session = await locals.auth.validate();
+	const profile = await getUserProfileData(session?.user.userId);
+
+	return {
+		profile
+	};
+};
 
 export const actions = {
 	logout: async ({ cookies, locals }) => {
