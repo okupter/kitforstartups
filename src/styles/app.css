@@ -55,4 +55,8 @@
 		@apply border border-gray-400 rounded-sm shadow-sm p-2 text-sm placeholder-gray-400;
 		@apply focus:outline-none focus:ring-1 focus:ring-blue-700;
 	}
+
+	form button[type='submit'] {
+		@apply disabled:opacity-50 disabled:cursor-not-allowed;
+	}
 }
