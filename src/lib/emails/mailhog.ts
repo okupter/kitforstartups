@@ -28,4 +28,3 @@ const sendTestEmail = async (options: {
 };
 
 export { sendTestEmail };
-
