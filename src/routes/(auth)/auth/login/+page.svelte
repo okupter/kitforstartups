@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import SubmitButton from '$lib/components/SubmitButton.svelte';
 </script>
 
 <svelte:head>
@@ -22,10 +23,12 @@
 			<label for="password">Password</label>
 			<input type="password" name="password" placeholder="Your password" required />
 
-			<a href="/password-reset" class="text-xs font-medium text-right text-blue-600 underline">Forgot your password?</a>
+			<a href="/password-reset" class="text-xs font-medium text-right text-blue-600 underline"
+				>Forgot your password?</a
+			>
 		</div>
 
-		<button type="submit" class="action-base action-primary">Login</button>
+		<SubmitButton text="Login" />
 	</form>
 
 	<div class="flex flex-col mt-12 space-y-4 social-logins">

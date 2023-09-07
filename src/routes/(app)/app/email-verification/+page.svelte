@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import SubmitButton from '$lib/components/SubmitButton.svelte';
 </script>
 
 <svelte:head>
@@ -22,7 +23,7 @@
 	<div class="space-y-4">
 		<h2>Resend verification link</h2>
 		<form method="post" action="?/resendEmailVerificationLink" use:enhance>
-			<button type="submit" class="action-base action-primary w-fit">Resend</button>
+			<SubmitButton text="Resend" />
 		</form>
 	</div>
 </div>
