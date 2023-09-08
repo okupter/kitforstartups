@@ -12,5 +12,5 @@ export default {
 		password: process.env.MYSQL_DB_PASSWORD as string,
 		database: process.env.MYSQL_DB_NAME as string
 	},
-	out: './src/lib/drizzle/mysql/migrations'
+	out: './src/lib/drizzle/mysql/migrations/data'
 } satisfies Config;

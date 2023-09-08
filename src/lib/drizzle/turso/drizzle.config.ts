@@ -10,5 +10,5 @@ export default {
 		url: process.env.TURSO_DB_URL as string,
         authToken: process.env.TURSO_AUTH_TOKEN as string
 	},
-	out: './src/lib/drizzle/migrations'
+	out: './src/lib/drizzle/migrations/data'
 } satisfies Config;
