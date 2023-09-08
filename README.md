@@ -116,3 +116,14 @@ docker-compose -f docker/mailhog.yml up -d
 ```bash
 pnpm dev
 ```
+
+## 🗺️ Roadmap
+
+KitForStartups is still in the early stages of development. Here is a list of features that we plan to add in the very near future:
+
+- [ ] Authorization logic with load functions and hooks
+- [ ] PostgreSQL support
+- [ ] Stripe integration
+- [ ] Lemon Squeezy integration
+- [ ] Mailgun integration
+- [ ] CLI for generating a starter project
