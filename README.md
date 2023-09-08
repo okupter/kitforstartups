@@ -121,6 +121,8 @@ pnpm dev
 
 KitForStartups is still in the early stages of development. Here is a list of features that we plan to add in the very near future:
 
+- [ ] A central configuration file for the app
+- [ ] Magic link authentication
 - [ ] Authorization logic with load functions and hooks
 - [ ] PostgreSQL support
 - [ ] Stripe integration
