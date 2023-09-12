@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/pg": "^8.10.2",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.14",
@@ -44,6 +45,7 @@
 		"@fontsource-variable/inter": "^5.0.8",
 		"@libsql/client": "^0.3.2",
 		"@lucia-auth/adapter-mysql": "^2.0.0",
+		"@lucia-auth/adapter-postgresql": "^2.0.1",
 		"@lucia-auth/adapter-sqlite": "^2.0.0",
 		"@lucia-auth/oauth": "^3.0.0",
 		"dotenv": "^16.3.1",
@@ -51,6 +53,7 @@
 		"lucia": "^2.4.2",
 		"mysql2": "^3.6.0",
 		"nanoid": "^4.0.2",
+		"pg": "^8.11.3",
 		"resend": "^1.0.0"
 	}
 }

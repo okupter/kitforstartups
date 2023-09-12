@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  kitforstartups-postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: kitforstartups
+    ports:
+      - 5432:5432
