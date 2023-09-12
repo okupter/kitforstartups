@@ -8,7 +8,7 @@ If you already found yourself in a situation where you were:
 
 - Trying to set up various authentication systems (email/password, social logins, OAuth, etc.)
 - Scratching your head over how to structure your app
-- Spending too much time setting up payments for your SvleteKit app either with Stripe or Lemon Squeezy
+- Spending too much time setting up payments for your SvelteKit app either with Stripe or Lemon Squeezy
 - Fighting against your email provider for sending emails from your app, and testing them reliably on your local machine
 - Doing all the above again and again for every new project
 
