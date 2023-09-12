@@ -111,6 +111,8 @@ We also provide a Docker Compose file to quickly spin up a MailHog container.
 docker-compose -f docker/mailhog.yml up -d
 ```
 
+The MailHog server will be available at `http://localhost:8025`.
+
 7. Run the app
 
 ```bash
