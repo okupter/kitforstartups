@@ -121,6 +121,7 @@ pnpm dev
 
 KitForStartups is still in the early stages of development. Here is a list of features that we plan to add in the very near future:
 
+- [ ] Proper error handling on the client with toast notifications
 - [ ] A central configuration file for the app
 - [ ] Magic link authentication
 - [ ] Authorization logic with load functions and hooks
