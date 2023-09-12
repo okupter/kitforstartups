@@ -1,12 +1,12 @@
 import { dev } from '$app/environment';
-import { connectionPool } from '$lib/drizzle/postgres/client';
+import { connection } from '$lib/drizzle/postgres/client';
 import {
-    adapterOptions,
-    generateUserAttributes,
-    githubAuthOptions,
-    googleAuthOptions
+	adapterOptions,
+	generateUserAttributes,
+	githubAuthOptions,
+	googleAuthOptions
 } from '$lib/lucia/utils';
-import { postgres } from "@lucia-auth/adapter-postgresql";
+import { postgres } from '@lucia-auth/adapter-postgresql';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
@@ -14,7 +14,7 @@ import { sveltekit } from 'lucia/middleware';
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
-	adapter: postgres(connectionPool, adapterOptions),
+	adapter: postgres(connection, adapterOptions),
 
 	getUserAttributes: (data) => {
 		return generateUserAttributes(data);

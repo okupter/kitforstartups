@@ -6,6 +6,6 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
-      POSTGRES_DB: kitforstartups
+      POSTGRES_DB: kitforstartups-postgres
     ports:
       - 5432:5432

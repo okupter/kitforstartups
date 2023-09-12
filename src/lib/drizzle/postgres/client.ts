@@ -5,21 +5,23 @@ import {
 	POSTGRES_DB_NAME,
 	POSTGRES_DB_PASSWORD,
 	POSTGRES_DB_PORT,
-	POSTGRES_DB_USER
+	POSTGRES_DB_USER,
+	POSTGRES_MAX_CONNECTIONS
 } from '$env/static/private';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
-const connectionPool = new Pool({
+const connection = postgres({
 	host: POSTGRES_DB_HOST,
 	port: Number(POSTGRES_DB_PORT),
 	user: POSTGRES_DB_USER,
 	password: POSTGRES_DB_PASSWORD,
-	database: POSTGRES_DB_NAME
+	database: POSTGRES_DB_NAME,
+	max: POSTGRES_MAX_CONNECTIONS ? Number(POSTGRES_MAX_CONNECTIONS) : 1
 });
 
-const drizzleClient = drizzle(connectionPool, {
+const drizzleClient = drizzle(connection, {
 	logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : dev
 });
 
-export { connectionPool, drizzleClient };
+export { connection, drizzleClient };
