@@ -23,7 +23,7 @@ Then _KitForStartups_ is for you 🎉!
 - Tailwind CSS
 - MySQL
 - SQLite
-- PostgreSQL (coming soon)
+- PostgreSQL
 - Stripe (coming soon)
 - Lemon Squeezy (coming soon)
 - Resend
@@ -119,15 +119,28 @@ The MailHog server will be available at `http://localhost:8025`.
 pnpm dev
 ```
 
+### Changing the database
+
+Right now, there is no CLI or configuration file to change the database. You will have to do some search and replace in the codebase to change the database.
+
+The default database is MySQL. If you want to use PostgreSQL, you will have to:
+
+* Change occurences of `$lib/lucia/mysql` to `$lib/lucia/postgres` in the `./src` directory
+* Change occurences of `$lib/drizzle/mysql/models` to `$lib/drizzle/postgres/models` in the `./src` directory
+
+This should be enough to get you started with PostgreSQL.
+
+**PS**: This won't be necessary in the future, as we plan to add a central configuration file for the app and a CLI to generate a starter project with the database of your choice.
+
 ## 🗺️ Roadmap
 
 KitForStartups is still in the early stages of development. Here is a list of features that we plan to add in the very near future:
 
+- [x] PostgreSQL support
 - [ ] Proper error handling on the client with toast notifications
 - [ ] A central configuration file for the app
 - [ ] Magic link authentication
 - [ ] Authorization logic with load functions and hooks
-- [ ] PostgreSQL support
 - [ ] Stripe integration
 - [ ] Lemon Squeezy integration
 - [ ] Mailgun integration
