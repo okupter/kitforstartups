@@ -17,7 +17,7 @@ const updateUserProfileData = async (profileData: typeof userProfile.$inferInser
 		.insert(userProfile)
 		.values(profileData)
 		.onConflictDoUpdate({
-			target: userProfile.id,
+			target: userProfile.userId,
 			set: Object.fromEntries(
 				Object.entries(profileData).filter(([key]) => !['id', 'userId'].includes(key))
 			)
