@@ -119,7 +119,7 @@ The MailHog server will be available at `http://localhost:8025`.
 pnpm dev
 ```
 
-### Changing the database
+### Changing the database
 
 Right now, there is no CLI or configuration file to change the database. You will have to do some search and replace in the codebase to change the database.
 
