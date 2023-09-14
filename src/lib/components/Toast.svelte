@@ -10,7 +10,7 @@
 		helpers,
 		states: { toasts },
 		actions: { portal }
-	} = createToaster<ToastData>({ closeDelay: 50000 });
+	} = createToaster<ToastData>();
 
 	export const creatToast = (data: ToastData) => {
 		helpers.addToast({
@@ -32,7 +32,9 @@
 			animate:flip={{ duration: 500 }}
 			in:fly={{ duration: 150, x: '100%' }}
 			out:fly={{ duration: 150, x: '100%' }}
-			class="px-6 py-4 rounded-md flex items-start gap-4 {data.type === 'success' ? 'bg-green-900 text-white' : ''}
+			class="px-6 py-4 rounded-md flex items-start gap-4 {data.type === 'success'
+				? 'bg-green-900 text-white'
+				: ''}
 			{data.type === 'error' ? 'bg-red-900 text-white' : ''}
 			{data.type === 'warning' ? 'bg-yellow-900 text-white' : ''}
 			{data.type === 'info' ? 'bg-blue-900 text-white' : ''}"
