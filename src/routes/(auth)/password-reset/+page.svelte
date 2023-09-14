@@ -18,19 +18,11 @@
 	};
 
 	$: {
-		if (form?.error) {
+		if (form?.feedback) {
 			creatToast({
-				type: 'error',
-				title: form.error.title,
-				description: form.error.message
-			});
-		}
-
-		if (form?.success) {
-			creatToast({
-				type: 'success',
-				title: form.success.title,
-				description: form.success.message
+				type: form.feedback.type,
+				title: form.feedback.title,
+				description: form.feedback.message
 			});
 		}
 	}

@@ -1,3 +1,4 @@
+import { getFeedbackObject } from '$lib/utils';
 import { SMTPClient } from 'emailjs';
 
 const client = new SMTPClient({
@@ -23,21 +24,19 @@ const sendTestEmail = async (options: {
 
 		console.log('Test email sent successfully');
 
-		return {
-			success: {
-				title: 'Test email sent successfully',
-				message: 'Check your inbox for the test email.'
-			}
-		};
+		return getFeedbackObject({
+			type: 'success',
+			title: 'Test email sent successfully',
+			message: 'Check your inbox for the test email.'
+		});
 	} catch (e) {
 		console.error(e);
 
-		return {
-			error: {
-				title: 'Error sending test email',
-				message: 'An unknown error occurred while sending the test email. Please try again later.'
-			}
-		};
+		return getFeedbackObject({
+			type: 'error',
+			title: 'Error sending test email',
+			message: 'An unknown error occurred while sending the test email. Please try again later.'
+		});
 	}
 };
 
