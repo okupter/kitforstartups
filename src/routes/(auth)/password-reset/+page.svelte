@@ -1,8 +1,39 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { creatToast } from '$lib/components/Toast.svelte';
+	import type { SubmitFunction } from '@sveltejs/kit';
 
 	export let data;
+	export let form;
+
+	let running = false;
+	const submitSendResetPasswordLink: SubmitFunction = () => {
+		running = true;
+
+		return async ({ update }) => {
+			running = false;
+			await update();
+		};
+	};
+
+	$: {
+		if (form?.error) {
+			creatToast({
+				type: 'error',
+				title: form.error.title,
+				description: form.error.message
+			});
+		}
+
+		if (form?.success) {
+			creatToast({
+				type: 'success',
+				title: form.success.title,
+				description: form.success.message
+			});
+		}
+	}
 </script>
 
 <svelte:head>
@@ -14,13 +45,13 @@
 </div>
 
 <div class="p-8 border border-gray-300 rounded-sm shadow-sm">
-	<form method="post" action="?/sendPasswordResetLink" use:enhance>
+	<form method="post" action="?/sendPasswordResetLink" use:enhance={submitSendResetPasswordLink}>
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
 		</div>
 
-		<SubmitButton text="Email password reset link" />
+		<SubmitButton {running} text="Email password reset link" />
 	</form>
 </div>
 

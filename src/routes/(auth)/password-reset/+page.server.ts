@@ -16,7 +16,10 @@ export const actions = {
 
 		if (!storedUser) {
 			return fail(400, {
-				message: 'User does not exist'
+				error: {
+					title: 'Invalid email',
+					message: 'The email you entered does not match any account.'
+				}
 			});
 		}
 
@@ -29,19 +32,18 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : storedUser.email;
 			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			await sendEmail({
+			return await sendEmail({
 				from: sender,
 				to: storedUser.email as string,
 				subject: 'Password Reset',
 				html: emailHtml
 			});
-
-			return {
-				success: true
-			};
 		} catch (error) {
 			return fail(500, {
-				message: 'An unknown error occurred'
+				error: {
+					title: 'Error sending email',
+					message: 'An unknown error occurred while sending the email. Please try again later.'
+				}
 			});
 		}
 	}

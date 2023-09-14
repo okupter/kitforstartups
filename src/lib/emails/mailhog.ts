@@ -22,8 +22,22 @@ const sendTestEmail = async (options: {
 		});
 
 		console.log('Test email sent successfully');
-	} catch (error) {
-		console.error(error);
+
+		return {
+			success: {
+				title: 'Test email sent successfully',
+				message: 'Check your inbox for the test email.'
+			}
+		};
+	} catch (e) {
+		console.error(e);
+
+		return {
+			error: {
+				title: 'Error sending test email',
+				message: 'An unknown error occurred while sending the test email. Please try again later.'
+			}
+		};
 	}
 };
 
