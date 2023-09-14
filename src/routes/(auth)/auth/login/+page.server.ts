@@ -36,7 +36,7 @@ export const actions = {
 			return fail(500, {
 				error: {
 					title: 'Login failed',
-					message: 'An unknown error occurred'
+					message: 'An unknown error occurred. Please try again later.'
 				}
 			});
 		}
