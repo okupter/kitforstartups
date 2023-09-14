@@ -4,7 +4,8 @@ import { sequence } from '@sveltejs/kit/hooks';
 
 const protectedRoutesBase = '/app';
 const emailVerificationPath = '/app/email-verification';
-const authRoutesBase = '/auth';
+
+const authRoutesBase = ['/auth', '/oauth'];
 
 const authHandler: Handle = async ({ event, resolve }) => {
 	event.locals.auth = auth.handleRequest(event);
@@ -25,7 +26,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	if (session) {
 		// If the user is logged in and is trying to access an auth route,
 		// redirect them to the profile page
-		if (event.url.pathname.startsWith(authRoutesBase)) {
+		if (authRoutesBase.some((route) => event.url.pathname.startsWith(route))) {
 			throw redirect(302, '/app/profile');
 		}
 
