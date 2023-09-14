@@ -1,6 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { creatToast } from '$lib/components/Toast.svelte';
+
+	export let form;
+
+	$: {
+		if (form?.error) {
+			creatToast({
+				type: 'error',
+				title: form.error.title,
+				description: form.error.message
+			});
+		}
+	}
 </script>
 
 <svelte:head>

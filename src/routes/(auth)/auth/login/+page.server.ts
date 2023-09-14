@@ -27,11 +27,17 @@ export const actions = {
 				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
 			) {
 				return fail(400, {
-					message: 'Incorrect email or password'
+					error: {
+						title: 'Login failed',
+						message: 'Incorrect email or password'
+					}
 				});
 			}
 			return fail(500, {
-				message: 'An unknown error occurred'
+				error: {
+					title: 'Login failed',
+					message: 'An unknown error occurred'
+				}
 			});
 		}
 
@@ -43,7 +49,10 @@ export const actions = {
 
 		if (!session) {
 			return fail(401, {
-				message: 'Unauthorized'
+				error: {
+					title: 'Unauthorized',
+					message: 'Unauthorized'
+				}
 			});
 		}
 
