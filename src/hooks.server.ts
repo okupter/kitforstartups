@@ -28,6 +28,12 @@ const authHandler: Handle = async ({ event, resolve }) => {
 		if (event.url.pathname.startsWith(authRoutesBase)) {
 			throw redirect(302, '/app/profile');
 		}
+
+		// If the user is logged in and is trying to access the email verification page,
+		// redirect them to the profile page
+		if (event.url.pathname.startsWith(emailVerificationPath)) {
+			throw redirect(302, '/app/profile');
+		}
 	}
 
 	return await resolve(event);
