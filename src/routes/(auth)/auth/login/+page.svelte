@@ -19,7 +19,7 @@
 	$: {
 		if (form?.feedback) {
 			creatToast({
-				type: 'error',
+				type: form.feedback.type,
 				title: form.feedback.title,
 				description: form.feedback.message
 			});
