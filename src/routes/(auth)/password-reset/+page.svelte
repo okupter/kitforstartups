@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
-	import { creatToast } from '$lib/components/Toast.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
 	export let data;
@@ -19,7 +19,7 @@
 
 	$: {
 		if (form?.feedback) {
-			creatToast({
+			createToast({
 				type: form.feedback.type,
 				title: form.feedback.title,
 				description: form.feedback.message

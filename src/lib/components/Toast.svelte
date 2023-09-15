@@ -12,7 +12,7 @@
 		actions: { portal }
 	} = createToaster<ToastData>();
 
-	export const creatToast = (data: ToastData) => {
+	export const createToast = (data: ToastData) => {
 		helpers.addToast({
 			data
 		});
