@@ -1,4 +1,5 @@
 import { auth } from '$lib/lucia/mysql';
+import { getFeedbackObject } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { LuciaError } from 'lucia';
 
@@ -26,19 +27,24 @@ export const actions = {
 				e instanceof LuciaError &&
 				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
 			) {
-				return fail(400, {
-					error: {
+				return fail(
+					400,
+					getFeedbackObject({
+						type: 'error',
 						title: 'Login failed',
-						message: 'Incorrect email or password'
-					}
-				});
+						message: 'Incorrect email or password.'
+					})
+				);
 			}
-			return fail(500, {
-				error: {
+
+			return fail(
+				500,
+				getFeedbackObject({
+					type: 'error',
 					title: 'Login failed',
 					message: 'An unknown error occurred. Please try again later.'
-				}
-			});
+				})
+			);
 		}
 
 		throw redirect(302, '/app/profile');
@@ -48,12 +54,14 @@ export const actions = {
 		const session = await locals.auth.validate();
 
 		if (!session) {
-			return fail(401, {
-				error: {
+			return fail(
+				401,
+				getFeedbackObject({
+					type: 'error',
 					title: 'Unauthorized',
-					message: 'Unauthorized'
-				}
-			});
+					message: 'You are not authorized to perform this action.'
+				})
+			);
 		}
 
 		// Invalidate session

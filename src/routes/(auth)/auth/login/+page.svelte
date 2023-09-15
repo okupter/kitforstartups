@@ -17,11 +17,11 @@
 	};
 
 	$: {
-		if (form?.error) {
+		if (form?.feedback) {
 			creatToast({
 				type: 'error',
-				title: form.error.title,
-				description: form.error.message
+				title: form.feedback.title,
+				description: form.feedback.message
 			});
 		}
 	}
