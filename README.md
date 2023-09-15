@@ -140,7 +140,7 @@ KitForStartups is still in the early stages of development. Here is a list of fe
 - [ ] Proper error handling on the client with toast notifications
 - [ ] A central configuration file for the app
 - [ ] Magic link authentication
-- [ ] Authorization logic with load functions and hooks
+- [x] Authorization logic with load functions and hooks
 - [ ] Stripe integration
 - [ ] Lemon Squeezy integration
 - [ ] Mailgun integration

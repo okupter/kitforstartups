@@ -1,6 +1,7 @@
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
+import { getFeedbackObject } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
@@ -9,9 +10,14 @@ export const actions = {
 		const user = await getUserByEmail(session?.user.email);
 
 		if (!user) {
-			return fail(400, {
-				message: 'User does not exist'
-			});
+			return fail(
+				400,
+				getFeedbackObject({
+					type: 'error',
+					title: 'Invalid user',
+					message: 'The user associated with this session is invalid.'
+				})
+			);
 		}
 
 		const profile = await getUserProfileData(session?.user.userId);
@@ -34,9 +40,14 @@ export const actions = {
 				success: true
 			};
 		} catch {
-			return fail(500, {
-				message: 'An unknown error occurred'
-			});
+			return fail(
+				500,
+				getFeedbackObject({
+					type: 'error',
+					title: 'Unknown error',
+					message: 'An unknown error occurred. Please try again.'
+				})
+			);
 		}
 	}
 };

@@ -1,6 +1,30 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
+	import type { SubmitFunction } from '@sveltejs/kit';
+
+	export let form;
+
+	let running = false;
+	const submitLoginUser: SubmitFunction = () => {
+		running = true;
+
+		return async ({ update }) => {
+			running = false;
+			await update();
+		};
+	};
+
+	$: {
+		if (form?.feedback) {
+			createToast({
+				type: form.feedback.type,
+				title: form.feedback.title,
+				description: form.feedback.message
+			});
+		}
+	}
 </script>
 
 <svelte:head>
@@ -13,7 +37,7 @@
 </div>
 
 <div class="p-8 border border-gray-300 rounded-sm shadow-sm">
-	<form method="post" action="?/loginUser" use:enhance>
+	<form method="post" action="?/loginUser" use:enhance={submitLoginUser}>
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
@@ -28,7 +52,7 @@
 			>
 		</div>
 
-		<SubmitButton text="Login" />
+		<SubmitButton {running} text="Login" />
 	</form>
 
 	<div class="flex flex-col mt-12 space-y-4 social-logins">

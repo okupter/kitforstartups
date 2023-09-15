@@ -1,5 +1,6 @@
 import { validatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { auth } from '$lib/lucia/mysql';
+import { getFeedbackObject } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -17,9 +18,14 @@ export const actions = {
 			let user = await auth.getUser(userId);
 
 			if (!user) {
-				return fail(400, {
-					message: 'Invalid or expired password reset link'
-				});
+				return fail(
+					400,
+					getFeedbackObject({
+						type: 'error',
+						title: 'Invalid or expired password reset link',
+						message: 'Please try again'
+					})
+				);
 			}
 
 			// Invalidate all sessions and update the password
@@ -40,9 +46,14 @@ export const actions = {
 
 			locals.auth.setSession(session);
 		} catch (e) {
-			return fail(400, {
-				message: 'Invalid or expired password reset link'
-			});
+			return fail(
+				400,
+				getFeedbackObject({
+					type: 'error',
+					title: 'Invalid reset link',
+					message: 'Your password reset link is invalid or has expired. Please try again.'
+				})
+			);
 		}
 
 		throw redirect(302, '/app/profile');

@@ -4,10 +4,10 @@ import { sendResendEmail } from '$lib/emails/resend';
 
 const sendEmail = async (options: { from: string; to: string; subject: string; html: string }) => {
 	if (!dev) {
-		await sendResendEmail(options);
+		return await sendResendEmail(options);
 	}
 
-	await sendTestEmail(options);
+	return await sendTestEmail(options);
 };
 
 export { sendEmail };

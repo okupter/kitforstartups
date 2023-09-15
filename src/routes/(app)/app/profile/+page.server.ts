@@ -1,5 +1,6 @@
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { auth } from '$lib/lucia/mysql';
+import { getFeedbackObject } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
@@ -16,9 +17,14 @@ export const actions = {
 		const session = await locals.auth.validate();
 
 		if (!session) {
-			return fail(401, {
-				message: 'Unauthorized'
-			});
+			return fail(
+				401,
+				getFeedbackObject({
+					type: 'error',
+					title: 'Unauthorized',
+					message: 'You are not authorized to perform this action.'
+				})
+			);
 		}
 
 		// Invalidate session

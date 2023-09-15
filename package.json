@@ -21,6 +21,7 @@
 		"migrate:turso": "tsx src/lib/drizzle/turso/migrations/migrate.ts"
 	},
 	"devDependencies": {
+		"@melt-ui/pp": "^0.1.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@types/pg": "^8.10.2",
@@ -38,6 +39,7 @@
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
+		"svelte-sequential-preprocessor": "^2.0.1",
 		"tailwindcss": "^3.3.2",
 		"tslib": "^2.4.1",
 		"tsx": "^3.12.8",
@@ -52,6 +54,7 @@
 		"@lucia-auth/adapter-postgresql": "^2.0.1",
 		"@lucia-auth/adapter-sqlite": "^2.0.0",
 		"@lucia-auth/oauth": "^3.0.0",
+		"@melt-ui/svelte": "^0.49.1",
 		"dotenv": "^16.3.1",
 		"drizzle-orm": "^0.28.5",
 		"lucia": "^2.4.2",

@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
 	import type { SubmitFunction } from './$types';
 
+	export let form;
 	let running = false;
 
 	const submitSignupUser: SubmitFunction = () => {
@@ -13,6 +15,16 @@
 			await update();
 		};
 	};
+
+	$: {
+		if (form?.feedback) {
+			createToast({
+				type: form.feedback.type,
+				title: form.feedback.title,
+				description: form.feedback.message
+			});
+		}
+	}
 </script>
 
 <svelte:head>
