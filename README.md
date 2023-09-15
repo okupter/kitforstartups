@@ -137,7 +137,7 @@ This should be enough to get you started with PostgreSQL.
 KitForStartups is still in the early stages of development. Here is a list of features that we plan to add in the very near future:
 
 - [x] PostgreSQL support
-- [ ] Proper error handling on the client with toast notifications
+- [x] Proper error handling on the client with toast notifications
 - [ ] A central configuration file for the app
 - [ ] Magic link authentication
 - [x] Authorization logic with load functions and hooks
