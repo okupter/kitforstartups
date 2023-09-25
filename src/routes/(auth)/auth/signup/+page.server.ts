@@ -2,21 +2,41 @@ import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens
 import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { auth } from '$lib/lucia/mysql';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
+import { z } from 'zod';
+
+const signupUserSchema = z.object({
+	firstName: z.string().optional(),
+	lastName: z.string().optional(),
+	email: z.string().email(),
+	password: z.string().nonempty()
+});
 
 export const actions = {
 	signupUser: async ({ locals, request, url }) => {
 		const formData = Object.fromEntries(await request.formData());
+		const signupUser = signupUserSchema.safeParse(formData);
 
-		// TODO: validation
-		const { firstName, lastName, email, password } = formData as {
-			firstName: string;
-			lastName: string;
-			email: string;
-			password: string;
-		};
+		if (!signupUser.success) {
+			const feedbacks = getFeedbackObjects(
+				signupUser.error.issues.map((issue) => {
+					return {
+						type: 'error',
+						path: String(issue.path[0]),
+						title: 'Invalid ' + issue.path[0],
+						message: issue.message
+					};
+				})
+			);
+
+			return fail(500, {
+				feedbacks
+			});
+		}
+
+		const { firstName, lastName, email, password } = signupUser.data;
 
 		try {
 			const user = await auth.createUser({
