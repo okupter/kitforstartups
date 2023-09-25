@@ -19,7 +19,7 @@ const userProfile = pgTable('user_profile', {
 	// From Google
 	firstName: varchar('first_name', { length: 255 }),
 	lastName: varchar('last_name', { length: 255 }),
-	picture: varchar('picture', { length: 255 })
+	picture: varchar('picture', { length: 1024 })
 });
 
 const emailVerification = pgTable('email_verification', {

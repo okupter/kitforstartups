@@ -19,7 +19,7 @@ const userProfile = sqliteTable('user_profile', {
 	// From Google
 	firstName: text('first_name', { length: 255 }),
 	lastName: text('last_name', { length: 255 }),
-	picture: text('picture', { length: 255 })
+	picture: text('picture', { length: 1024 })
 });
 
 const emailVerification = sqliteTable('email_verification', {
