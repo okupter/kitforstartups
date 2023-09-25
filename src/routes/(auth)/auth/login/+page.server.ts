@@ -50,7 +50,7 @@ export const actions = {
 		throw redirect(302, '/app/profile');
 	},
 
-	logout: async ({ locals }) => {
+	logout: async ({ cookies, locals }) => {
 		const session = await locals.auth.validate();
 
 		if (!session) {
@@ -67,8 +67,12 @@ export const actions = {
 		// Invalidate session
 		await auth.invalidateSession(session.sessionId);
 
-		// Remove cookie
+		// Remove session cookie
 		locals.auth.setSession(null);
+
+		// Remove OAuth cookies
+		cookies.delete('github_oauth_state');
+		cookies.delete('google_oauth_state');
 
 		throw redirect(302, '/auth/login');
 	}

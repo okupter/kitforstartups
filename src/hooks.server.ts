@@ -14,11 +14,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	if (!session) {
 		// If the user is not logged in and is trying to access a protected route,
 		// redirect them to the login page
-		// Except if they are trying to access the email verification page
-		if (
-			event.url.pathname.startsWith(protectedRoutesBase) &&
-			!event.url.pathname.startsWith(emailVerificationPath)
-		) {
+		if (event.url.pathname.startsWith(protectedRoutesBase)) {
 			throw redirect(302, '/auth/login');
 		}
 	}
@@ -26,14 +22,23 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	if (session) {
 		// If the user is logged in and is trying to access an auth route,
 		// redirect them to the profile page
-		if (authRoutesBase.some((route) => event.url.pathname.startsWith(route))) {
+		// except if they are trying to logout
+		if (
+			authRoutesBase.some((route) => event.url.pathname.startsWith(route)) &&
+			event.url.search !== '?/logout'
+		) {
 			throw redirect(302, '/app/profile');
 		}
 
-		// If the user is logged in and is trying to access the email verification page,
-		// redirect them to the profile page
-		if (event.url.pathname.startsWith(emailVerificationPath)) {
-			throw redirect(302, '/app/profile');
+		// If the user is logged in, but their email is not verified
+		// and they are trying to access a protected route,
+		// redirect them to the email verification page
+		if (
+			!session.user.emailVerified &&
+			event.url.pathname.startsWith(protectedRoutesBase) &&
+			!event.url.pathname.startsWith(emailVerificationPath)
+		) {
+			throw redirect(302, '/app/email-verification');
 		}
 	}
 

@@ -11,7 +11,7 @@
 		{#if data.user}
 			<a href="/app/profile">Profile</a>
 
-			<form method="post" action="/app/profile?/logout" use:enhance>
+			<form method="post" action="/auth/login?/logout" use:enhance>
 				<button type="submit">Log Out</button>
 			</form>
 		{:else}
