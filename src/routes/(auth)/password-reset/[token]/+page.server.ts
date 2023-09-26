@@ -1,16 +1,36 @@
 import { validatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { auth } from '$lib/lucia/mysql';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
+import { z } from 'zod';
+
+const newPasswordSchema = z.object({
+	password: z.string().nonempty()
+});
 
 export const actions = {
 	resetPassword: async ({ locals, params, request }) => {
 		const formData = Object.fromEntries(await request.formData());
+		const newPassword = newPasswordSchema.safeParse(formData);
 
-		// TODO: validation
-		const { password } = formData as {
-			password: string;
-		};
+		if (!newPassword.success) {
+			const feedbacks = getFeedbackObjects(
+				newPassword.error.issues.map((issue) => {
+					return {
+						type: 'error',
+						path: String(issue.path[0]),
+						title: 'Invalid ' + issue.path[0],
+						message: issue.message
+					};
+				})
+			);
+
+			return fail(500, {
+				feedbacks
+			});
+		}
+
+		const { password } = newPassword.data;
 
 		try {
 			const { token } = params;

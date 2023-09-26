@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
-	import { createToast } from '$lib/components/Toast.svelte';
+	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
 	export let form;
@@ -15,16 +15,6 @@
 			await update();
 		};
 	};
-
-	$: {
-		if (form?.feedback) {
-			createToast({
-				type: form.feedback.type,
-				title: form.feedback.title,
-				description: form.feedback.message
-			});
-		}
-	}
 </script>
 
 <svelte:head>
@@ -40,6 +30,11 @@
 		<div class="form-control">
 			<label for="password">New Password</label>
 			<input type="password" name="password" placeholder="Your new password" required />
+			{#if getFeedbackObjectByPath(form?.feedbacks, 'password') && getFeedbackObjectByPath(form?.feedbacks, 'password')?.type === 'error'}
+				<p class="text-sm text-red-600">
+					{getFeedbackObjectByPath(form?.feedbacks, 'password')?.message}
+				</p>
+			{/if}
 		</div>
 
 		<SubmitButton {running} text="Reset your password" />
