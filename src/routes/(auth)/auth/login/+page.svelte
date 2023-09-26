@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
@@ -31,23 +32,13 @@
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
-
-			{#if getFeedbackObjectByPath(form?.feedbacks, 'email') && getFeedbackObjectByPath(form?.feedbacks, 'email')?.type === 'error'}
-				<p class="text-sm text-red-600">
-					{getFeedbackObjectByPath(form?.feedbacks, 'email')?.message}
-				</p>
-			{/if}
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'email')} />
 		</div>
 
 		<div class="form-control">
 			<label for="password">Password</label>
-			<input type="password" name="password" placeholder="Your password" required />
-
-			{#if getFeedbackObjectByPath(form?.feedbacks, 'password') && getFeedbackObjectByPath(form?.feedbacks, 'password')?.type === 'error'}
-				<p class="text-sm text-red-600">
-					{getFeedbackObjectByPath(form?.feedbacks, 'password')?.message}
-				</p>
-			{/if}
+			<input type="password" name="password" placeholder="Your password" />
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'password')} />
 
 			<a href="/password-reset" class="text-xs font-medium text-right text-blue-600 underline"
 				>Forgot your password?</a

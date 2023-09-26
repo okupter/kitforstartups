@@ -38,4 +38,4 @@ const getFeedbackObjectByPath = (
 	});
 };
 
-export { getFeedbackObject, getFeedbackObjectByPath, getFeedbackObjects };
+export { getFeedbackObject, getFeedbackObjectByPath, getFeedbackObjects, type Feedback };
