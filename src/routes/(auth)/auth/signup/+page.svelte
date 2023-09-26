@@ -40,7 +40,7 @@
 
 		<div class="form-control">
 			<label for="email">Email</label>
-			<input name="email" placeholder="Your email address" required />
+			<input type="email" name="email" placeholder="Your email address" required />
 			{#if getFeedbackObjectByPath(form?.feedbacks, 'email')}
 				<p class="text-sm text-red-600">
 					{getFeedbackObjectByPath(form?.feedbacks, 'email')?.message}
@@ -50,7 +50,7 @@
 
 		<div class="form-control">
 			<label for="password">Password</label>
-			<input type="password" name="password" placeholder="Your password" />
+			<input type="password" name="password" placeholder="Your password" required />
 			{#if getFeedbackObjectByPath(form?.feedbacks, 'password')}
 				<p class="text-sm text-red-600">
 					{getFeedbackObjectByPath(form?.feedbacks, 'password')?.message}
