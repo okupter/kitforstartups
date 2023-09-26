@@ -86,12 +86,18 @@ export const actions = {
 			<br>
 			Justin from KitForStartups`;
 
-			await sendEmail({
+			const signupEmail = await sendEmail({
 				from: sender,
 				to: email,
 				subject: 'Verify Your Email Address',
 				html: emailHtml
 			});
+
+			if (signupEmail[0].type === 'error') {
+				return fail(500, {
+					feedbacks: signupEmail
+				});
+			}
 		} catch (e) {
 			const feedbacks = getFeedbackObjects([
 				{

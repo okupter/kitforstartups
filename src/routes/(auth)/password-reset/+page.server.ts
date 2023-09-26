@@ -57,12 +57,18 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : storedUser.email;
 			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			return await sendEmail({
+			const passwordResetEmail = await sendEmail({
 				from: sender,
 				to: storedUser.email as string,
 				subject: 'Password Reset',
 				html: emailHtml
 			});
+
+			if (passwordResetEmail[0].type === 'error') {
+				return fail(500, {
+					feedbacks: passwordResetEmail
+				});
+			}
 		} catch (error) {
 			const feedbacks = getFeedbackObjects([
 				{
