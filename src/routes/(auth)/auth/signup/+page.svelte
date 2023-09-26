@@ -41,7 +41,7 @@
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
-			{#if getFeedbackObjectByPath(form?.feedbacks, 'email')}
+			{#if getFeedbackObjectByPath(form?.feedbacks, 'email') && getFeedbackObjectByPath(form?.feedbacks, 'email')?.type === 'error'}
 				<p class="text-sm text-red-600">
 					{getFeedbackObjectByPath(form?.feedbacks, 'email')?.message}
 				</p>
@@ -51,7 +51,7 @@
 		<div class="form-control">
 			<label for="password">Password</label>
 			<input type="password" name="password" placeholder="Your password" required />
-			{#if getFeedbackObjectByPath(form?.feedbacks, 'password')}
+			{#if getFeedbackObjectByPath(form?.feedbacks, 'password') && getFeedbackObjectByPath(form?.feedbacks, 'password')?.type === 'error'}
 				<p class="text-sm text-red-600">
 					{getFeedbackObjectByPath(form?.feedbacks, 'password')?.message}
 				</p>

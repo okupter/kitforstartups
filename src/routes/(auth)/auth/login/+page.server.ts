@@ -1,17 +1,37 @@
 import { auth } from '$lib/lucia/mysql';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { LuciaError } from 'lucia';
+import { z } from 'zod';
+
+const loginUserSchema = z.object({
+	email: z.string().email(),
+	password: z.string().nonempty()
+});
 
 export const actions = {
 	loginUser: async ({ locals, request }) => {
 		const formData = Object.fromEntries(await request.formData());
+		const loginUser = loginUserSchema.safeParse(formData);
 
-		// TODO: validation
-		const { email, password } = formData as {
-			email: string;
-			password: string;
-		};
+		if (!loginUser.success) {
+			const feedbacks = getFeedbackObjects(
+				loginUser.error.issues.map((issue) => {
+					return {
+						type: 'error',
+						path: String(issue.path[0]),
+						title: 'Invalid ' + issue.path[0],
+						message: issue.message
+					};
+				})
+			);
+
+			return fail(500, {
+				feedbacks
+			});
+		}
+
+		const { email, password } = loginUser.data;
 
 		try {
 			const user = await auth.useKey('email', email, password);
