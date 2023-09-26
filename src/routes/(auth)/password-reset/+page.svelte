@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
-	import { createToast } from '$lib/components/Toast.svelte';
+	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
 	export let data;
@@ -16,16 +16,6 @@
 			await update();
 		};
 	};
-
-	$: {
-		if (form?.feedback) {
-			createToast({
-				type: form.feedback.type,
-				title: form.feedback.title,
-				description: form.feedback.message
-			});
-		}
-	}
 </script>
 
 <svelte:head>
@@ -41,6 +31,12 @@
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
+
+			{#if getFeedbackObjectByPath(form?.feedbacks, 'email') && getFeedbackObjectByPath(form?.feedbacks, 'email')?.type === 'error'}
+				<p class="text-sm text-red-600">
+					{getFeedbackObjectByPath(form?.feedbacks, 'email')?.message}
+				</p>
+			{/if}
 		</div>
 
 		<SubmitButton {running} text="Email password reset link" />

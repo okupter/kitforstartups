@@ -1,18 +1,37 @@
 import { generatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
+import { z } from 'zod';
+
+const passwordResetSchema = z.object({
+	email: z.string().email()
+});
 
 export const actions = {
 	sendPasswordResetLink: async ({ request, url }) => {
 		const formData = Object.fromEntries(await request.formData());
+		const passwordReset = passwordResetSchema.safeParse(formData);
 
-		// TODO: validation
-		const { email } = formData as {
-			email: string;
-		};
+		if (!passwordReset.success) {
+			const feedbacks = getFeedbackObjects(
+				passwordReset.error.issues.map((issue) => {
+					return {
+						type: 'error',
+						path: String(issue.path[0]),
+						title: 'Invalid ' + issue.path[0],
+						message: issue.message
+					};
+				})
+			);
 
+			return fail(500, {
+				feedbacks
+			});
+		}
+
+		const { email } = passwordReset.data;
 		const storedUser = await getUserByEmail(email);
 
 		if (!storedUser) {
