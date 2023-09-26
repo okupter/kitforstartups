@@ -1,7 +1,7 @@
 import { generatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
-import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
+import { getFeedbackObjects } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -35,14 +35,17 @@ export const actions = {
 		const storedUser = await getUserByEmail(email);
 
 		if (!storedUser) {
-			return fail(
-				400,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Invalid email',
 					message: 'The email you entered does not match any account.'
-				})
-			);
+				}
+			]);
+
+			return fail(400, {
+				feedbacks
+			});
 		}
 
 		const profile = await getUserProfileData(storedUser.id);
@@ -61,14 +64,17 @@ export const actions = {
 				html: emailHtml
 			});
 		} catch (error) {
-			return fail(
-				500,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Error sending email',
 					message: 'An unknown error occurred while sending the email. Please try again later.'
-				})
-			);
+				}
+			]);
+
+			return fail(500, {
+				feedbacks
+			});
 		}
 	}
 };

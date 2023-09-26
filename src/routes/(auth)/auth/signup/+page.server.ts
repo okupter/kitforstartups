@@ -2,7 +2,7 @@ import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens
 import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { auth } from '$lib/lucia/mysql';
-import { getFeedbackObject, getFeedbackObjects } from '$lib/utils';
+import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
@@ -93,14 +93,17 @@ export const actions = {
 				html: emailHtml
 			});
 		} catch (e) {
-			return fail(
-				500,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Unknown error',
 					message: 'An unknown error occurred. Please try again.'
-				})
-			);
+				}
+			]);
+
+			return fail(500, {
+				feedbacks
+			});
 		}
 
 		throw redirect(302, '/app/email-verification');

@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
 	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
@@ -16,6 +17,20 @@
 			await update();
 		};
 	};
+
+	$: {
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
+			});
+		}
+	}
 </script>
 
 <svelte:head>

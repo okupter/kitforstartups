@@ -2,11 +2,13 @@
 	import { enhance } from '$app/forms';
 	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
 	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import type { ActionData } from './$types.js';
 
 	export let data;
-	export let form;
+	export let form: ActionData;
 
 	let running = false;
 	const submitSendResetPasswordLink: SubmitFunction = () => {
@@ -17,6 +19,20 @@
 			await update();
 		};
 	};
+
+	$: {
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
+			});
+		}
+	}
 </script>
 
 <svelte:head>

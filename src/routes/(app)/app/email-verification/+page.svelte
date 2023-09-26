@@ -1,6 +1,23 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
+	import { createToast } from '$lib/components/Toast.svelte';
+
+	export let form;
+
+	$: {
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
+			});
+		}
+	}
 </script>
 
 <svelte:head>

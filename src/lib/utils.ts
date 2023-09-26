@@ -6,18 +6,6 @@ type Feedback = {
 	message: string;
 };
 
-const getFeedbackObject = (feedback: { type: FeedbackType; title: string; message: string }) => {
-	const { type, title, message } = feedback;
-
-	return {
-		feedback: {
-			type,
-			title,
-			message
-		}
-	};
-};
-
 const getFeedbackObjects = (feedbacks: Feedback[]): Feedback[] => {
 	return feedbacks.map((feedback) => {
 		return {
@@ -38,4 +26,4 @@ const getFeedbackObjectByPath = (
 	});
 };
 
-export { getFeedbackObject, getFeedbackObjectByPath, getFeedbackObjects, type Feedback };
+export { getFeedbackObjectByPath, getFeedbackObjects, type Feedback };

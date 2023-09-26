@@ -4,8 +4,10 @@
 	export let feedback: Feedback | undefined;
 </script>
 
-{#if feedback}
-	<p class="text-sm text-red-600">
-		{feedback.message}
-	</p>
+{#if feedback && feedback.path}
+	{#if feedback.type === 'error'}
+		<p class="text-sm text-red-600">
+			{feedback.message}
+		</p>
+	{/if}
 {/if}
