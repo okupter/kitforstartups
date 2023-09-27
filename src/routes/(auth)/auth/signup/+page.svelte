@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import { createToast } from '$lib/components/Toast.svelte';
+	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from './$types';
 
 	export let form;
@@ -17,11 +19,17 @@
 	};
 
 	$: {
-		if (form?.feedback) {
-			createToast({
-				type: form.feedback.type,
-				title: form.feedback.title,
-				description: form.feedback.message
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					// Feedbacks with path are related to a specific field in the form
+					// they are already handled by the InlineFormNotice component
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
 			});
 		}
 	}
@@ -51,11 +59,13 @@
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'email')} />
 		</div>
 
 		<div class="form-control">
 			<label for="password">Password</label>
 			<input type="password" name="password" placeholder="Your password" required />
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'password')} />
 		</div>
 
 		<SubmitButton {running} text="Sign Up" />

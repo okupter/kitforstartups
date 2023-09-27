@@ -1,29 +1,51 @@
 import { generatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObjects } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
+import { z } from 'zod';
+
+const passwordResetSchema = z.object({
+	email: z.string().email()
+});
 
 export const actions = {
 	sendPasswordResetLink: async ({ request, url }) => {
 		const formData = Object.fromEntries(await request.formData());
+		const passwordReset = passwordResetSchema.safeParse(formData);
 
-		// TODO: validation
-		const { email } = formData as {
-			email: string;
-		};
+		if (!passwordReset.success) {
+			const feedbacks = getFeedbackObjects(
+				passwordReset.error.issues.map((issue) => {
+					return {
+						type: 'error',
+						path: String(issue.path[0]),
+						title: 'Invalid ' + issue.path[0],
+						message: issue.message
+					};
+				})
+			);
 
+			return fail(500, {
+				feedbacks
+			});
+		}
+
+		const { email } = passwordReset.data;
 		const storedUser = await getUserByEmail(email);
 
 		if (!storedUser) {
-			return fail(
-				400,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Invalid email',
 					message: 'The email you entered does not match any account.'
-				})
-			);
+				}
+			]);
+
+			return fail(400, {
+				feedbacks
+			});
 		}
 
 		const profile = await getUserProfileData(storedUser.id);
@@ -35,21 +57,30 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : storedUser.email;
 			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			return await sendEmail({
+			const passwordResetEmail = await sendEmail({
 				from: sender,
 				to: storedUser.email as string,
 				subject: 'Password Reset',
 				html: emailHtml
 			});
+
+			if (passwordResetEmail[0].type === 'error') {
+				return fail(500, {
+					feedbacks: passwordResetEmail
+				});
+			}
 		} catch (error) {
-			return fail(
-				500,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Error sending email',
 					message: 'An unknown error occurred while sending the email. Please try again later.'
-				})
-			);
+				}
+			]);
+
+			return fail(500, {
+				feedbacks
+			});
 		}
 	}
 };

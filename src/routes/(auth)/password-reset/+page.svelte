@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import { createToast } from '$lib/components/Toast.svelte';
+	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import type { ActionData } from './$types.js';
 
 	export let data;
-	export let form;
+	export let form: ActionData;
 
 	let running = false;
 	const submitSendResetPasswordLink: SubmitFunction = () => {
@@ -18,11 +21,15 @@
 	};
 
 	$: {
-		if (form?.feedback) {
-			createToast({
-				type: form.feedback.type,
-				title: form.feedback.title,
-				description: form.feedback.message
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
 			});
 		}
 	}
@@ -41,6 +48,7 @@
 		<div class="form-control">
 			<label for="email">Email</label>
 			<input type="email" name="email" placeholder="Your email address" required />
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'email')} />
 		</div>
 
 		<SubmitButton {running} text="Email password reset link" />

@@ -1,5 +1,5 @@
 import { RESEND_API_KEY } from '$env/static/private';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObjects } from '$lib/utils';
 import { Resend } from 'resend';
 
 const sendResendEmail = async (options: {
@@ -15,19 +15,23 @@ const sendResendEmail = async (options: {
 
 		console.log('Email sent successfully');
 
-		return getFeedbackObject({
-			type: 'success',
-			title: 'Email sent successfully',
-			message: 'Check your inbox for the email.'
-		});
+		return getFeedbackObjects([
+			{
+				type: 'success',
+				title: 'Email sent successfully',
+				message: 'Check your inbox for the email.'
+			}
+		]);
 	} catch (err) {
 		console.error(err);
 
-		return getFeedbackObject({
-			type: 'error',
-			title: 'Error sending email',
-			message: 'An unknown error occurred while sending the email. Please try again later.'
-		});
+		return getFeedbackObjects([
+			{
+				type: 'error',
+				title: 'Error sending email',
+				message: 'An unknown error occurred while sending the email. Please try again later.'
+			}
+		]);
 	}
 };
 

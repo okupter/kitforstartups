@@ -1,7 +1,7 @@
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
-import { getFeedbackObject } from '$lib/utils';
+import { getFeedbackObjects } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
@@ -10,14 +10,17 @@ export const actions = {
 		const user = await getUserByEmail(session?.user.email);
 
 		if (!user) {
-			return fail(
-				400,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Invalid user',
 					message: 'The user associated with this session is invalid.'
-				})
-			);
+				}
+			]);
+
+			return fail(400, {
+				feedbacks
+			});
 		}
 
 		const profile = await getUserProfileData(session?.user.userId);
@@ -29,25 +32,30 @@ export const actions = {
 			const recipient = profile?.firstName ? `${profile.firstName}` : user.email;
 			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
 
-			await sendEmail({
+			const verificationEmail = await sendEmail({
 				from: sender,
 				to: user.email,
 				subject: 'Verify Your Email Address',
 				html: emailHtml
 			});
 
-			return {
-				success: true
-			};
+			if (verificationEmail[0].type === 'error') {
+				return fail(500, {
+					feedbacks: verificationEmail
+				});
+			}
 		} catch {
-			return fail(
-				500,
-				getFeedbackObject({
+			const feedbacks = getFeedbackObjects([
+				{
 					type: 'error',
 					title: 'Unknown error',
 					message: 'An unknown error occurred. Please try again.'
-				})
-			);
+				}
+			]);
+
+			return fail(500, {
+				feedbacks
+			});
 		}
 	}
 };

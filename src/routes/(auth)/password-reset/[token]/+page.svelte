@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import InlineFormNotice from '$lib/components/InlineFormNotice.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import { createToast } from '$lib/components/Toast.svelte';
+	import { getFeedbackObjectByPath } from '$lib/utils';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
 	export let form;
@@ -17,11 +19,15 @@
 	};
 
 	$: {
-		if (form?.feedback) {
-			createToast({
-				type: form.feedback.type,
-				title: form.feedback.title,
-				description: form.feedback.message
+		if (form?.feedbacks && form.feedbacks.length > 0) {
+			form.feedbacks.forEach((feedback) => {
+				if (!feedback.path) {
+					createToast({
+						type: feedback.type,
+						title: feedback.title,
+						description: feedback.message
+					});
+				}
 			});
 		}
 	}
@@ -40,6 +46,7 @@
 		<div class="form-control">
 			<label for="password">New Password</label>
 			<input type="password" name="password" placeholder="Your new password" required />
+			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'password')} />
 		</div>
 
 		<SubmitButton {running} text="Reset your password" />

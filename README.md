@@ -18,6 +18,7 @@ Then _KitForStartups_ is for you 🎉!
 
 - SvelteKit
 - TypeScript
+- Zod
 - Drizzle ORM
 - Drizzle Kit
 - Tailwind CSS
