@@ -5,6 +5,6 @@ export const load = async ({ locals }) => {
 	const profile = await getUserProfileData(session?.user.userId);
 
 	return {
-		profile
+		profile,
 	};
 };

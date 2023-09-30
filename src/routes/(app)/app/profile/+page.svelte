@@ -21,6 +21,9 @@
 		<h2>Profile Data</h2>
 		<p>First Name: {data.profile?.firstName}</p>
 		<p>Last Name: {data.profile?.lastName}</p>
+		
+		<p>Client ID: {data.profile?.clientId}</p>
+		<p>Role: {data.profile?.role}</p>
 
 		{#if data.profile?.picture}
 			<img

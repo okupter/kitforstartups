@@ -20,6 +20,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 	}
 
 	if (session) {
+		console.log(session);
 		// If the user is logged in and is trying to access an auth route,
 		// redirect them to the profile page
 		// except if they are trying to logout

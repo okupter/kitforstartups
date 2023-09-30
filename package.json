@@ -17,6 +17,7 @@
 		"push:postgres": "drizzle-kit push:pg --config=src/lib/drizzle/postgres/drizzle.config.ts",
 		"push:turso": "drizzle-kit push:turso --config=src/lib/drizzle/turso/drizzle.config.ts",
 		"migrate:mysql": "tsx src/lib/drizzle/mysql/migrations/migrate.ts",
+		"migrate:drop": "drizzle-kit drop --config=src/lib/drizzle/mysql/drizzle.config.ts",
 		"migrate:postgres": "tsx src/lib/drizzle/postgres/migrations/migrate.ts",
 		"migrate:turso": "tsx src/lib/drizzle/turso/migrations/migrate.ts"
 	},

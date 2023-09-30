@@ -17,7 +17,7 @@ const generateUserAttributes = (data: UserSchema) => {
 	return {
 		email: data.email,
 		emailVerified: data.email_verified,
-		githubUsername: data.github_username
+		githubUsername: data.github_username,
 	};
 };
 

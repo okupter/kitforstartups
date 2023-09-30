@@ -5,8 +5,12 @@ declare global {
 		type Auth = import('$lib/lucia/mysql').Auth;
 		type DatabaseUserAttributes = {
 			email: string;
-			email_verified: boolean
+			email_verified: boolean;
 			github_username?: string;
+		};
+		type DatabaseUserProfileAttributes = {
+			client_id: string;
+			role: string;
 		};
 		type DatabaseSessionAttributes = object;
 	}

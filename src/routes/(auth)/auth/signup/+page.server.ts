@@ -47,7 +47,7 @@ export const actions = {
 				},
 				attributes: {
 					email,
-					email_verified: false
+					email_verified: false,
 				}
 			});
 
@@ -56,12 +56,14 @@ export const actions = {
 				id: nanoid(),
 				userId: user.userId,
 				firstName,
-				lastName
+				lastName,
+				clientId: 'default',
+				role: 'user',
 			});
 
 			const session = await auth.createSession({
 				userId: user.userId,
-				attributes: {}
+				attributes: {},
 			});
 
 			// Set session cookie

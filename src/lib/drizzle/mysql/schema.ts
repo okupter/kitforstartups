@@ -1,4 +1,4 @@
-import { bigint, boolean, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
+import { bigint, boolean, mysqlEnum, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
 
 const user = mysqlTable('auth_user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -15,6 +15,12 @@ const userProfile = mysqlTable('user_profile', {
 		.unique()
 		.notNull()
 		.references(() => user.id),
+		
+	clientId: varchar('client_id', { length: 255 })
+		.references(() => client.id),
+	role: mysqlEnum('role', ['user', 'supervisor', 'admin', 'org_admin', 'super_admin'])
+		.default('user')
+		.notNull(),
 
 	// From Google
 	firstName: varchar('first_name', { length: 255 }),
@@ -46,6 +52,16 @@ const userKey = mysqlTable('user_key', {
 	hashedPassword: varchar('hashed_password', { length: 255 })
 });
 
+const client = mysqlTable('client', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	name: varchar('name', { length: 255 }).notNull(),
+	contactUserId: varchar('contact_user_id', { length: 255 })
+		.references(() => user.id),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
+});
+
 const userSession = mysqlTable('user_session', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
@@ -55,5 +71,5 @@ const userSession = mysqlTable('user_session', {
 	idleExpires: bigint('idle_expires', { mode: 'bigint' }).notNull()
 });
 
-export { emailVerification, passwordResetToken, user, userKey, userProfile, userSession };
+export { emailVerification, passwordResetToken, user, userKey, userProfile, client, userSession };
 

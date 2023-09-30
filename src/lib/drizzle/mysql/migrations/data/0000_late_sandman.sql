@@ -1,3 +1,13 @@
+CREATE TABLE `client` (
+	`id` varchar(255) NOT NULL,
+	`name` varchar(255) NOT NULL,
+	`contact_user_id` varchar(255),
+	`created` bigint NOT NULL,
+	`updated` bigint NOT NULL,
+	`deleted` bigint,
+	CONSTRAINT `client_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
 CREATE TABLE `email_verification` (
 	`id` varchar(255) NOT NULL,
 	`user_id` varchar(255) NOT NULL,
@@ -32,6 +42,8 @@ CREATE TABLE `user_key` (
 CREATE TABLE `user_profile` (
 	`id` varchar(255) NOT NULL,
 	`user_id` varchar(255) NOT NULL,
+	`client_id` varchar(255),
+	`role` enum('user','supervisor','admin','org_admin','super_admin') NOT NULL DEFAULT 'user',
 	`first_name` varchar(255),
 	`last_name` varchar(255),
 	`picture` varchar(1024),
@@ -47,8 +59,10 @@ CREATE TABLE `user_session` (
 	CONSTRAINT `user_session_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+ALTER TABLE `client` ADD CONSTRAINT `client_contact_user_id_auth_user_id_fk` FOREIGN KEY (`contact_user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `email_verification` ADD CONSTRAINT `email_verification_user_id_auth_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `password_reset_token` ADD CONSTRAINT `password_reset_token_user_id_auth_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_key` ADD CONSTRAINT `user_key_user_id_auth_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_profile` ADD CONSTRAINT `user_profile_user_id_auth_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `user_profile` ADD CONSTRAINT `user_profile_client_id_client_id_fk` FOREIGN KEY (`client_id`) REFERENCES `client`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_session` ADD CONSTRAINT `user_session_user_id_auth_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE no action ON UPDATE no action;

@@ -1,9 +1,81 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "fcf03971-376a-4daf-a48c-30eb73a100ee",
+  "id": "07d73c7e-0eaf-4fb2-a9b5-0a77f321926b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "client": {
+      "name": "client",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "contact_user_id": {
+          "name": "contact_user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created": {
+          "name": "created",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated": {
+          "name": "updated",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "client_contact_user_id_auth_user_id_fk": {
+          "name": "client_contact_user_id_auth_user_id_fk",
+          "tableFrom": "client",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "contact_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "client_id": {
+          "name": "client_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "email_verification": {
       "name": "email_verification",
       "columns": {
@@ -232,6 +304,21 @@
           "notNull": true,
           "autoincrement": false
         },
+        "client_id": {
+          "name": "client_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "enum('user','supervisor','admin','org_admin','super_admin')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'user'"
+        },
         "first_name": {
           "name": "first_name",
           "type": "varchar(255)",
@@ -262,6 +349,19 @@
           "tableTo": "auth_user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_profile_client_id_client_id_fk": {
+          "name": "user_profile_client_id_client_id_fk",
+          "tableFrom": "user_profile",
+          "tableTo": "client",
+          "columnsFrom": [
+            "client_id"
           ],
           "columnsTo": [
             "id"
