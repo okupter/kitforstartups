@@ -9,6 +9,9 @@
 
 	<div class="flex gap-4">
 		{#if data.user}
+			{#if data.profile?.role === 'super_admin'}
+				<a href="/app/client">Manage Clients</a>
+			{/if}
 			<a href="/app/profile">Profile</a>
 
 			<form method="post" action="/auth/login?/logout" use:enhance>
