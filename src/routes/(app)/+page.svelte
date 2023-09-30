@@ -3,11 +3,11 @@
 </script>
 
 <svelte:head>
-	<title>KitForStartups</title>
+	<title>Stacks</title>
 </svelte:head>
 
 <div>
-	<h1>KitForStartups</h1>
+	<h1>Stacks</h1>
 
 	{#if data.user}
 		<p>Welcome, {data.user.email}</p>

@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1696092878382,
+      "tag": "0000_futuristic_arclight",
+      "breakpoints": true
+    }
+  ]
+}
