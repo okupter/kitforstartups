@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import SelectClient from '$lib/components/SelectClient.svelte';
 
 	export let data;
 </script>
@@ -10,6 +11,7 @@
 	<div class="flex gap-4">
 		{#if data.user}
 			{#if data.profile?.role === 'super_admin'}
+				<SelectClient clients={data.clients} />
 				<a href="/app/client">Manage Clients</a>
 			{/if}
 			<a href="/app/profile">Profile</a>

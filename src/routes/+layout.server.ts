@@ -1,3 +1,4 @@
+import { getClients } from '$lib/drizzle/mysql/models/clients';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 
 export const load = async ({ locals }) => {
@@ -7,5 +8,6 @@ export const load = async ({ locals }) => {
 	return {
 		user: session?.user,
 		profile,
+		clients: getClients(),
 	};
 };
