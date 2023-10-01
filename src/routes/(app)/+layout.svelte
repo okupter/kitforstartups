@@ -1,4 +1,5 @@
 <script lang="ts">
+	import stacks_logo from '$lib/assets/stacks_logo.png';
 	import { enhance } from '$app/forms';
 	import SelectClient from '$lib/components/SelectClient.svelte';
 
@@ -6,12 +7,14 @@
 </script>
 
 <nav class="flex justify-between py-4 container-base">
-	<a href="/">Home</a>
+	<a href="/">
+		<img src={stacks_logo} class="object-contain h-24" alt="Stacks logo, looks like overlapping triangles." >
+	</a>
 
-	<div class="flex gap-4">
+	<div class="flex gap-4 items-center">
 		{#if data.user}
 			{#if data.profile?.role === 'super_admin'}
-				<SelectClient clients={data.clients} />
+				<SelectClient clients={data.clients} selectedClientId={data.profile.clientId || ''} />
 				<a href="/app/client">Manage Clients</a>
 			{/if}
 			<a href="/app/profile">Profile</a>

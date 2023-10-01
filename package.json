@@ -22,6 +22,7 @@
 		"migrate:turso": "tsx src/lib/drizzle/turso/migrations/migrate.ts"
 	},
 	"devDependencies": {
+		"@iconify/svelte": "^3.1.4",
 		"@melt-ui/pp": "^0.1.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
@@ -59,6 +60,7 @@
 		"dotenv": "^16.3.1",
 		"drizzle-orm": "^0.28.5",
 		"lucia": "^2.4.2",
+		"lucide-svelte": "^0.279.0",
 		"mysql2": "^3.6.0",
 		"nanoid": "^4.0.2",
 		"postgres": "^3.3.5",
