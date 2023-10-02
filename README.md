@@ -4,6 +4,8 @@ The Open Source SvelteKit SaaS boilerplate.
 
 _KitForStartups_ is a starter kit for building and shipping fast, secure, and scalable full stack SaaS applications with SvelteKit and TypeScript.
 
+The starter is built and maintained by [Okupter](https://www.okupter.com).
+
 If you already found yourself in a situation where you were:
 
 - Trying to set up various authentication systems (email/password, social logins, OAuth, etc.)
