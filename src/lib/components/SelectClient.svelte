@@ -3,6 +3,7 @@
   import Icon from '@iconify/svelte';
 	import { createDialog, melt, createSelect } from '@melt-ui/svelte';
   import { Check, ChevronDown, XSquare } from 'lucide-svelte';
+  // import {} from '$app/';
  
   // const options = {
   //   sweet: ['Caramel', 'Chocolate', 'Strawberry', 'Cookies & Cream'],
@@ -23,15 +24,11 @@
   });
   
   export let selectedClientId: string;
-  export let clients: any[];
-  const selectedClient = clients.find(x => x.id === selectedClientId) as {
-    id: string;
-    name: string;
-    contactUserId: string | null;
-    created: bigint;
-    updated: bigint;
-    deleted: bigint | null;
-  };
+  export let clients: App.Client[];
+  const selectedClient = clients.find(x => x.id === selectedClientId) as App.Client;
+  
+  if (selectedClient) selected.set({ value: selectedClient.name, label: selectedClient.name });
+  
 	const {
 		elements: { trigger, overlay, content, title, close, portalled },
 		states: { open }
@@ -39,6 +36,27 @@
   
   const options = {
     clients: [...clients.map(x => x.name)],
+  }
+  
+  async function setSelectedClient(clientName: string) {
+    const newClient = clients.find(x => x.name === clientName);
+    if (!newClient) return;
+    
+    const res = await fetch('/api/clients', {
+      method: 'post',
+      body: JSON.stringify({ id: newClient.id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    try {
+      console.log(await res.json());
+    } catch (err) {
+      console.error(err);
+      
+      console.dir(res);
+    }
   }
 </script>
 
@@ -58,7 +76,9 @@
 		>
 			<div class="flex justify-between">
         <h3 use:melt={$title}>Active Clients</h3>
-        <XSquare />
+        <button use:melt={$close}>
+          <XSquare />
+        </button>
       </div>
 			
       <div class="py-5 px-2">
@@ -69,10 +89,9 @@
         
         <div class="flex flex-col gap-1">
           <!-- svelte-ignore a11y-label-has-associated-control - $label contains the 'for' attribute -->
-          <label class="block text-magnum-900" use:melt={$label}>Favorite Flavor</label>
+          <label class="block" use:melt={$label}>Change Client</label>
           <button
-            class="flex h-10 min-w-[220px] items-center justify-between rounded-lg bg-white px-3 py-2
-          text-magnum-700 shadow transition-opacity hover:opacity-90"
+            class="flex h-10 min-w-[220px] items-center justify-between rounded-lg bg-white px-3 py-2 shadow transition-opacity hover:opacity-90"
             use:melt={$triggerSelect}
             on:m-keydown={(e) => {
               e.preventDefault(); // Cancel default builder behabiour
@@ -98,9 +117,9 @@
                 open.set(true);
               }
             }}
-            aria-label="Food"
+            aria-label="Client"
           >
-            {$selectedLabel || 'Select a flavor'}
+            {$selectedLabel || 'Select a client'}
             <ChevronDown class="square-5" />
           </button>
           {#if $openSelect}
@@ -114,10 +133,17 @@
                 {#each arr as item}
                   <div
                     class="relative cursor-pointer rounded-lg py-1 pl-8 pr-4 text-neutral-800
-                    focus:z-10 focus:text-magnum-700
-                  data-[highlighted]:bg-magnum-50 data-[selected]:bg-magnum-100
-                  data-[highlighted]:text-magnum-900 data-[selected]:text-magnum-900"
+                    focus:z-10 focus:text-neutral-700
+                  data-[highlighted]:bg-magnum-50 data-[selected]:bg-neutral-100
+                  data-[highlighted]:text-neutral-900 data-[selected]:text-neutral-900"
                     use:melt={$option({ value: item, label: item })}
+                    on:m-click={(e) => {
+                      e.preventDefault();
+                      
+                      selected.set({ value: item, label: item });
+                      open.set(false);
+                      setSelectedClient(item);
+                    }}
                   >
                     <div class="check {$isSelected(item) ? 'block' : 'hidden'}">
                       <Check class="square-4" />
@@ -132,7 +158,9 @@
         </div>
       </div>
       
-			<button use:melt={$close}> Close Dialog </button>
+			<div class="flex justify-end">
+        <button use:melt={$close}>Close</button>
+      </div>
 		</div>
 	{/if}
 </div>

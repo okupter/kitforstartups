@@ -22,6 +22,14 @@ declare global {
 		}
 		// interface PageData {}
 		// interface Platform {}
+		interface Client {
+			id: string;
+			name: string;
+			contactUserId: string | null;
+			created: bigint;
+			updated: bigint;
+			deleted: bigint | null;
+		}
 	}
 }
 
