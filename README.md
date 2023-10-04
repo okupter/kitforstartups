@@ -17,3 +17,7 @@ Then _KitForStartups_ is for you 🎉!
 ## Documentation
 
 The documentation for _KitForStartups_ is available at [https://docs.kitforstartups.com](https://docs.kitforstartups.com).
+
+## Community
+
+There's a `#kitforstartups` channel on Okupter Discord where you can ask questions and share your experience with the starter. You can join the channel here: [https://discord.gg/PNH4BJDP](https://discord.gg/PNH4BJDP).
