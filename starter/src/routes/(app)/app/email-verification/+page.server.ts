@@ -2,7 +2,21 @@ import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { getFeedbackObjects } from '$lib/utils';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+
+export const load = async ({ locals }) => {
+	const session = await locals.auth.validate();
+
+	if (!session) {
+		throw redirect(302, '/auth/login');
+	}
+
+	if (session.user.emailVerified) {
+		throw redirect(302, '/app/profile');
+	}
+
+	return {};
+};
 
 export const actions = {
 	resendEmailVerificationLink: async ({ locals, url }) => {

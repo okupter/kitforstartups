@@ -7,6 +7,16 @@ import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 
+export const load = async ({ locals }) => {
+	const session = await locals.auth.validate();
+
+	if (session) {
+		throw redirect(302, '/app/profile');
+	}
+
+	return {};
+};
+
 const signupUserSchema = z.object({
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
