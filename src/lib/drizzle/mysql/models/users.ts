@@ -33,4 +33,14 @@ const getUserProfileData = async (userId: string | undefined) => {
 	return data[0];
 };
 
-export { getUserByEmail, getUserProfileData, updateUserProfileData };
+const getUsers = async (clientId: string) => {
+	const data = await drizzleClient.select()
+		.from(userProfile)
+		.innerJoin(user, eq(userProfile.userId, user.id))
+		.where(eq(userProfile.clientId, clientId))
+		.orderBy(userProfile.firstName);
+
+	return data;
+}
+
+export { getUserByEmail, getUserProfileData, updateUserProfileData, getUsers };

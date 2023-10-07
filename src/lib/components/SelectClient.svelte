@@ -1,8 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+	import SelectedClientStore from '$lib/stores/client';
   import Icon from '@iconify/svelte';
 	import { createDialog, melt, createSelect } from '@melt-ui/svelte';
   import { Check, ChevronDown, XSquare } from 'lucide-svelte';
+	import { onDestroy } from 'svelte';
+	import type { Unsubscriber } from 'svelte/store';
   // import {} from '$app/';
  
   // const options = {
@@ -25,9 +28,13 @@
   
   export let selectedClientId: string;
   export let clients: App.Client[];
-  const selectedClient = clients.find(x => x.id === selectedClientId) as App.Client;
-  
-  if (selectedClient) selected.set({ value: selectedClient.name, label: selectedClient.name });
+  let selectedClient: App.Client;
+  let unsubs = [] as Unsubscriber[];
+
+  unsubs.push(SelectedClientStore.subscribe(clientId => {
+    selectedClientId = clientId;
+    selectedClient = clients.find(x => x.id === selectedClientId) as App.Client;
+  }));
   
 	const {
 		elements: { trigger, overlay, content, title, close, portalled },
@@ -38,7 +45,9 @@
     clients: [...clients.map(x => x.name)],
   }
   
-  async function setSelectedClient(clientName: string) {
+  unsubs.push(selected.subscribe(async value => {
+    const clientName = value?.value;
+    if (!clientName) return;
     const newClient = clients.find(x => x.name === clientName);
     if (!newClient) return;
     
@@ -51,17 +60,19 @@
     });
     
     try {
-      console.log(await res.json());
+      const data = await res.json();
+      
+      SelectedClientStore.set(data.clientId);
     } catch (err) {
       console.error(err);
-      
-      console.dir(res);
     }
-  }
+  }));
+  
+  onDestroy(() => unsubs.forEach(fn => fn()));
 </script>
 
 <button use:melt={$trigger} class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center gap-2">
-  <span>{selectedClient.name.toLowerCase()}</span>
+  <span>{selectedClient?.name.toLowerCase()}</span>
   <Icon icon="tabler:select" />
 </button>
 
@@ -84,7 +95,7 @@
       <div class="py-5 px-2">
         <div class="flex gap-2 pb-3">
           <h4>Currently Selected:</h4>
-          <span>{selectedClient.name}</span>
+          <span>{selectedClient?.name}</span>
         </div>
         
         <div class="flex flex-col gap-1">
@@ -142,7 +153,6 @@
                       
                       selected.set({ value: item, label: item });
                       open.set(false);
-                      setSelectedClient(item);
                     }}
                   >
                     <div class="check {$isSelected(item) ? 'block' : 'hidden'}">
