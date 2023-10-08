@@ -38,6 +38,9 @@ const employee = mysqlTable('employee', {
 		.references(() => client.id),
 	firstName: varchar('first_name', { length: 255 }).notNull(),
 	lastName: varchar('last_name', { length: 255 }).notNull(),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
 });
 
 const employeeProfile = mysqlTable('employee_profile', {

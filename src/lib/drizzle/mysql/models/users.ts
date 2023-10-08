@@ -1,6 +1,6 @@
 import { drizzleClient } from '$lib/drizzle/mysql/client';
 import { user, userProfile } from '$lib/drizzle/mysql/schema';
-import { eq } from 'drizzle-orm';
+import { eq, ne, and } from 'drizzle-orm';
 
 const getUserByEmail = async (email: string | undefined) => {
 	if (!email) {
@@ -37,7 +37,7 @@ const getUsers = async (clientId: string) => {
 	const data = await drizzleClient.select()
 		.from(userProfile)
 		.innerJoin(user, eq(userProfile.userId, user.id))
-		.where(eq(userProfile.clientId, clientId))
+		.where(and(eq(userProfile.clientId, clientId), ne(userProfile.role, 'super_admin')))
 		.orderBy(userProfile.firstName);
 
 	return data;

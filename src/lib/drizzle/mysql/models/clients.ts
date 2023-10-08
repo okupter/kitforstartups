@@ -7,4 +7,15 @@ const getClients = async () => {
   return data;
 }
 
-export { getClients };
+const createClient = async (clientData: typeof client.$inferInsert) => {
+  await db
+    .insert(client)
+    .values(clientData)
+    .onDuplicateKeyUpdate({
+      set: Object.fromEntries(
+        Object.entries(clientData).filter(([key]) => !['id'].includes(key))
+      )
+    });
+}
+
+export { getClients, createClient };
