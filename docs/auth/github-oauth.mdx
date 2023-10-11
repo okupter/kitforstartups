@@ -1,0 +1,23 @@
+---
+title: "GitHub OAuth"
+description: "Setup and use GitHub OAuth with KitForStartups"
+---
+
+KitForStartups offers various ways to authenticate users. One of the most popular ways is to use GitHub OAuth. This guide will show you how to setup GitHub OAuth with KitForStartups.
+
+## Create a GitHub OAuth App
+
+First, you need to create a GitHub OAuth App.
+
+- Go to [GitHub Apps Settings](https://github.com/settings/apps) and click on the "New GitHub App" button
+- Give your app a name and description
+- Set the "Homepage URL" to your website / application homepage
+- Add the following "Callback URL": `http://localhost:5173/api/oauth/github/callback` (this is for local development)
+  - When your application is deployed, you will need to add the a new callback URL for your production environment (eg: `https://yourdomain.com/api/oauth/github/callback`)
+- Uncheck the "Active" checkbox under "Webhook"
+- Go to the "Permissions and events" tab, and under "Permissions > Account permissions", set the "Email addresses" permission to "Read-only"
+- Save your changes
+- Click on the "Generate a new client secret" button to generate a new client secret
+- Copy the "Client ID" and newly generated "Client Secret" and save them in the `.env` file of your application (respectively as `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`)
+
+And that's it! You can now use GitHub to sign in to your application.

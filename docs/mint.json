@@ -32,6 +32,10 @@
     {
       "group": "Get Started",
       "pages": ["intro", "quick-start", "roadmap"]
+    },
+    {
+      "group": "Authentication",
+      "pages": ["auth/github-oauth"]
     }
   ],
   "footerSocials": {
