@@ -1,5 +1,6 @@
 import { getUserByEmail } from '$lib/drizzle/mysql/models/users';
 import { auth, githubAuth } from '$lib/lucia/mysql';
+import { getGitHubPrimaryEmailAddress } from '$lib/utils';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
 
@@ -16,7 +17,7 @@ export const GET = async ({ url, cookies, locals }) => {
 	}
 
 	try {
-		const { getExistingUser, githubUser, createUser, createKey } =
+		const { getExistingUser, githubUser, githubTokens, createUser, createKey } =
 			await githubAuth.validateCallback(code);
 
 		const getUser = async () => {
@@ -26,11 +27,19 @@ export const GET = async ({ url, cookies, locals }) => {
 				return existingUser;
 			}
 
+			let githubUserEmail = githubUser.email;
+
 			if (!githubUser.email) {
-				throw error(400, 'No email provided by GitHub');
+				const email = await getGitHubPrimaryEmailAddress(githubTokens.accessToken);
+
+				if (!email) {
+					throw error(400, 'No email provided by GitHub');
+				} else {
+					githubUserEmail = email;
+				}
 			}
 
-			const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);
+			const existingDatabaseUserWithEmail = await getUserByEmail(String(githubUserEmail));
 
 			if (existingDatabaseUserWithEmail) {
 				const user = auth.transformDatabaseUser({
@@ -46,7 +55,7 @@ export const GET = async ({ url, cookies, locals }) => {
 
 			return await createUser({
 				attributes: {
-					email: githubUser.email,
+					email: String(githubUserEmail),
 					email_verified: true,
 					github_username: githubUser.login
 				}
