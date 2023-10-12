@@ -1,3 +1,5 @@
+import { Octokit } from 'octokit';
+
 type FeedbackType = 'success' | 'error' | 'warning' | 'info';
 type Feedback = {
 	type: FeedbackType;
@@ -26,4 +28,24 @@ const getFeedbackObjectByPath = (
 	});
 };
 
-export { getFeedbackObjectByPath, getFeedbackObjects, type Feedback };
+const getGitHubPrimaryEmailAddress = async (accessToken: string) => {
+	try {
+		const octokit = new Octokit({
+			auth: accessToken
+		});
+
+		const emails = await octokit.request('GET /user/emails', {
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28'
+			}
+		});
+
+		const primary = emails.data.find((email) => email.primary)?.email;
+
+		return primary;
+	} catch (error) {
+		console.error(error);
+	}
+};
+
+export { getFeedbackObjectByPath, getFeedbackObjects, getGitHubPrimaryEmailAddress, type Feedback };

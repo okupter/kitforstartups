@@ -35,7 +35,8 @@ const googleAuthOptions = {
 
 const githubAuthOptions = {
 	clientId: GITHUB_CLIENT_ID,
-	clientSecret: GITHUB_CLIENT_SECRET
+	clientSecret: GITHUB_CLIENT_SECRET,
+	scope: ['user:email']
 };
 
 export { adapterOptions, generateUserAttributes, githubAuthOptions, googleAuthOptions };
