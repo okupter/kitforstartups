@@ -1,6 +1,8 @@
 import { drizzleClient } from '$lib/drizzle/mysql/client';
-import { user, userProfile } from '$lib/drizzle/mysql/schema';
+import { user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
+import type { InsertUser, InsertUserKey, InsertUserProfile } from '$lib/types/db.model';
 import { eq, ne, and } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
 
 const getUserByEmail = async (email: string | undefined) => {
 	if (!email) {
@@ -43,4 +45,28 @@ const getUsers = async (clientId: string) => {
 	return data;
 }
 
-export { getUserByEmail, getUserProfileData, updateUserProfileData, getUsers };
+const createUser = async (userData: InsertUser, userKeyData: InsertUserKey, profileData: InsertUserProfile) => {
+	
+	if (!userData.id) return { success: false, error: 'User ID is required.' };
+	if (!userProfile.id) return { success: false, error: 'User Profile ID is required.' };
+	if (!userProfile.userId) profileData.userId = userData.id;
+	
+	try {
+		await drizzleClient.transaction(async (tx) => {
+			await tx.insert(user).values(userData);
+			await tx.insert(userKey).values(userKeyData);
+			await tx.insert(userProfile).values(profileData);
+		});
+	} catch (err) {
+		console.error(err);
+		
+		return {
+			success: false,
+			error: err,
+		};
+	}
+	
+	return { success: true, };
+}
+
+export { getUserByEmail, getUserProfileData, updateUserProfileData, getUsers, createUser };

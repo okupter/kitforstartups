@@ -6,12 +6,6 @@
   import { Check, ChevronDown, XSquare } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
-  // import {} from '$app/';
- 
-  // const options = {
-  //   sweet: ['Caramel', 'Chocolate', 'Strawberry', 'Cookies & Cream'],
-  //   savory: ['Basil', 'Bacon', 'Rosemary'],
-  // };
  
   const {
     elements: { trigger: triggerSelect, menu, option, group, groupLabel, label },
