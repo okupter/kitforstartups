@@ -1,6 +1,5 @@
-import { createUser, getUserProfileData, getUsers } from '$lib/drizzle/mysql/models/users';
-import type { InsertUser, InsertUserKey, InsertUserProfile, RoleTypes } from '$lib/types/db.model.js';
-import { json } from '@sveltejs/kit';
+import { createUser, getUserProfileData, getUsers, updateUser } from '$lib/drizzle/mysql/models/users';
+import type { InsertUser, InsertUserKey, InsertUserProfile, RoleTypes, User } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
 
 
@@ -13,7 +12,7 @@ export const load = async ({locals}) => {
     };
   }
   
-  const users = async () => {
+  const users = async (): Promise<User[]> => {
     const profile = await getUserProfileData(session?.user.userId);
     
     if (!profile) {
@@ -70,5 +69,41 @@ export const actions = {
     };
     
     return await createUser(insertUser, insertUserKey, insertUserProfile);
+  },
+  update: async ({ locals, request }) => {
+    const session = await locals.auth.validate();
+    if (!session) {
+      return {
+        status: 401,
+      };
+    }
+    
+    const payload = await request.formData();
+    const data = Object.fromEntries(payload.entries()) as { 
+      user_id: string;
+      user_profile_id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      role: string;
+      client_id: string;
+    };
+    
+    const insertUser: InsertUser = {
+      id: data.user_id,
+      email: data.email,
+      emailVerified: false,
+    };
+    
+    const insertUserProfile: InsertUserProfile = {
+      id: data.user_profile_id,
+      userId: data.user_id,
+      firstName: data.first_name,
+      lastName: data.last_name,
+      clientId: data.client_id,
+      role: data.role as RoleTypes,
+    };
+    
+    return await updateUser(insertUser, insertUserProfile);
   }
 }

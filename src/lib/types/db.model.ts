@@ -14,3 +14,6 @@ export type UpdateUserProfile = InsertUserProfile;
 export type SelectUserProfile = typeof userProfile.$inferSelect;
 
 export type RoleTypes = "user" | "supervisor" | "admin" | "org_admin" | "super_admin" | undefined;
+
+export type UserProfile = SelectUserProfile;
+export type User = { auth_user: SelectUser, user_profile: SelectUserProfile };
