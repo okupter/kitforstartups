@@ -2,7 +2,7 @@
 	import stacks_logo from '$lib/assets/stacks_logo.png';
 	import { enhance } from '$app/forms';
 	import SelectClient from '$lib/components/SelectClient.svelte';
-	import SelectedClientStore from '$lib/stores/client.js';
+	import SelectedClientStore from '$lib/stores/client';
 
 	export let data;
 	

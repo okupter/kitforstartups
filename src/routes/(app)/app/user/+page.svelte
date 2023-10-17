@@ -6,25 +6,21 @@
 	import { Eye } from 'lucide-svelte';
 	import { btn } from '$lib/styles/buttons';
 	import ViewUserDialog from '$lib/components/ViewUserDialog.svelte';
+	import UserStore from '$lib/stores/user.js';
 
   export let data;
   
-  let users = [] as User[];
-  if (data.users) users = data.users;
-  
-  console.log(data);
+  if (data.users) UserStore.set(data.users);
 </script>
-
-<p>hi</p>
 
 <AddUserDialog />
 
-<div class="mx-auto max-w-4xl px-4 sm:px-6 pt-8">
+<div class="max-w-4xl pt-8">
   <h3 class="text-3xl tracking-tight font-bold text-gray-900 sm:text-2xl">Users</h3>
 </div>
 
 <div class="flex flex-row justify-start gap-2 py-4">
-  {#each users as user}
+  {#each $UserStore as user}
     <Card title={`${user.user_profile.firstName} ${user.user_profile.lastName}`}>
       <svelte:fragment slot="description">
         <div>Email: {user.auth_user.email}</div>

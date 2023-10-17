@@ -3,10 +3,11 @@
   import SelectedClientStore from '$lib/stores/client';
 	import type { User } from '$lib/types/db.model';
   import Icon from '@iconify/svelte';
-  import { createDialog, melt, createLabel, createSelect, createToaster } from '@melt-ui/svelte';
+  import { createDialog, melt, createLabel, createSelect, createToaster, type CreateDialogProps } from '@melt-ui/svelte';
 	import { Check, ChevronDown, Eye, XSquare } from 'lucide-svelte';
   import type { Unsubscriber } from 'svelte/store';
 	import { createToast } from './Toast.svelte';
+	import UserStore from '$lib/stores/user';
   
   export let user: User;
   let origUser: User;
@@ -26,7 +27,7 @@
   
   const {
 		elements: { trigger, overlay, content, title, close, portalled },
-		states: { open }
+		states: { open },
 	} = createDialog();
   
   const {
@@ -105,6 +106,39 @@
                 description: 'The user has been updated successfully.'
               });
               
+              // update the user in the store
+              // TODO: I hate everything about this... but it works
+              UserStore.update(users => {
+                const user = users.findIndex(x => x.auth_user.id === payload.user_id &&
+                  x.user_profile.id === payload.user_profile_id);
+                console.log(payload);
+                
+                if (user > -1) {
+                  for (const prop in payload) {
+                    if (prop === 'user_id' || prop === 'user_profile_id') continue;
+                    if (prop === 'client_id') continue;
+                    if (prop === 'email') {
+                      users[user] = {...users[user],
+                        auth_user: {...users[user].auth_user,
+                          email: payload.email,
+                        },
+                      };
+                      continue;
+                    }
+                    if (prop === 'first_name' || prop === 'last_name') {
+                      users[user] = {...users[user],
+                        user_profile: {...users[user].user_profile,
+                          firstName: payload.first_name,
+                          lastName: payload.last_name,
+                        },
+                      };
+                      continue;
+                    }
+                  }
+                }
+                
+                return users;
+              });
               open.set(false);
             }
             // `result` is an `ActionResult` object
