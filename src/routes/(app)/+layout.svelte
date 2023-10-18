@@ -23,7 +23,11 @@
 				<a href="/app/client">Manage Clients</a>
 				<a href="/app/user">Users</a>
 			{/if}
-			<a href="/app/profile">Profile</a>
+			{#if ['super_admin', 'org_admin'].includes(data.profile?.role)}
+				 <!-- content here -->
+				<a href="/app/employee">Employees</a>
+				<a href="/app/profile">Profile</a>
+			{/if}
 
 			<form method="post" action="/auth/login?/logout" use:enhance>
 				<button type="submit">Log Out</button>

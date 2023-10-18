@@ -1,11 +1,11 @@
 import { drizzleClient as db } from '$lib/drizzle/mysql/client';
 import { eq } from 'drizzle-orm';
 import { employee, employeeProfile } from '../schema';
+import type { Employee } from '$lib/types/db.model';
 
-
-const getEmployees = async (clientId: string) => {
+const getEmployees = async (clientId: string): Promise<Employee[]> => {
   if (!clientId) {
-    return undefined;
+    return [];
   }
   
   const data = await db.select().from(employee)
