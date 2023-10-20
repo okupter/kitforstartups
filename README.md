@@ -20,4 +20,4 @@ The documentation for _KitForStartups_ is available at [https://docs.kitforstart
 
 ## Community
 
-There's a `#kitforstartups` channel on Okupter Discord where you can ask questions and share your experience with the starter. You can join the channel here: [https://discord.gg/PNH4BJDP](https://discord.gg/PNH4BJDP).
+There's a `#kitforstartups` channel on Okupter Discord where you can ask questions and share your experience with the starter. You can join the channel here: [https://discord.gg/Dcn7b9Cf9Q](https://discord.gg/Dcn7b9Cf9Q).
