@@ -23,8 +23,8 @@ export const actions = {
         id: nanoid(),
         name: data.name,
         contactUserId: session?.user.userId,
-        created: new Date().getMilliseconds() as any,
-        updated: new Date().getMilliseconds() as any,
+        created: Date.now() as any,
+        updated: Date.now() as any,
       });
     } catch (err) {
       return {

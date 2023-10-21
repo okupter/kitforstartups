@@ -1,7 +1,7 @@
 import { drizzleClient as db } from '$lib/drizzle/mysql/client';
 import { eq } from 'drizzle-orm';
 import { employee, employeeProfile } from '../schema';
-import type { Employee } from '$lib/types/db.model';
+import type { Employee, InsertEmployee, InsertEmployeeProfile } from '$lib/types/db.model';
 
 const getEmployees = async (clientId: string): Promise<Employee[]> => {
   if (!clientId) {
@@ -15,13 +15,13 @@ const getEmployees = async (clientId: string): Promise<Employee[]> => {
   return data;
 }
 
-const createEmployee = async (employeeData: typeof employee.$inferInsert) => {
+const _createEmployee = async (employeeData: InsertEmployee) => {
   try {
     await db.insert(employee)
       .values({
         ...employeeData,
-        created: new Date().getMilliseconds() as any,
-        updated: new Date().getMilliseconds() as any,
+        created: Date.now() as any,
+        updated: Date.now() as any,
       });
   } catch (err) {
     console.error(err);
@@ -31,12 +31,30 @@ const createEmployee = async (employeeData: typeof employee.$inferInsert) => {
   return { success: true, };
 }
 
-const updateEmployee = async (employeeData: typeof employee.$inferInsert) => {
+const createEmployee = async (employeeData: InsertEmployee, employeeProfileData: InsertEmployeeProfile) => {
+  const employeeResult = await _createEmployee(employeeData);
+  
+  if (!employeeResult.success) {
+    return employeeResult;
+  }
+  
+  try {
+    await db.insert(employeeProfile)
+      .values({...employeeProfileData});
+  } catch (err) {
+    console.error(err);
+    return { success: false, };
+  }
+  
+  return { success: true, };
+}
+
+const updateEmployee = async (employeeData: InsertEmployee) => {
   try {
     await db.update(employee)
       .set({
         ...employeeData,
-        updated: new Date().getMilliseconds() as any,
+        updated: Date.now() as any,
       })
       .where(eq(employee.id, employeeData.id));
   } catch (err) {
@@ -51,7 +69,7 @@ const deleteEmployee = async (employeeId: string) => {
   try {
     await db.update(employee)
       .set({
-        deleted: new Date().getMilliseconds() as any,
+        deleted: Date.now() as any,
       })
       .where(eq(employee.id, employeeId));
   } catch (err) {

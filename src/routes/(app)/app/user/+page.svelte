@@ -1,10 +1,7 @@
 <script lang="ts">
 	import AddUserDialog from '$lib/components/AddUserDialog.svelte';
 	import { Card } from '$lib/components';
-	import type { User } from '$lib/types/db.model';
 	import { toProperCase } from '$lib/utils';
-	import { Eye } from 'lucide-svelte';
-	import { btn } from '$lib/styles/buttons';
 	import ViewUserDialog from '$lib/components/ViewUserDialog.svelte';
 	import UserStore from '$lib/stores/user.js';
 
