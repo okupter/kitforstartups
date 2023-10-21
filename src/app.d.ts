@@ -31,6 +31,11 @@ declare global {
 			deleted: bigint | null;
 		}
 	}
+	
+	interface Window {
+		webkitRequestAnimationFrame: any;
+		mozRequestAnimationFrame: any;
+	}
 }
 
 export { };

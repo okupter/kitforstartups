@@ -75,6 +75,15 @@ const getUsers = async (clientId: string): Promise<User[]> => {
 	return data;
 }
 
+const getUserDetail = async (userId: string): Promise<User> => {
+	const data = (await drizzleClient.select()
+		.from(userProfile)
+		.innerJoin(user, eq(userProfile.userId, user.id))
+		.where(eq(userProfile.userId, userId))) as unknown as User[];
+
+	return data[0];
+}
+
 const createUser = async (userData: InsertUser, userKeyData: InsertUserKey, profileData: InsertUserProfile) => {
 	
 	if (!userData.id) return { success: false, error: 'User ID is required.' };
@@ -123,6 +132,7 @@ export {
 	getUserProfileData, 
 	insertUserProfileData as updateUserProfileData, 
 	getUsers, 
+	getUserDetail,
 	createUser,
 	updateUser,
 };

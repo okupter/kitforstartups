@@ -15,6 +15,18 @@ const getEmployees = async (clientId: string): Promise<Employee[]> => {
   return data;
 }
 
+const getEmployee = async (employeeId: string): Promise<Employee> => {
+  if (!employeeId) {
+    return null as unknown as Employee;
+  }
+  
+  const data = await db.select().from(employee)
+    .innerJoin(employeeProfile, eq(employee.id, employeeProfile.employeeId))
+    .where(eq(employee.id, employeeId));
+    
+  return data[0];
+}
+
 const _createEmployee = async (employeeData: InsertEmployee) => {
   try {
     await db.insert(employee)
@@ -80,4 +92,4 @@ const deleteEmployee = async (employeeId: string) => {
   return { success: true, };
 }
 
-export { getEmployees, createEmployee, updateEmployee, deleteEmployee, };
+export { getEmployees, getEmployee, createEmployee, updateEmployee, deleteEmployee, };
