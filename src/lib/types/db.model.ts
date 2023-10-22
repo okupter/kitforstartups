@@ -1,4 +1,4 @@
-import type { employee, employeeProfile, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
+import type { employee, employeeCodes, employeeProfile, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
 
 
 export type InsertUserKey = typeof userKey.$inferInsert;
@@ -21,6 +21,7 @@ export type User = { auth_user: SelectUser, user_profile: SelectUserProfile };
 export type SelectEmployee = typeof employee.$inferSelect;
 export type SelectEmployeeProfile = typeof employeeProfile.$inferSelect;
 export type EmployeeProfile = SelectEmployeeProfile;
-export type Employee = { employee: SelectEmployee, employee_profile: SelectEmployeeProfile };
+export type SelectEmployeeCodes = typeof employeeCodes.$inferSelect;
+export type Employee = { employee: SelectEmployee, employee_profile: SelectEmployeeProfile, employeeCodes: SelectEmployeeCodes[] };
 export type InsertEmployee = typeof employee.$inferInsert;
 export type InsertEmployeeProfile = typeof employeeProfile.$inferInsert;
