@@ -1,12 +1,12 @@
 import { dev } from '$app/environment';
-import { connectionPool } from '$lib/drizzle/mysql/client';
+import { connection } from '$lib/drizzle/mysql/client';
 import {
 	adapterOptions,
 	generateUserAttributes,
 	githubAuthOptions,
 	googleAuthOptions
 } from '$lib/lucia/utils';
-import { mysql2 } from '@lucia-auth/adapter-mysql';
+import { planetscale } from '@lucia-auth/adapter-mysql';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
@@ -14,7 +14,7 @@ import { sveltekit } from 'lucia/middleware';
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
-	adapter: mysql2(connectionPool, adapterOptions),
+	adapter: planetscale(connection, adapterOptions),
 
 	getUserAttributes: (data) => {
 		return generateUserAttributes(data);

@@ -8,23 +8,31 @@ const getEmployees = async (clientId: string): Promise<Employee[]> => {
     return [];
   }
   
-  const data = await db.select().from(employee)
-    .innerJoin(employeeProfile, eq(employee.id, employeeProfile.employeeId))
-    .where(eq(employee.clientId, clientId));
+  const data = await db.query.employee.findMany({ 
+    with: {
+      employeeProfile: true,
+      employeeCodes: true,
+    },
+    where: (employee, { eq }) => eq(employee.clientId, clientId),
+  })
     
   return data;
 }
 
-const getEmployee = async (employeeId: string): Promise<Employee> => {
+const getEmployee = async (employeeId: string): Promise<Employee | undefined> => {
   if (!employeeId) {
     return null as unknown as Employee;
   }
   
-  const data = await db.select().from(employee)
-    .innerJoin(employeeProfile, eq(employee.id, employeeProfile.employeeId))
-    .where(eq(employee.id, employeeId));
+  const data = await db.query.employee.findFirst({
+    with: {
+      employeeProfile: true,
+      employeeCodes: true,
+    },
+    where: (employee, { eq }) => eq(employee.id, employeeId),
+  });
     
-  return data[0];
+  return data;
 }
 
 const _createEmployee = async (employeeData: InsertEmployee) => {

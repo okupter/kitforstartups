@@ -1,25 +1,20 @@
 import { dev } from '$app/environment';
 import {
-    ENABLE_DRIZZLE_LOGGER,
-    MYSQL_DB_HOST,
-    MYSQL_DB_NAME,
-    MYSQL_DB_PASSWORD,
-    MYSQL_DB_PORT,
-    MYSQL_DB_USER
-} from '$env/static/private';
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+    ENABLE_DRIZZLE_LOGGER} from '$env/static/private';
+import { drizzle } from 'drizzle-orm/planetscale-serverless';
+import * as schema from './schema';
+import 'dotenv/config'
+import { connect } from '@planetscale/database';
 
-const connectionPool = mysql.createPool({
-	host: MYSQL_DB_HOST,
-    port: Number(MYSQL_DB_PORT),
-	user: MYSQL_DB_USER,
-	password: MYSQL_DB_PASSWORD,
-	database: MYSQL_DB_NAME
+const connection = connect({
+    host: process.env.MYSQL_DB_HOST,
+    username: process.env.MYSQL_DB_USER,
+    password: process.env.MYSQL_DB_PASSWORD,
 });
 
-const drizzleClient = drizzle(connectionPool, {
-	logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : dev
+const drizzleClient = drizzle(connection, {
+    schema,
+    logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : dev,
 });
 
-export { connectionPool, drizzleClient };
+export { connection, drizzleClient };

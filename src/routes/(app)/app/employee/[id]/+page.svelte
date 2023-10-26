@@ -1,13 +1,15 @@
 <script lang="ts">
   import { page } from '$app/stores';
+	import EmployeeNotes from '$lib/components/EmployeeNotes.svelte';
 	import MaskInput from '$lib/components/MaskInput.svelte';
+	import type { Employee } from '$lib/types/db.model.js';
 	export let data;
   
   // how you read the id param from the url 
   $: console.log($page.params.id);
   
   const { ee } = data;
-  const { employee, employee_profile: profile } = ee;
+  const { employeeProfile: profile, ...employee } = (ee || { employeeProfile: null }) as Employee;
 </script>
 
 <form action="?/save" method="post">
@@ -28,10 +30,7 @@
         </div> -->
 
         <div class="col-span-full">
-          <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Notes</label>
-          <div class="mt-2">
-            <textarea id="about" name="about" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
-          </div>
+          <EmployeeNotes />
           <p class="mt-3 text-sm leading-6 text-gray-600">Critical information about the employee.</p>
         </div>
 

@@ -14,7 +14,7 @@
 
 	export let employee: Employee;
   
-  const initials = `${employee?.employee?.firstName[0]}${employee?.employee?.lastName[0]}`;
+  const initials = `${employee?.firstName[0]}${employee?.lastName[0]}`;
   let windowUrl = '';
   onMount(() => windowUrl = window.location.href + '/');
 </script>
@@ -42,13 +42,13 @@
 	</div>
 	<div class="w-[100%] mt-16 flex flex-col justify-center items-center">
 		<h4 class="text-xl font-bold text-navy-700 dark:text-white">
-			{employee?.employee?.firstName}
-			{employee?.employee?.lastName}
+			{employee?.firstName}
+			{employee?.lastName}
 		</h4>
-		<p class="text-base font-normal text-gray-600">{employee?.employee_profile?.email}</p>
+		<p class="text-base font-normal text-gray-600">{employee?.employeeProfile.email}</p>
 	</div>
 	<div class="w-[100%] px-2 mt-6 mb-3 flex justify-end gap-14 md:!gap-14">
-    <a href={windowUrl + employee?.employee?.id}>
+    <a href={windowUrl + employee?.id}>
       <AppWindow />
     </a>
 		<!-- <div class="flex flex-col items-center justify-center">

@@ -22,6 +22,6 @@ export type SelectEmployee = typeof employee.$inferSelect;
 export type SelectEmployeeProfile = typeof employeeProfile.$inferSelect;
 export type EmployeeProfile = SelectEmployeeProfile;
 export type SelectEmployeeCodes = typeof employeeCodes.$inferSelect;
-export type Employee = { employee: SelectEmployee, employee_profile: SelectEmployeeProfile, employeeCodes: SelectEmployeeCodes[] };
+export type Employee = SelectEmployee & { employeeProfile: SelectEmployeeProfile, employeeCodes: SelectEmployeeCodes[] };
 export type InsertEmployee = typeof employee.$inferInsert;
 export type InsertEmployeeProfile = typeof employeeProfile.$inferInsert;
