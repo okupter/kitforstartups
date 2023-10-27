@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { bigint, boolean, mysqlEnum, mysqlTable, unique, varchar } from 'drizzle-orm/mysql-core';
+import { bigint, boolean, mysqlEnum, mysqlTable, text, unique, varchar } from 'drizzle-orm/mysql-core';
 
 const user = mysqlTable('auth_user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -50,6 +50,7 @@ const employeeRelations = relations(employee, ({ many, one }) => ({
 		references: [employeeProfile.employeeId],
 	}),
 	employeeCodes: many(employeeCodes),
+	employeeNotes: many(employeeNotes),
 }));
 
 const employeeProfile = mysqlTable('employee_profile', {
@@ -67,6 +68,22 @@ const employeeProfile = mysqlTable('employee_profile', {
 	phone2: varchar('phone_2', { length: 255 }),
 	email: varchar('email', { length: 255 }).notNull(),
 });
+
+const employeeNotes = mysqlTable('employee_notes', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	note: text('note').notNull(),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+})
+
+const employeeNotesRelations = relations(employeeNotes, ({ one }) => ({
+	employee: one(employee, {
+		fields: [employeeNotes.employeeId],
+		references: [employee.id],
+	}),
+}));
 
 const employeeCodes = mysqlTable('employee_codes', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -132,5 +149,6 @@ const userSession = mysqlTable('user_session', {
 export {
 	emailVerification, passwordResetToken, user, userKey, userProfile, client, userSession,
 	employee, employeeProfile, employeeCodes, employeeRelations, employeeCodesRelations,
+	employeeNotes, employeeNotesRelations,
 };
 

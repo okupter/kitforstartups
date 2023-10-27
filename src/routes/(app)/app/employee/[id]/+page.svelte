@@ -2,14 +2,14 @@
   import { page } from '$app/stores';
 	import EmployeeNotes from '$lib/components/EmployeeNotes.svelte';
 	import MaskInput from '$lib/components/MaskInput.svelte';
-	import type { Employee } from '$lib/types/db.model.js';
+	import type { EmployeeWithNotes } from '$lib/types/db.model.js';
 	export let data;
   
   // how you read the id param from the url 
   $: console.log($page.params.id);
   
   const { ee } = data;
-  const { employeeProfile: profile, ...employee } = (ee || { employeeProfile: null }) as Employee;
+  const { employeeProfile: profile, ...employee } = (ee || { employeeProfile: null }) as EmployeeWithNotes;
 </script>
 
 <form action="?/save" method="post">
@@ -30,7 +30,7 @@
         </div> -->
 
         <div class="col-span-full">
-          <EmployeeNotes />
+          <EmployeeNotes notes={employee?.employeeNotes} />
           <p class="mt-3 text-sm leading-6 text-gray-600">Critical information about the employee.</p>
         </div>
 

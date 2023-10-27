@@ -28,6 +28,7 @@ const getEmployee = async (employeeId: string): Promise<Employee | undefined> =>
     with: {
       employeeProfile: true,
       employeeCodes: true,
+      employeeNotes: true,
     },
     where: (employee, { eq }) => eq(employee.id, employeeId),
   });

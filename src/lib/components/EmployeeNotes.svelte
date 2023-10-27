@@ -1,14 +1,19 @@
 <script lang="ts">
-	import { createLabel, melt, createToolbar } from '@melt-ui/svelte';
+	import type { SelectEmployeeNotes } from '$lib/types/db.model';
+	import { createLabel, melt, createToolbar, createSeparator } from '@melt-ui/svelte';
+  
+  export let notes: SelectEmployeeNotes[];
 
 	const {
 		elements: { root }
 	} = createLabel();
 
 	const {
-		elements: { root: toolbarRoot, button, link, separator },
-		builders: { createToolbarGroup }
-	} = createToolbar();
+    elements: { root: horizontal },
+  } = createSeparator({
+    orientation: 'horizontal',
+    decorative: true,
+  });
 </script>
 
 <form action="">
@@ -27,40 +32,33 @@
 			rows="3"
 			class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 		></textarea>
-		<div
-			use:melt={$root}
-			class="flex min-w-max items-center gap-4 rounded-md bg-white px-3 py-3 text-neutral-700 shadow-sm lg:w-[35rem]"
-		>
-			<!-- <div class="flex items-center gap-1" use:melt={$fontGroup}>
-				<button class="item" aria-label="bold" use:melt={$fontItem('bold')}>
-					<Bold class="square-5" />
-				</button>
-				<button class="item" aria-label="italic" use:melt={$fontItem('italic')}>
-					<Italic class="square-5" />
-				</button>
-				<button class="item" aria-label="strikethrough" use:melt={$fontItem('strikethrough')}>
-					<Strikethrough class="square-5" />
-				</button>
-			</div>
-			<div class="separator" use:melt={$separator} />
-			<div class="flex items-center gap-1" use:melt={$alignGroup}>
-				<button class="item" aria-label="align left" use:melt={$alignItem('left')}>
-					<AlignLeft class="square-5" />
-				</button>
-				<button class="item" aria-label="align center" use:melt={$alignItem('center')}>
-					<AlignCenter class="square-5" />
-				</button>
-				<button class="item" aria-label="align-right" use:melt={$alignItem('right')}>
-					<AlignRight class="square-5" />
-				</button>
-			</div>
-			<div class="separator" use:melt={$separator} /> -->
-			<a href="/" class="link nowrap flex-shrink-0" use:melt={$link}> Edited 2 hours ago </a>
-			<button
-				class="ml-auto rounded-md bg-magnum-600 px-3 py-1 font-medium text-magnum-100 hover:opacity-75 active:opacity-50"
-				use:melt={$button}>Save</button
-			>
-		</div>
+    
+    <div use:melt={$horizontal} class="my-3.5 h-[1px] w-full bg-neutral-900" />
+    
+    <div class="block w-full rounded-md border-1 py-1 5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset">
+      {#each notes as note}
+        <div class="flex flex-row items-center justify-between">
+          <div class="flex flex-col">
+            <span class="text-sm font-medium leading-6 text-gray-900">{note.created}</span>
+            <span class="text-sm font-medium leading-6 text-gray-900">{note.note}</span>
+          </div>
+          <div class="flex flex-row items-center justify-center">
+            <button type="button" class="p-1.5 text-gray-900 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 8a6 6 0 00-6-6m6 0a6 6 0 01-6 6"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              </svg>
+            </button>
+            <button type="button" class="p-1.5 text-gray-900 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      {/each}
+    </div>
 	</div>
 </form>
 
