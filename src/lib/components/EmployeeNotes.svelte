@@ -3,7 +3,10 @@
 	import { createLabel, melt, createToolbar, createSeparator } from '@melt-ui/svelte';
   import dayjs from 'dayjs';
 	import SubmitButton from './SubmitButton.svelte';
+	import { enhance } from '$app/forms';
+	import { createToast } from './Toast.svelte';
   
+  export let employeeId: string;
   export let notes: SelectEmployeeNotes[];
 
 	const {
@@ -26,7 +29,33 @@
   }
 </script>
 
-<form action="">
+<form action="?/add-note" method="post"
+  use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+    formData.append('employee_id', employeeId);
+    
+    return async ({ result, update }) => {
+      console.log(result);
+      
+      if (!result.data) return;
+      
+      const newNote = {
+        id: '',
+        employeeId: result.data.employee_id,
+        note: result.data.notes,
+        created: Date.now(),
+      };
+      
+      notes = [newNote, ...notes];
+      
+      update();
+      createToast({
+        type: 'success',
+        title: 'Note added',
+        description: 'The note has been added successfully.'
+      });
+    }
+  }}
+>
 	<div class="flex flex-col items-start justify-center">
 		<label
 			for="notes"
@@ -41,6 +70,7 @@
 			id="notes"
 			rows="3"
 			class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      required
 		></textarea>
     
     <div class="flex justify-end w-[100%]">
@@ -58,7 +88,7 @@
             <span class="text-sm font-medium leading-6 text-gray-900">{note.note}</span>
           </div>
           <div class="flex flex-col">
-            <span class="text-sm font-medium leading-6 text-gray-900">{formatDate(note.created)}</span>
+            <span class="text-sm font-medium leading-6 text-gray-400">{formatDate(note.created)}</span>
           </div>
         </div>
         {#if i !== notes.length - 1}

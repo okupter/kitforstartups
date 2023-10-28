@@ -30,7 +30,7 @@
         </div> -->
 
         <div class="col-span-full">
-          <EmployeeNotes notes={employee?.employeeNotes} />
+          <EmployeeNotes notes={employee?.employeeNotes} employeeId={$page.params.id} />
           <p class="mt-3 text-sm leading-6 text-gray-600">Critical information about the employee.</p>
         </div>
 

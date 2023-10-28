@@ -1,7 +1,8 @@
 import { drizzleClient as db } from '$lib/drizzle/mysql/client';
 import { eq } from 'drizzle-orm';
-import { employee, employeeProfile } from '../schema';
-import type { Employee, InsertEmployee, InsertEmployeeProfile } from '$lib/types/db.model';
+import { employee, employeeNotes, employeeProfile } from '../schema';
+import type { Employee, InsertEmployee, InsertEmployeeNotes, InsertEmployeeProfile } from '$lib/types/db.model';
+import { nanoid } from 'nanoid';
 
 const getEmployees = async (clientId: string): Promise<Employee[]> => {
   if (!clientId) {
@@ -19,21 +20,23 @@ const getEmployees = async (clientId: string): Promise<Employee[]> => {
   return data;
 }
 
-const getEmployee = async (employeeId: string): Promise<Employee | undefined> => {
+const getEmployee = async (employeeId: string, withProfile = true, withCodes = true, withNotes = true): Promise<Employee | undefined> => {
   if (!employeeId) {
     return null as unknown as Employee;
   }
   
   const data = await db.query.employee.findFirst({
     with: {
-      employeeProfile: true,
-      employeeCodes: true,
-      employeeNotes: true,
+      employeeProfile: withProfile as any,
+      employeeCodes: withCodes as any,
+      employeeNotes: withNotes ? {
+        orderBy: (employeeNotes, { desc }) => [desc(employeeNotes.created)],
+      } : false as any,
     },
     where: (employee, { eq }) => eq(employee.id, employeeId),
   });
     
-  return data;
+  return data as any;
 }
 
 const _createEmployee = async (employeeData: InsertEmployee) => {
@@ -101,4 +104,24 @@ const deleteEmployee = async (employeeId: string) => {
   return { success: true, };
 }
 
-export { getEmployees, getEmployee, createEmployee, updateEmployee, deleteEmployee, };
+const addEmployeeNote = async (employeeId: string, note: string) => {
+  
+  const dto = {
+    id: nanoid(),
+    employeeId,
+    note,
+    created: Date.now() as any,
+  } as InsertEmployeeNotes;
+  
+  try {
+    await db.insert(employeeNotes).values(dto);
+  } catch (err) {
+    console.error(err);
+    return { success: false, };
+  }
+  
+}
+
+export { getEmployees, getEmployee, createEmployee, updateEmployee, deleteEmployee,
+  addEmployeeNote,
+};
