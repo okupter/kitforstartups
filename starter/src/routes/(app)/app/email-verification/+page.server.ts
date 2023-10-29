@@ -58,7 +58,7 @@ export const actions = {
 					feedbacks: verificationEmail
 				});
 			}
-		} catch {
+		} catch(e) {
 			const feedbacks = getFeedbackObjects([
 				{
 					type: 'error',

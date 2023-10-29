@@ -109,6 +109,8 @@ export const actions = {
 				});
 			}
 		} catch (e) {
+			console.error(e);
+
 			const feedbacks = getFeedbackObjects([
 				{
 					type: 'error',
