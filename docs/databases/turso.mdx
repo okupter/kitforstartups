@@ -49,6 +49,23 @@ For the DB URL, on local environments, you can use `turso dev` to invoke a libSQ
 turso dev -f src/lib/drizzle/turso/data/data.sqlite
 ```
 
+## Push the database schema
+
+Once you have your database setup, you can push the schema using the following command:
+
+```bash
+pnpm push:turso
+```
+
+This will directly push the schema to the database without creating any migrations files.
+
+If you want / need to create migrations files, you can use the following command:
+
+```bash
+pnpm generate-migrations:turso
+pnpm migrate:turso
+```
+
 ## Search and replace the database configuration
 
 In order to switch, the current option is to search and replace occurences of `drizzle/mysql` and `lucia/mysql` with `drizzle/turso` and `lucia/turso` respectively.
