@@ -36,6 +36,10 @@
     {
       "group": "Authentication",
       "pages": ["auth/github-oauth"]
+    },
+    {
+      "group": "Databases",
+      "pages": ["databases/overview", "databases/turso"]
     }
   ],
   "footerSocials": {

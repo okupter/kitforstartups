@@ -1,0 +1,56 @@
+---
+title: "Turso"
+---
+
+Quoted from the [Turso documentation](https://docs.turso.tech),
+
+<Note>
+  Turso is an edge-hosted, distributed database based on libSQL, an open-source
+  and open-contribution fork of SQLite. It was designed to minimize query
+  latency for applications where queries come from anywhere in the world.
+</Note>
+
+It's an easy database to setup, and SQLite can be used quite easily on local environments.
+
+Here is how to setup and use Turso with KitForStartups:
+
+## Create a Turso database
+
+Before creating a database, you'll need to install Turso CLI on your machine. Steps to do so can be found [here](https://docs.turso.tech/tutorials/get-started-turso-cli/step-01-installation).
+
+Next, you can create a logical database using the following commands:
+
+```bash
+# Create a group
+# https://docs.turso.tech/concepts#placement-group
+turso group create my-group-name
+
+# Create a database in the newly created group
+# https://docs.turso.tech/concepts#database
+turso db create my-db-name --group my-group
+```
+
+## Update environments variables
+
+The next step is to update the environment variables in your `.env` file. You can find the values for these variables in the Turso console.
+
+For Turso, we need `TURSO_DB_URL` and `TURSO_AUTH_TOKEN`.
+
+The token can be generated using the following command:
+
+```bash
+turso db tokens create my-db-name
+```
+
+For the DB URL, on local environments, you can use `turso dev` to invoke a libSQL server locally. This will open a websocket server that can be accessed on `ws://127.0.0.1:8080` (this will be the value for `TURSO_DB_URL`).
+
+```bash
+# Create a src/lib/drizzle/turso/data folder
+turso dev -f src/lib/drizzle/turso/data/data.sqlite
+```
+
+## Search and replace the database configuration
+
+In order to switch, the current option is to search and replace occurences of `drizzle/mysql` and `lucia/mysql` with `drizzle/turso` and `lucia/turso` respectively.
+
+If you are using VSCode, you can exclude the `src/lib/drizzle` and `src/lib/lucia` folders from the search.
