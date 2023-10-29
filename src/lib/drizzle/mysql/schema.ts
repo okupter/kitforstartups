@@ -90,6 +90,10 @@ const employeeCodes = mysqlTable('employee_codes', {
 	employeeId: varchar('employee_id', { length: 255 })
 		.notNull()
 		.references(() => employee.id),
+	campaignId: varchar('campaign_id', { length: 255 })
+		.notNull()
+		.references(() => campaigns.id)
+		.default(''),
 	employeeCode: varchar('employee_code', { length: 255 }).notNull(),
 	isActive: boolean('is_active').default(false).notNull(),
 }, (t) => ({
@@ -146,9 +150,20 @@ const userSession = mysqlTable('user_session', {
 	idleExpires: bigint('idle_expires', { mode: 'bigint' }).notNull()
 });
 
+const campaigns = mysqlTable('campaigns', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	name: varchar('name', { length: 255 }).notNull(),
+	active: boolean('active').default(false).notNull(),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+});
+
 export {
 	emailVerification, passwordResetToken, user, userKey, userProfile, client, userSession,
 	employee, employeeProfile, employeeCodes, employeeRelations, employeeCodesRelations,
-	employeeNotes, employeeNotesRelations,
+	employeeNotes, employeeNotesRelations, campaigns,
 };
 

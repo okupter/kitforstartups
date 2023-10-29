@@ -36,6 +36,27 @@
       "when": 1698383731309,
       "tag": "0004_yielding_franklin_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1698547492754,
+      "tag": "0005_windy_wild_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1698547711743,
+      "tag": "0006_certain_norman_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1698547913566,
+      "tag": "0007_open_the_liberteens",
+      "breakpoints": true
     }
   ]
 }

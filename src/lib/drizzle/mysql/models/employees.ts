@@ -12,7 +12,9 @@ const getEmployees = async (clientId: string): Promise<Employee[]> => {
   const data = await db.query.employee.findMany({ 
     with: {
       employeeProfile: true,
-      employeeCodes: true,
+      employeeCodes: {
+        where: (code, { eq }) => eq(code.isActive, true),
+      },
     },
     where: (employee, { eq }) => eq(employee.clientId, clientId),
   })
@@ -28,7 +30,9 @@ const getEmployee = async (employeeId: string, withProfile = true, withCodes = t
   const data = await db.query.employee.findFirst({
     with: {
       employeeProfile: withProfile as any,
-      employeeCodes: withCodes as any,
+      employeeCodes: withCodes ? {
+        where: (code, { eq }) => eq(code.isActive, true),
+      } : false as any,
       employeeNotes: withNotes ? {
         orderBy: (employeeNotes, { desc }) => [desc(employeeNotes.created)],
       } : false as any,

@@ -1,0 +1,1 @@
+ALTER TABLE `employee_codes` MODIFY COLUMN `campaign_id` varchar(255) NOT NULL DEFAULT '';

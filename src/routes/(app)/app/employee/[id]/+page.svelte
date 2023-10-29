@@ -6,10 +6,16 @@
 	export let data;
   
   // how you read the id param from the url 
-  $: console.log($page.params.id);
   
-  const { ee } = data;
-  const { employeeProfile: profile, ...employee } = (ee || { employeeProfile: null }) as EmployeeWithNotes;
+  let { ee, campaigns } = data;
+  const { employeeProfile: profile, employeeCodes: codes, ...employee } = (ee || { employeeProfile: null }) as EmployeeWithNotes;
+  
+  campaigns = campaigns || [];
+  
+  const getCodeForCampaign = (campaignId: string) => {
+    const code = codes?.find(c => c.campaignId === campaignId);
+    return code?.employeeCode || '';
+  }
 </script>
 
 <form action="?/save" method="post">
@@ -31,7 +37,7 @@
 
         <div class="col-span-full">
           <EmployeeNotes notes={employee?.employeeNotes} employeeId={$page.params.id} />
-          <p class="mt-3 text-sm leading-6 text-gray-600">Critical information about the employee.</p>
+          <!-- <p class="mt-3 text-sm leading-6 text-gray-600">Critical information about the employee.</p> -->
         </div>
 
         <!-- <div class="col-span-full">
@@ -176,8 +182,37 @@
         </div>
       </div>
     </div>
-
+    
     <div class="border-b border-gray-900/10 pb-12">
+      <h2 class="text-base font-semibold leading-7 text-gray-900">Sales Codes</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-600">
+        Sales codes are used to track sales and commissions. 
+        <br>
+        <span class="text-xs text-gray-400">*Sales codes are not required.</span>
+      </p>
+      
+      {#if campaigns?.length}
+        <div class="flex mt-10 sm:gap-1 md:gap-6">
+          {#each campaigns as campaign}
+            <!-- content here -->
+            <fieldset>
+              <legend class="text-sm font-semibold leading-6 text-gray-900">{campaign?.name}</legend>
+              <div class="space-y-6">
+                <div class="relative flex gap-x-3">
+                  <div class="flex items-center">
+                    <input name={'code_campaign_' + campaign?.id} type="text" 
+                      value={getCodeForCampaign(campaign?.id)}
+                      class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 max-w-[120px]">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          {/each}
+        </div>
+      {/if}
+    </div>
+
+    <!-- <div class="border-b border-gray-900/10 pb-12">
       <h2 class="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
       <p class="mt-1 text-sm leading-6 text-gray-600">We'll always let you know about important changes, but you pick what else you want to hear about.</p>
 
@@ -233,7 +268,7 @@
           </div>
         </fieldset>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div class="mt-6 flex items-center justify-end gap-x-6">
