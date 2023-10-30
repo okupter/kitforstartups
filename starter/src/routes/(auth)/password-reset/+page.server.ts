@@ -1,3 +1,4 @@
+import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
@@ -53,9 +54,9 @@ export const actions = {
 		try {
 			const resetToken = await generatePasswordResetToken(storedUser.id);
 
-			const sender = 'KitForStartups <justin@updates.okupter.com>';
+			const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
 			const recipient = profile?.firstName ? `${profile.firstName}` : storedUser.email;
-			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>Justin from KitForStartups`;
+			const emailHtml = `Hello ${recipient},<br><br>Here is your password reset link:<br><br><a href="${url.origin}/password-reset/${resetToken}">Reset Password</a><br><br>Thanks,<br>${TRANSACTIONAL_EMAILS_SENDER}`;
 
 			const passwordResetEmail = await sendEmail({
 				from: sender,

@@ -1,3 +1,4 @@
+import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
@@ -80,7 +81,7 @@ export const actions = {
 			// Send verification email
 			const verificationToken = await generateEmailVerificationToken(user.userId);
 
-			const sender = 'KitForStartups <justin@updates.okupter.com>';
+			const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
 			const recipient = firstName ? `${firstName}` : email;
 			const emailHtml = `Hello ${recipient},
 			<br><br>
@@ -94,7 +95,7 @@ export const actions = {
 			<br><br>
 			Thanks,
 			<br>
-			Justin from KitForStartups`;
+			${TRANSACTIONAL_EMAILS_SENDER}`;
 
 			const signupEmail = await sendEmail({
 				from: sender,

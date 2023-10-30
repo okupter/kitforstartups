@@ -1,3 +1,4 @@
+import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
 import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { sendEmail } from '$lib/emails/send';
@@ -42,9 +43,9 @@ export const actions = {
 		try {
 			const verificationToken = await generateEmailVerificationToken(user.id);
 
-			const sender = 'KitForStartups <justin@updates.okupter.com>';
+			const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
 			const recipient = profile?.firstName ? `${profile.firstName}` : user.email;
-			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>Justin from KitForStartups`;
+			const emailHtml = `Hello ${recipient},<br><br>Thank you for signing up to KitForStartups! Please click the link below to verify your email address:<br><br><a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a><br><br>Thanks,<br>${TRANSACTIONAL_EMAILS_SENDER}`;
 
 			const verificationEmail = await sendEmail({
 				from: sender,
