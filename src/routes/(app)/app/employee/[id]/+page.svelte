@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
 	import EmployeeNotes from '$lib/components/EmployeeNotes.svelte';
 	import MaskInput from '$lib/components/MaskInput.svelte';
+	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import type { EmployeeWithNotes } from '$lib/types/db.model.js';
 	export let data;
   
@@ -21,8 +22,8 @@
 <form action="?/save" method="post">
   <div class="space-y-12">
     <div class="border-b border-gray-900/10 pb-12">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">This information is private and used for employee management purposes.</p>
+      <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Profile</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">This information is private and used for employee management purposes.</p>
 
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <!-- <div class="sm:col-span-4">
@@ -72,65 +73,65 @@
     </div>
 
     <div class="border-b border-gray-900/10 pb-12">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
+      <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Personal Information</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">Use a permanent address where you can receive mail.</p>
 
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-3">
-          <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
+          <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">First name</label>
           <div class="mt-2">
             <input type="text" name="first-name" id="first-name"
               value={employee?.firstName}
-              autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
             >
           </div>
         </div>
 
         <div class="sm:col-span-3">
-          <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
+          <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Last name</label>
           <div class="mt-2">
             <input type="text" name="last-name" id="last-name" 
               value={employee?.lastName}
-              autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
             >
           </div>
         </div>
 
         <div class="sm:col-span-4">
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+          <label for="email" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Email address</label>
           <div class="mt-2">
             <input id="email" name="email" type="email" 
               value={profile?.email}
-              autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required 
             />
           </div>
         </div>
         
         <div class="sm:col-span-3">
-          <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Phone number</label>
+          <label for="phone" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Phone number</label>
           <div class="mt-2">
             <MaskInput alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
               value={profile?.phone}
               id="phone" name="phone" type="phone"
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required
             />
             <!-- <input id="phone" name="phone" type="phone" 
               value={profile?.phone}
-              autocomplete="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> -->
+              autocomplete="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6"> -->
           </div>
         </div>
         
         <div class="sm:col-span-3">
-          <label for="phone2" class="block text-sm font-medium leading-6 text-gray-900">Secondary phone</label>
+          <label for="phone2" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Secondary phone</label>
           <div class="mt-2">
             <MaskInput id="phone2" name="phone2" type="phone2" 
               alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
               value={profile?.phone2 || ''}
-              autocomplete="phone2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              autocomplete="phone2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700" />
           </div>
         </div>
 
@@ -146,49 +147,49 @@
         </div> -->
 
         <div class="col-span-full">
-          <label for="street-address" class="block text-sm font-medium leading-6 text-gray-900">Street address</label>
+          <label for="street-address" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Street address</label>
           <div class="mt-2">
             <input type="text" name="street-address" id="street-address" 
               value={profile?.address}
-              autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
         <div class="sm:col-span-2 sm:col-start-1">
-          <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+          <label for="city" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">City</label>
           <div class="mt-2">
             <input type="text" name="city" id="city" 
               value={profile?.city}
-              autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
         <div class="sm:col-span-2">
-          <label for="region" class="block text-sm font-medium leading-6 text-gray-900">State / Province</label>
+          <label for="region" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">State / Province</label>
           <div class="mt-2">
             <input type="text" name="region" id="region" 
               value={profile?.state}
-              autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
         <div class="sm:col-span-2">
-          <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900">ZIP / Postal code</label>
+          <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">ZIP / Postal code</label>
           <div class="mt-2">
             <input type="text" name="postal-code" id="postal-code" 
               value={profile?.zip}
-              autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
       </div>
     </div>
     
     <div class="border-b border-gray-900/10 pb-12">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">Sales Codes</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">
+      <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Sales Codes</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">
         Sales codes are used to track sales and commissions. 
         <br>
-        <span class="text-xs text-gray-400">*Sales codes are not required.</span>
+        <span class="text-xs text-gray-400 dark:text-gray-50">*Sales codes are not required.</span>
       </p>
       
       {#if campaigns?.length}
@@ -196,13 +197,13 @@
           {#each campaigns as campaign}
             <!-- content here -->
             <fieldset>
-              <legend class="text-sm font-semibold leading-6 text-gray-900">{campaign?.name}</legend>
+              <legend class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">{campaign?.name}</legend>
               <div class="space-y-6">
                 <div class="relative flex gap-x-3">
                   <div class="flex items-center">
                     <input name={'code_campaign_' + campaign?.id} type="text" 
                       value={getCodeForCampaign(campaign?.id)}
-                      class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 max-w-[120px]">
+                      class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-100 dark:text-indigo-100 dark:focus:ring-indigo-200 max-w-[120px] dark:bg-neutral-700">
                   </div>
                 </div>
               </div>
@@ -272,7 +273,8 @@
   </div>
 
   <div class="mt-6 flex items-center justify-end gap-x-6">
-    <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
-    <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+    <button type="button" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">Cancel</button>
+    <SubmitButton text="Save" />
+    <!-- <button type="submit" class="rounded-md bg-indigo-600 dark:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200">Save</button> -->
   </div>
 </form>
