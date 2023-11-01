@@ -57,6 +57,20 @@
       "when": 1698547913566,
       "tag": "0007_open_the_liberteens",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1698802233310,
+      "tag": "0008_wonderful_rage",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1698803950272,
+      "tag": "0009_red_puck",
+      "breakpoints": true
     }
   ]
 }

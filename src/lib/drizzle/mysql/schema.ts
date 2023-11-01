@@ -156,6 +156,8 @@ const campaigns = mysqlTable('campaigns', {
 		.notNull()
 		.references(() => client.id),
 	name: varchar('name', { length: 255 }).notNull(),
+	url: varchar('url', { length: 255 }).default(''),
+	description: text('description').default(''),
 	active: boolean('active').default(false).notNull(),
 	created: bigint('created', { mode: 'bigint' }).notNull(),
 	updated: bigint('updated', { mode: 'bigint' }).notNull(),

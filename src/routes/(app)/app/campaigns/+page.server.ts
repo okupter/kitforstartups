@@ -10,7 +10,13 @@ export const load = async ({ locals, params }) => {
   const campaigns = async () => {
     const profile = await getUserProfileData(session?.user.userId);
     const clientId = profile.clientId;
-    return getCampaigns(clientId as string)
+    const data = await getCampaigns(clientId as string)
+    
+    return data.map(campaign => ({
+      ...campaign,
+      created: Number(campaign.created),
+      updated: Number(campaign.updated),
+    }));
   };
   
   return {

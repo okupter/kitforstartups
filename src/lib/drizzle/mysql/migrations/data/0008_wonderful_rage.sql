@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `description` text DEFAULT ('');
