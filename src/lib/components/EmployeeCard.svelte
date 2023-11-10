@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="flex flex-col items-start rounded-[10px] border-[1px] border-gray-200 w-[300px] p-4 bg-indigo-400 bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
+	class="flex flex-col items-start rounded-[10px] border-[1px] border-gray-200 w-[300px] p-4 bg-indigo-400 dark:bg-indigo-900 bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
 >
 	<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
 		<img
@@ -45,7 +45,7 @@
 			{employee?.firstName}
 			{employee?.lastName}
 		</h4>
-		<p class="text-base font-normal text-gray-600">{employee?.employeeProfile.email}</p>
+		<p class="text-base font-normal text-gray-600 dark:text-gray-400">{employee?.employeeProfile.email}</p>
 	</div>
 	<div class="w-[100%] px-2 mt-6 mb-3 flex justify-end gap-14 md:!gap-14">
     <a href={windowUrl + employee?.id}>

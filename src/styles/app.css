@@ -37,9 +37,29 @@
 	.container-base {
 		@apply max-w-5xl mx-auto px-4;
 	}
+	
+	form .form-control {
+		@apply flex flex-col space-y-1;
+	}
+	
+	form .form-control > label {
+		@apply mb-0.5 font-medium text-neutral-900 dark:text-neutral-100;
+	}
+	
+	form .form-control > input[type='text'] {
+		@apply h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50;
+	}
+	
+	form .form-control > textarea {
+		@apply w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50;
+	}
+	
+	form .form-control > input[type='checkbox'] {
+		@apply h-4 w-4 rounded-md p-3 text-indigo-500;
+	}
 
 	/* Forms */
-	form {
+	/* form {
 		@apply space-y-4;
 	}
 
@@ -58,5 +78,5 @@
 
 	form button[type='submit'] {
 		@apply disabled:opacity-50 disabled:cursor-not-allowed;
-	}
+	} */
 }

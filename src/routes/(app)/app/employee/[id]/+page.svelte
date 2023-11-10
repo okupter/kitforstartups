@@ -20,7 +20,7 @@
 </script>
 
 <form action="?/save" method="post">
-  <div class="space-y-12">
+  <div class="space-y-12 bg-gray-100 border-gray-100 dark:bg-gray-800 border dark:border-gray-800 shadow-lg rounded-2xl p-6">
     <div class="border-b border-gray-900/10 pb-12">
       <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Profile</h2>
       <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">This information is private and used for employee management purposes.</p>
@@ -270,11 +270,10 @@
         </fieldset>
       </div>
     </div> -->
-  </div>
-
-  <div class="mt-6 flex items-center justify-end gap-x-6">
-    <button type="button" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">Cancel</button>
-    <SubmitButton text="Save" />
-    <!-- <button type="submit" class="rounded-md bg-indigo-600 dark:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200">Save</button> -->
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <button type="button" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">Cancel</button>
+      <SubmitButton text="Save" />
+      <!-- <button type="submit" class="rounded-md bg-indigo-600 dark:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200">Save</button> -->
+    </div>
   </div>
 </form>

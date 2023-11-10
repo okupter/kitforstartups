@@ -1,11 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import SelectedClientStore from '$lib/stores/client';
-  import Icon from '@iconify/svelte';
   import { createDialog, melt, createLabel, createSelect } from '@melt-ui/svelte';
-	import { Check, ChevronDown, XSquare } from 'lucide-svelte';
-  import type { Unsubscriber } from 'svelte/store';
-	import { createToast } from './Toast.svelte';
+	import { XSquare } from 'lucide-svelte';
+  import { createToast } from './Toast.svelte';
   
   const {
     elements: { trigger: triggerSelect, menu, option, group, groupLabel, label },
@@ -40,7 +37,7 @@
     <div
 			use:melt={$content}
 			class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw]
-      max-w-[40%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white
+      max-w-[40%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white dark:bg-gray-800 dark:text-neutral-100
       p-6 shadow-lg"
 		>
       <div class="flex justify-between">
@@ -79,73 +76,73 @@
         <div>
           <div class="grid grid-cols-5 gap-4">
             <div class="pb-2 col-span-2">
-              <label use:melt={$root} for="first_name" class="mb-0.5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="first_name" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 First Name
               </label>
-              <input type="text" name="first_name" id="first_name" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" />
+              <input type="text" name="first_name" id="first_name" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
             </div>
             
             <div class="col-span-3 pb-2">
-              <label use:melt={$root} for="last_name" class="mb-0.5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="last_name" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 Last Name
               </label>
-              <input type="text" name="last_name" id="last_name" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" />
+              <input type="text" name="last_name" id="last_name" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
             </div>
           </div>
           
           <div class="grid grid-cols-5 gap-4">
             <div class="col-span-2 pb-2">
-              <label use:melt={$root} for="phone" class="mb-0 5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="phone" class="mb-0 5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 Phone
               </label>
-              <input type="text" name="phone" id="phone" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" required />
+              <input type="text" name="phone" id="phone" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" required />
             </div>
             
             <div class="col-span-3 pb-2">
-              <label use:melt={$root} for="email" class="mb-0 5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="email" class="mb-0 5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 Email
               </label>
-              <input type="text" name="email" id="email" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" />
+              <input type="text" name="email" id="email" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
             </div>
           </div>
           
           <div class="grid grid-cols-5 gap-4">
             <div class="col-span-4 pb-2">
-              <label use:melt={$root} for="address" class="mb-0.5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="address" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 Address
               </label>
-              <input type="text" name="address" id="address" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" />
+              <input type="text" name="address" id="address" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
             </div>
             
             <div class="pb-2">
-              <label use:melt={$root} for="address_2" class="mb-0.5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="address_2" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 Apt / Unit
               </label>
-              <input type="text" name="address_2" id="address_2" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" />
+              <input type="text" name="address_2" id="address_2" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
             </div>
           </div>
           
           <div class="grid grid-cols-3 gap-4">
             <div class="flex flex-col items-start justify-center pb-2 col-span-2">
-              <label use:melt={$root} for="city" class="mb-0 5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="city" class="mb-0 5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 City
               </label>
-              <input type="text" name="city" id="city" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" required />
+              <input type="text" name="city" id="city" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" required />
             </div>
             
             <div class="flex flex-col items-start justify-center pb-2">
-              <label use:melt={$root} for="state" class="mb-0 5 font-medium text-neutral-900" data-melt-part="root">
+              <label use:melt={$root} for="state" class="mb-0 5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
                 State
               </label>
-              <input type="text" name="state" id="state" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700" required />
+              <input type="text" name="state" id="state" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" required />
             </div>
           </div>
           
           <div class="flex flex-col items-start justify-center pb-2">
-            <label use:melt={$root} for="zip" class="mb-0 5 font-medium text-neutral-900" data-melt-part="root">
+            <label use:melt={$root} for="zip" class="mb-0 5 font-medium text-neutral-900 dark:text-neutral-100" data-melt-part="root">
               Zip
             </label>
-            <input type="text" name="zip" id="zip" class="h-10 w-[240px] rounded-md px-3 py-2 text-neutral-700" required />
+            <input type="text" name="zip" id="zip" class="h-10 w-[240px] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" required />
           </div>
         </div>
         

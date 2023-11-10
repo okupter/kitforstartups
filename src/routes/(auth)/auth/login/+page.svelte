@@ -39,20 +39,20 @@
 
 <div class="text-center">
 	<h1 class="text-3xl font-bold">Welcome back</h1>
-	<p class="text-gray-600">Login into your account</p>
+	<p class="text-gray-600 dark:text-gray-100">Login into your account</p>
 </div>
 
-<div class="p-8 border border-gray-300 rounded-sm shadow-sm">
+<div class="p-8 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm">
 	<form method="post" action="?/loginUser" use:enhance={submitLoginUser}>
-		<div class="form-control">
-			<label for="email">Email</label>
-			<input type="email" name="email" placeholder="Your email address" required />
+		<div>
+			<label for="email" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100">Email</label>
+			<input type="email" name="email" placeholder="Your email address" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
 			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'email')} />
 		</div>
 
-		<div class="form-control">
-			<label for="password">Password</label>
-			<input type="password" name="password" placeholder="Your password" />
+		<div>
+			<label for="password" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100">Password</label>
+			<input type="password" name="password" placeholder="Your password" class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
 			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'password')} />
 
 			<a href="/password-reset" class="text-xs font-medium text-right text-blue-600 underline"
@@ -64,16 +64,16 @@
 	</form>
 
 	<div class="flex flex-col mt-12 space-y-4 social-logins">
-		<a href="/oauth/github" class="action-base action-outline">Login with GitHub</a>
-		<a href="/oauth/google" class="action-base action-outline">Login with Google</a>
+		<a href="/oauth/github" class="rounded-md bg-gray-900 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center">Login with GitHub</a>
+		<a href="/oauth/google" class="rounded-md bg-indigo-600 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center">Login with Google</a>
 	</div>
 </div>
 
-<div class="text-center">
+<!-- <div class="text-center">
 	<p class="text-sm text-gray-600">
 		You don't have an account yet? <a
 			href="/auth/signup"
 			class="font-medium text-blue-600 underline">Create one</a
 		>
 	</p>
-</div>
+</div> -->

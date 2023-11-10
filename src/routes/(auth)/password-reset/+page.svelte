@@ -45,9 +45,9 @@
 
 <div class="p-8 border border-gray-300 rounded-sm shadow-sm">
 	<form method="post" action="?/sendPasswordResetLink" use:enhance={submitSendResetPasswordLink}>
-		<div class="form-control">
-			<label for="email">Email</label>
-			<input type="email" name="email" placeholder="Your email address" required />
+		<div>
+			<label for="email" class="mb-0.5 font-medium text-neutral-900 dark:text-neutral-100">Email</label>
+			<input type="email" name="email" placeholder="Your email address" required class="h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50" />
 			<InlineFormNotice feedback={getFeedbackObjectByPath(form?.feedbacks, 'email')} />
 		</div>
 
