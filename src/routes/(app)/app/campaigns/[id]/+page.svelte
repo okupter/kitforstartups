@@ -3,6 +3,7 @@
 	import shop from '$lib/assets/shop-2-svgrepo-com.svg';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import { enhance } from '$app/forms';
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 	export let data;
 
 	const { campaign } = data;
@@ -11,6 +12,14 @@
 		return dayjs(date).format('MMMM D, YYYY');
 	};
 </script>
+
+<div class="pb-4">
+  <Breadcrumb aria-label="Breadcrumb">
+    <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+    <BreadcrumbItem href="/app/campaigns">Campaigns</BreadcrumbItem>
+    <BreadcrumbItem>{campaign?.name}</BreadcrumbItem>
+  </Breadcrumb>
+</div>
 
 <!-- component -->
 <div class="flex flex-col bg-background-100 shadow-md rounded-xl py-10">

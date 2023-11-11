@@ -4,6 +4,7 @@
 	import { toProperCase } from '$lib/utils';
 	import ViewUserDialog from '$lib/components/ViewUserDialog.svelte';
 	import UserStore from '$lib/stores/user.js';
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 
   export let data;
   
@@ -13,7 +14,14 @@
 <AddUserDialog />
 
 <div class="max-w-4xl pt-8">
-  <h3 class="text-3xl tracking-tight font-bold text-gray-900 sm:text-2xl">Users</h3>
+  <h4 class="text-text-900">Users</h4>
+</div>
+
+<div class="pb-4">
+  <Breadcrumb aria-label="Breadcrumb">
+    <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+    <BreadcrumbItem>Clients</BreadcrumbItem>
+  </Breadcrumb>
 </div>
 
 <div class="flex flex-row justify-start gap-2 py-4">

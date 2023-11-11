@@ -4,6 +4,7 @@
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation'
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 	
 	export let data;
 
@@ -33,6 +34,13 @@
 </script>
 
 <section class="px-4 mx-auto container">
+	<div class="pb-4">
+		<Breadcrumb aria-label="Breadcrumb">
+			<BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+			<BreadcrumbItem>Campaigns</BreadcrumbItem>
+		</Breadcrumb>
+	</div>	
+	
 	<div class="sm:flex sm:items-center sm:justify-between">
 		<div>
 			<div class="flex items-center gap-x-3">
@@ -51,7 +59,8 @@
 
 		<div class="flex items-center mt-3 gap-x-3">
 			<button
-				class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-primary-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-primary-600 dark:hover:bg-primary-500 dark:bg-primary-600"
+				class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-text-50 dark:text-text-900 transition-colors 
+					duration-200 bg-primary-600 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-primary-700 dark:hover:bg-primary-400 dark:bg-primary-300"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

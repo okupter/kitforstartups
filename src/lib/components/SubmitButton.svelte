@@ -3,7 +3,9 @@
 	export let text = 'Submit';
 </script>
 
-<button type="submit" disabled={running} class="rounded-md bg-primary-600 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 flex justify-around items-center">
+<button type="submit" disabled={running} class="rounded-md bg-primary-600 dark:bg-primary-300 p-2.5 text-sm font-semibold text-white 
+	shadow-sm hover:bg-primary-500 dark:hover:bg-primary-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 
+	focus-visible:outline-primary-600 flex justify-around items-center">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"

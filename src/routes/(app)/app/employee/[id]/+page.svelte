@@ -4,6 +4,7 @@
 	import MaskInput from '$lib/components/MaskInput.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
 	import type { EmployeeWithNotes } from '$lib/types/db.model.js';
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 	export let data;
   
   // how you read the id param from the url 
@@ -19,12 +20,22 @@
   }
 </script>
 
-<form action="?/save" method="post">
-  <div class="space-y-12 bg-background-100 border-gray-100 border dark:border-gray-800 shadow-lg rounded-2xl p-6">
-    <div class="border-b border-gray-900/10 pb-12">
-      <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Profile</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">This information is private and used for employee management purposes.</p>
+<div class="pb-3">
+  <h4 class="text-gray-900 dark:text-gray-50">Profile</h4>
+  <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">This information is private and used for employee management purposes.</p>
+</div>
 
+<div class="pb-4">
+  <Breadcrumb aria-label="Breadcrumb">
+    <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+    <BreadcrumbItem href="/app/employee">Employees</BreadcrumbItem>
+    <BreadcrumbItem>{employee?.firstName} {employee?.lastName}</BreadcrumbItem>
+  </Breadcrumb>
+</div>
+
+<form action="?/save" method="post">
+  <div class="bg-background-100 border-gray-100 border dark:border-gray-800 shadow-lg rounded-2xl px-6 pb-6">
+    <div class="border-b border-gray-900/10 pb-12">
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <!-- <div class="sm:col-span-4">
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>

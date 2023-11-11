@@ -1,13 +1,19 @@
 /** @type {import('tailwindcss').Config}*/
 const config = {
   darkMode: 'class',
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+	content: [
+    './src/**/*.{html,js,svelte,ts}',
+    './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}',
+    './node_modules/flowbite/**/*.js',
+  ],
 
 	theme: {
     fontSize: {
-      xs: '0.5rem',
-      sm: '0.707rem',
+      xs: '0.55rem',
+      sm: '0.7777rem',
+      md: '1.11rem',
       base: '1rem',
+      lg: '1.333rem',
       xl: '1.414rem',
       '2xl': '1.999rem',
       '3xl': '2.827rem',
@@ -110,6 +116,7 @@ const config = {
 
 	plugins: [
     require('@tailwindcss/forms'),
+    require('flowbite/plugin'),
   ]
 };
 

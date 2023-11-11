@@ -2,6 +2,7 @@
 	import AddEmployeeDialog from '$lib/components/AddEmployeeDialog.svelte';
 	import EmployeeCard from '$lib/components/EmployeeCard.svelte';
 	import type { Employee } from '$lib/types/db.model';
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 
   
   export let data: {
@@ -10,6 +11,13 @@
   
   console.log(data)
 </script>
+
+<div class="pb-4">
+  <Breadcrumb aria-label="Breadcrumb">
+    <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+    <BreadcrumbItem>Employees</BreadcrumbItem>
+  </Breadcrumb>
+</div>
 
 <div class="pb-4">
   <AddEmployeeDialog />

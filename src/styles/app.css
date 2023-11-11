@@ -143,17 +143,17 @@
 
 	html {font-size: 100%;} /* 16px */
 
-	h1 {font-size: 5.652rem; /* 90.4px */}
+	h1 {font-size: 6.2172rem; /* 90.4px */}
 
-	h2 {font-size: 3.997rem; /* 64px */}
+	h2 {font-size: 4.3967rem; /* 64px */}
 
-	h3 {font-size: 2.827rem; /* 45.28px */}
+	h3 {font-size: 3.1097rem; /* 45.28px */}
 
-	h4 {font-size: 1.999rem; /* 32px */}
+	h4 {font-size: 2.1989rem; /* 32px */}
 
-	h5 {font-size: 1.414rem; /* 22.56px */}
+	h5 {font-size: 1.5554rem; /* 22.56px */}
 
-	small {font-size: 0.707rem; /* 11.36px */}
+	small {font-size: 0.7777rem; /* 11.36px */}
 }
 
 @layer components {

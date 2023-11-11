@@ -3,6 +3,7 @@
 	import { slide } from 'svelte/transition';
 	import { ChevronsUpDown, X } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 
 	const {
 		elements: { root, content, trigger },
@@ -18,7 +19,14 @@
 </svelte:head>
 
 <div>
-	<h2>Manage Clients</h2>
+	<div class="pb-4">
+		<Breadcrumb aria-label="Breadcrumb">
+			<BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+			<BreadcrumbItem>Clients</BreadcrumbItem>
+		</Breadcrumb>
+	</div>	
+	
+	<h4>Manage Clients</h4>
 
 	<div use:melt={$root} class="relative mt-8 mb-28 w-[18rem] max-w-full sm:w-[25rem]">
 		<div class="flex items-center justify-between">
@@ -58,13 +66,13 @@
 		</div>
 	</div>
 
-	<h3>Clients</h3>
+	<h5>Clients</h5>
 
 	<div class="flex flex-col gap-2 pt-4">
 		{#each data.clients as client}
 			<!-- content here -->
-			<div>
-				<h5>{client.name}</h5>
+			<div class="border border-primary-500 rounded-md shadow-md p-4">
+				<p class="font-bold">{client.name}</p>
 				{#if client.contactUserId}
 					<p>Contact User ID: {client.contactUserId}</p>
 				{/if}

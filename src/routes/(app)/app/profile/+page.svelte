@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
+
 	export let data;
 </script>
 
@@ -7,18 +9,25 @@
 </svelte:head>
 
 <div>
-	<h1>Profile</h1>
+	<div class="pb-4">
+		<Breadcrumb aria-label="Breadcrumb">
+			<BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+			<BreadcrumbItem>Profile</BreadcrumbItem>
+		</Breadcrumb>
+	</div>
+	
+	<h4>Profile</h4>
 
 	<p>Email: {data.user?.email}</p>
 	<p>Email is verified: {Boolean(data.user?.emailVerified)}</p>
 
 	<div>
-		<h2>From GitHub</h2>
+		<h4>From GitHub</h4>
 		<p>GitHub username: {data.user?.githubUsername}</p>
 	</div>
 
 	<div>
-		<h2>Profile Data</h2>
+		<h4>Profile Data</h4>
 		<p>First Name: {data.profile?.firstName}</p>
 		<p>Last Name: {data.profile?.lastName}</p>
 		

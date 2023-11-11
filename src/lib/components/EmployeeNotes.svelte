@@ -63,7 +63,7 @@
 			class="block text-sm font-medium leading-6 text-gray-900 dark:text-neutral-50"
 			data-melt-part="root"
 		>
-			<span>Notes</span>
+      <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Notes</h2>
 		</label>
     
 		<div class="block w-full rounded-md border-1 p-4 5 text-gray-900 dark:text-neutral-50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-50 focus:ring-2 focus:ring-inset max-h-60 overflow-y-scroll">
