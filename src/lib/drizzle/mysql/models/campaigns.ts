@@ -1,5 +1,7 @@
 import { drizzleClient } from '$lib/drizzle/mysql/client';
-import type { SelectCampaign } from '$lib/types/db.model';
+import type { InsertCampaign, SelectCampaign } from '$lib/types/db.model';
+import { eq } from 'drizzle-orm';
+import { campaigns } from '../schema';
 
 const getCampaign = async (clientId: string, campaignId: string): Promise<SelectCampaign | null> => {
   if (!clientId || !campaignId) {
@@ -29,4 +31,37 @@ const getCampaigns = async (clientId: string): Promise<SelectCampaign[]> => {
   return data || [];
 }
 
-export { getCampaign, getCampaigns };
+const saveCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | null> => {
+  if (!campaign) return null;
+  const updated = Date.now() as any;
+  
+  try {
+    const current = await getCampaign(campaign.clientId, campaign.id);
+    
+    if (!current) return null;
+    
+    await drizzleClient.update(campaigns)
+      .set({
+        name: campaign.name,
+        description: campaign.description,
+        active: campaign.active,
+        updated,
+      })
+      .where(eq(campaigns.id, campaign.id));
+  } catch (ex) {
+    console.error(ex);
+    return null;
+  }
+  
+  return {
+    id: campaign.id,
+    clientId: campaign.clientId,
+    name: campaign.name,
+    description: campaign.description,
+    active: campaign.active,
+    created: campaign.created,
+    updated,
+  } as SelectCampaign;
+}
+
+export { getCampaign, getCampaigns, saveCampaign, };

@@ -18,7 +18,7 @@
 </svelte:head>
 
 <div>
-	<h1>Manage Clients</h1>
+	<h2>Manage Clients</h2>
 
 	<div use:melt={$root} class="relative mt-8 mb-28 w-[18rem] max-w-full sm:w-[25rem]">
 		<div class="flex items-center justify-between">
@@ -51,7 +51,7 @@
 							<input type="text" name="name" id="name" required />
 						</label>
 				
-						<button class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center gap-2" type="submit">Save</button>
+						<button class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 flex justify-around items-center gap-2" type="submit">Save</button>
 					</form>
 				</div>
 			{/if}
@@ -60,13 +60,15 @@
 
 	<h3>Clients</h3>
 
-	<div class="pt-4">
+	<div class="flex flex-col gap-2 pt-4">
 		{#each data.clients as client}
 			<!-- content here -->
-			<h3>{client.name}</h3>
-			{#if client.contactUserId}
-				<p>Contact User ID: {client.contactUserId}</p>
-			{/if}
+			<div>
+				<h5>{client.name}</h5>
+				{#if client.contactUserId}
+					<p>Contact User ID: {client.contactUserId}</p>
+				{/if}
+			</div>
 		{/each}
 	</div>
 </div>

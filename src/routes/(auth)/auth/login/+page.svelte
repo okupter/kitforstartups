@@ -64,8 +64,8 @@
 	</form>
 
 	<div class="flex flex-col mt-12 space-y-4 social-logins">
-		<a href="/oauth/github" class="rounded-md bg-gray-900 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center">Login with GitHub</a>
-		<a href="/oauth/google" class="rounded-md bg-indigo-600 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center">Login with Google</a>
+		<a href="/oauth/github" class="rounded-md bg-gray-900 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 flex justify-around items-center">Login with GitHub</a>
+		<a href="/oauth/google" class="rounded-md bg-primary-600 p-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 flex justify-around items-center">Login with Google</a>
 	</div>
 </div>
 

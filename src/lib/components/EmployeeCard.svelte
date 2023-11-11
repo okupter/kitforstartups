@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="flex flex-col items-start rounded-[10px] border-[1px] border-gray-200 w-[300px] p-4 bg-indigo-400 dark:bg-indigo-900 bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
+	class="flex flex-col items-start rounded-[10px] border border-background-100 w-[300px] p-4 bg-background-100 dark:bg-primary-200 dark:border-primary-200 bg-clip-border shadow-md text-text-200 dark:shadow-none"
 >
 	<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
 		<img
@@ -29,7 +29,7 @@
       alt=""
 		/>
 		<div
-			class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-indigo-500 dark:!border-navy-700"
+			class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-primary-500 dark:!border-navy-700"
 		>
 			<img
 				use:melt={$image}
@@ -37,18 +37,18 @@
 				src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/avatar11.1060b63041fdffa5f8ef.png"
 				alt=""
 			/>
-			<span use:melt={$fallback} class="text-3xl font-medium dark:text-white">{initials}</span>
+			<span use:melt={$fallback} class="text-3xl font-medium dark:text-text-900">{initials}</span>
 		</div>
 	</div>
 	<div class="w-[100%] mt-16 flex flex-col justify-center items-center">
-		<h4 class="text-xl font-bold text-navy-700 dark:text-white">
+		<h4 class="text-xl font-bold text-text-800 dark:text-text-900">
 			{employee?.firstName}
 			{employee?.lastName}
 		</h4>
-		<p class="text-base font-normal text-gray-600 dark:text-gray-400">{employee?.employeeProfile.email}</p>
+		<p class="text-base font-normal text-text-800 dark:text-text-900">{employee?.employeeProfile.email}</p>
 	</div>
 	<div class="w-[100%] px-2 mt-6 mb-3 flex justify-end gap-14 md:!gap-14">
-    <a href={windowUrl + employee?.id}>
+    <a href={windowUrl + employee?.id} class="text-accent-700 dark:text-text-800">
       <AppWindow />
     </a>
 		<!-- <div class="flex flex-col items-center justify-center">

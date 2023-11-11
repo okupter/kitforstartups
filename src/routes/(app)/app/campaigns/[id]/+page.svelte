@@ -13,25 +13,23 @@
 </script>
 
 <!-- component -->
-<div class="flex flex-col bg-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-md rounded-xl py-10">
+<div class="flex flex-col bg-background-100 shadow-md rounded-xl py-10">
   <div class="container mx-4">
     <div class="max-w-3xl w-full mx-auto grid gap-1 grid-cols-1">
-      <h2 class="text-5xl text-indigo-500 dark:text-neutral-200">{campaign?.name}</h2>
-      <p class="text-gray-500 dark:text-gray-400">Last Updated: {formatDate(campaign?.updated)}</p>
+      <h3 class="text-text-900">{campaign?.name}</h3>
+      <p class="text-accent-700">Last Updated: {formatDate(campaign?.updated)}</p>
     </div>
   </div>
   
   <!-- dark theme -->
 	<div class="container m-4">
     
-		<form action="?/save" method="post"
+		<form action="?/update" method="post"
       class="max-w-3xl w-full mx-auto grid gap-4 grid-cols-2 pt-8"
       use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-        const formValues = Object.fromEntries(formData.entries());
-        console.log(formValues);
         
         return async ({ result, update }) => {
-          
+          console.log(result);
         }
       }}
     >

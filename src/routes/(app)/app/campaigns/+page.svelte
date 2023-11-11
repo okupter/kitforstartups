@@ -36,9 +36,9 @@
 	<div class="sm:flex sm:items-center sm:justify-between">
 		<div>
 			<div class="flex items-center gap-x-3">
-				<h2 class="text-lg font-medium text-neutral-800 dark:text-neutral-50">Campaigns</h2>
+				<h4 class="text-lg font-medium text-neutral-800 dark:text-neutral-50">Campaigns</h4>
 				<span
-					class="px-3 py-1 text-xs text-indigo-600 bg-indigo-100 rounded-full dark:bg-gray-800 dark:text-indigo-200"
+					class="px-3 py-1 text-xs text-900 bg-primary-100 rounded-full dark:bg-gray-800 dark:text-200"
 				>
 					{$campaigns?.length} Campaigns
 				</span>
@@ -51,7 +51,7 @@
 
 		<div class="flex items-center mt-3 gap-x-3">
 			<button
-				class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-indigo-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-indigo-600 dark:hover:bg-indigo-500 dark:bg-indigo-600"
+				class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-primary-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-primary-600 dark:hover:bg-primary-500 dark:bg-primary-600"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +201,7 @@
                 <tr>
                   <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
                     <div>
-                      <h2 class="font-medium text-gray-800 dark:text-white">{ campaign.name }</h2>
+                      <h5 class="font-medium text-gray-800 dark:text-white">{ campaign.name }</h5>
                       <p class="text-sm font-normal text-gray-600 dark:text-gray-400">
                         { campaign.url }
                       </p>

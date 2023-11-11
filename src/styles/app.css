@@ -1,20 +1,159 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:700|Lora:400');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+	:root {
+    --text-50: #f8f2ed;
+    --text-100: #f0e4db;
+    --text-200: #e2cab6;
+    --text-300: #d3af92;
+    --text-400: #c5956d;
+    --text-500: #b67a49;
+    --text-600: #92623a;
+    --text-700: #6d492c;
+    --text-800: #49311d;
+    --text-900: #24180f;
+    --text-950: #120c07;
+    
+    --background-50: #f2f2f3;
+    --background-100: #e4e5e7;
+    --background-200: #cacbce;
+    --background-300: #afb1b6;
+    --background-400: #95989d;
+    --background-500: #7a7e85;
+    --background-600: #62656a;
+    --background-700: #494b50;
+    --background-800: #313235;
+    --background-900: #18191b;
+    --background-950: #0c0d0d;
+    
+    --primary-50: #edf3f8;
+    --primary-100: #dae7f1;
+    --primary-200: #b5cee3;
+    --primary-300: #90b6d5;
+    --primary-400: #6b9ec7;
+    --primary-500: #4685b9;
+    --primary-600: #386b94;
+    --primary-700: #2a506f;
+    --primary-800: #1c354a;
+    --primary-900: #0e1b25;
+    --primary-950: #070d12;
+    
+    --secondary-50: #ededf8;
+    --secondary-100: #dadbf1;
+    --secondary-200: #b5b7e3;
+    --secondary-300: #9092d5;
+    --secondary-400: #6b6ec7;
+    --secondary-500: #464ab9;
+    --secondary-600: #383b94;
+    --secondary-700: #2a2c6f;
+    --secondary-800: #1c1e4a;
+    --secondary-900: #0e0f25;
+    --secondary-950: #070712;
+    
+    --accent-50: #edf8f7;
+    --accent-100: #daf1f0;
+    --accent-200: #b5e3e1;
+    --accent-300: #90d5d1;
+    --accent-400: #6bc7c2;
+    --accent-500: #46b9b3;
+    --accent-600: #38948f;
+    --accent-700: #2a6f6b;
+    --accent-800: #1c4a48;
+    --accent-900: #0e2524;
+    --accent-950: #071212;
+    
+  }
+  .dark {
+    --text-50: #120c07;
+    --text-100: #24180f;
+    --text-200: #49311d;
+    --text-300: #6d492c;
+    --text-400: #92623a;
+    --text-500: #b67a49;
+    --text-600: #c5956d;
+    --text-700: #d3af92;
+    --text-800: #e2cab6;
+    --text-900: #f0e4db;
+    --text-950: #f8f2ed;
+    
+    --background-50: #0c0d0d;
+    --background-100: #18191b;
+    --background-200: #313235;
+    --background-300: #494b50;
+    --background-400: #62656a;
+    --background-500: #7a7e85;
+    --background-600: #95989d;
+    --background-700: #afb1b6;
+    --background-800: #cacbce;
+    --background-900: #e4e5e7;
+    --background-950: #f2f2f3;
+    
+    --primary-50: #070d12;
+    --primary-100: #0e1b25;
+    --primary-200: #1c354a;
+    --primary-300: #2a506f;
+    --primary-400: #386b94;
+    --primary-500: #4685b9;
+    --primary-600: #6b9ec7;
+    --primary-700: #90b6d5;
+    --primary-800: #b5cee3;
+    --primary-900: #dae7f1;
+    --primary-950: #edf3f8;
+    
+    --secondary-50: #070712;
+    --secondary-100: #0e0f25;
+    --secondary-200: #1c1e4a;
+    --secondary-300: #2a2c6f;
+    --secondary-400: #383b94;
+    --secondary-500: #464ab9;
+    --secondary-600: #6b6ec7;
+    --secondary-700: #9092d5;
+    --secondary-800: #b5b7e3;
+    --secondary-900: #dadbf1;
+    --secondary-950: #ededf8;
+    
+    --accent-50: #071212;
+    --accent-100: #0e2524;
+    --accent-200: #1c4a48;
+    --accent-300: #2a6f6b;
+    --accent-400: #38948f;
+    --accent-500: #46b9b3;
+    --accent-600: #6bc7c2;
+    --accent-700: #90d5d1;
+    --accent-800: #b5e3e1;
+    --accent-900: #daf1f0;
+    --accent-950: #edf8f7; 
+  }
+	
 	body {
-		@apply font-inter text-gray-800 dark:bg-neutral-800 dark:text-gray-50;
+		@apply text-text-950 dark:text-text-900 bg-background-50 dark:bg-background-200;
+		
+		font-family: 'Lora';
+  	font-weight: 400;
+	}
+	
+	h1, h2, h3, h4, h5 {
+		font-family: 'Nunito';
+		font-weight: 700;
 	}
 
-	/* Headings */
-	h1 {
-		@apply text-4xl font-bold;
-	}
+	html {font-size: 100%;} /* 16px */
 
-	h2 {
-		@apply text-3xl font-bold;
-	}
+	h1 {font-size: 5.652rem; /* 90.4px */}
+
+	h2 {font-size: 3.997rem; /* 64px */}
+
+	h3 {font-size: 2.827rem; /* 45.28px */}
+
+	h4 {font-size: 1.999rem; /* 32px */}
+
+	h5 {font-size: 1.414rem; /* 22.56px */}
+
+	small {font-size: 0.707rem; /* 11.36px */}
 }
 
 @layer components {
@@ -24,8 +163,8 @@
 	}
 
 	.action-primary {
-		@apply bg-blue-600 text-white;
-		@apply hover:bg-blue-700;
+		@apply bg-background-600 text-text-900;
+		@apply hover:bg-background-700;
 	}
 
 	.action-outline {
@@ -43,19 +182,23 @@
 	}
 	
 	form .form-control > label {
-		@apply mb-0.5 font-medium text-neutral-900 dark:text-neutral-100;
+		@apply mb-0.5 text-text-900;
 	}
 	
 	form .form-control > input[type='text'] {
-		@apply h-10 w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50;
+		@apply h-10 w-[100%] rounded-md px-3 py-2 text-text-900 dark:bg-background-200;
 	}
 	
 	form .form-control > textarea {
-		@apply w-[100%] rounded-md px-3 py-2 text-neutral-700 dark:bg-gray-400 dark:text-neutral-50;
+		@apply w-[100%] rounded-md px-3 py-2 text-text-900 dark:bg-background-200;
 	}
 	
 	form .form-control > input[type='checkbox'] {
-		@apply h-4 w-4 rounded-md p-3 text-indigo-500;
+		@apply h-4 w-4 rounded-md p-3 text-text-900;
+	}
+	
+	form .form-control > input[type='checkbox']:checked {
+		@apply bg-primary-500;
 	}
 
 	/* Forms */

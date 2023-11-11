@@ -20,7 +20,7 @@
 </script>
 
 <form action="?/save" method="post">
-  <div class="space-y-12 bg-gray-100 border-gray-100 dark:bg-gray-800 border dark:border-gray-800 shadow-lg rounded-2xl p-6">
+  <div class="space-y-12 bg-background-100 border-gray-100 border dark:border-gray-800 shadow-lg rounded-2xl p-6">
     <div class="border-b border-gray-900/10 pb-12">
       <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-50">Profile</h2>
       <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-100">This information is private and used for employee management purposes.</p>
@@ -29,7 +29,7 @@
         <!-- <div class="sm:col-span-4">
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
           <div class="mt-2">
-            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600 sm:max-w-md">
               <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">workcation.com/</span>
               <input type="text" name="username" id="username" autocomplete="username" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">
             </div>
@@ -59,7 +59,7 @@
                 <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
               </svg>
               <div class="mt-4 flex text-sm leading-6 text-gray-600">
-                <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-900 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-600 focus-within:ring-offset-2 hover:text-500">
                   <span>Upload a file</span>
                   <input id="file-upload" name="file-upload" type="file" class="sr-only">
                 </label>
@@ -82,7 +82,7 @@
           <div class="mt-2">
             <input type="text" name="first-name" id="first-name"
               value={employee?.firstName}
-              autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
+              autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
             >
           </div>
@@ -93,7 +93,7 @@
           <div class="mt-2">
             <input type="text" name="last-name" id="last-name" 
               value={employee?.lastName}
-              autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
+              autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
             >
           </div>
@@ -104,7 +104,7 @@
           <div class="mt-2">
             <input id="email" name="email" type="email" 
               value={profile?.email}
-              autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
+              autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required 
             />
           </div>
@@ -116,12 +116,12 @@
             <MaskInput alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
               value={profile?.phone}
               id="phone" name="phone" type="phone"
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required
             />
             <!-- <input id="phone" name="phone" type="phone" 
               value={profile?.phone}
-              autocomplete="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6"> -->
+              autocomplete="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6"> -->
           </div>
         </div>
         
@@ -131,14 +131,14 @@
             <MaskInput id="phone2" name="phone2" type="phone2" 
               alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
               value={profile?.phone2 || ''}
-              autocomplete="phone2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700" />
+              autocomplete="phone2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700" />
           </div>
         </div>
 
         <!-- <div class="sm:col-span-3">
           <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
           <div class="mt-2">
-            <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+            <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:max-w-xs sm:text-sm sm:leading-6">
               <option>United States</option>
               <option>Canada</option>
               <option>Mexico</option>
@@ -151,7 +151,7 @@
           <div class="mt-2">
             <input type="text" name="street-address" id="street-address" 
               value={profile?.address}
-              autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
+              autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
@@ -160,7 +160,7 @@
           <div class="mt-2">
             <input type="text" name="city" id="city" 
               value={profile?.city}
-              autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
+              autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
@@ -169,7 +169,7 @@
           <div class="mt-2">
             <input type="text" name="region" id="region" 
               value={profile?.state}
-              autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
+              autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
@@ -178,7 +178,7 @@
           <div class="mt-2">
             <input type="text" name="postal-code" id="postal-code" 
               value={profile?.zip}
-              autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
+              autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@
                   <div class="flex items-center">
                     <input name={'code_campaign_' + campaign?.id} type="text" 
                       value={getCodeForCampaign(campaign?.id)}
-                      class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-100 dark:text-indigo-100 dark:focus:ring-indigo-200 max-w-[120px] dark:bg-neutral-700">
+                      class="rounded border-gray-300 text-900 focus:ring-primary-600 dark:border-gray-100 dark:text-100 dark:focus:ring-primary-200 max-w-[120px] dark:bg-neutral-700">
                   </div>
                 </div>
               </div>
@@ -223,7 +223,7 @@
           <div class="mt-6 space-y-6">
             <div class="relative flex gap-x-3">
               <div class="flex h-6 items-center">
-                <input id="comments" name="comments" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                <input id="comments" name="comments" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-900 focus:ring-primary-600">
               </div>
               <div class="text-sm leading-6">
                 <label for="comments" class="font-medium text-gray-900">Comments</label>
@@ -232,7 +232,7 @@
             </div>
             <div class="relative flex gap-x-3">
               <div class="flex h-6 items-center">
-                <input id="candidates" name="candidates" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                <input id="candidates" name="candidates" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-900 focus:ring-primary-600">
               </div>
               <div class="text-sm leading-6">
                 <label for="candidates" class="font-medium text-gray-900">Candidates</label>
@@ -241,7 +241,7 @@
             </div>
             <div class="relative flex gap-x-3">
               <div class="flex h-6 items-center">
-                <input id="offers" name="offers" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                <input id="offers" name="offers" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-900 focus:ring-primary-600">
               </div>
               <div class="text-sm leading-6">
                 <label for="offers" class="font-medium text-gray-900">Offers</label>
@@ -255,15 +255,15 @@
           <p class="mt-1 text-sm leading-6 text-gray-600">These are delivered via SMS to your mobile phone.</p>
           <div class="mt-6 space-y-6">
             <div class="flex items-center gap-x-3">
-              <input id="push-everything" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              <input id="push-everything" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-900 focus:ring-primary-600">
               <label for="push-everything" class="block text-sm font-medium leading-6 text-gray-900">Everything</label>
             </div>
             <div class="flex items-center gap-x-3">
-              <input id="push-email" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              <input id="push-email" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-900 focus:ring-primary-600">
               <label for="push-email" class="block text-sm font-medium leading-6 text-gray-900">Same as email</label>
             </div>
             <div class="flex items-center gap-x-3">
-              <input id="push-nothing" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              <input id="push-nothing" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-900 focus:ring-primary-600">
               <label for="push-nothing" class="block text-sm font-medium leading-6 text-gray-900">No push notifications</label>
             </div>
           </div>
@@ -273,7 +273,7 @@
     <div class="mt-6 flex items-center justify-end gap-x-6">
       <button type="button" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">Cancel</button>
       <SubmitButton text="Save" />
-      <!-- <button type="submit" class="rounded-md bg-indigo-600 dark:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200">Save</button> -->
+      <!-- <button type="submit" class="rounded-md bg-primary-600 dark:bg-primary-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200">Save</button> -->
     </div>
   </div>
 </form>

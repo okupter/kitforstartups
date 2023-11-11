@@ -65,7 +65,9 @@
   onDestroy(() => unsubs.forEach(fn => fn()));
 </script>
 
-<button use:melt={$trigger} class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex justify-around items-center gap-2">
+<button use:melt={$trigger} class="rounded-md bg-primary-600 text-text-50 dark:text-text-900 px-3.5 py-2.5 text-sm font-semibold 
+  shadow-sm hover:bg-primary-700 dark:bg-primary-300 dark:hover:bg-primary-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 
+  focus-visible:outline-primary-600 flex justify-around items-center gap-2">
   <span>{selectedClient?.name.toLowerCase()}</span>
   <Icon icon="tabler:select" />
 </button>
@@ -76,11 +78,11 @@
 		<div
 			use:melt={$content}
 			class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw]
-      max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white
+      max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background-50 dark:bg-background-200
       p-6 shadow-lg"
 		>
 			<div class="flex justify-between">
-        <h3 use:melt={$title}>Active Clients</h3>
+        <h5 use:melt={$title}>Active Clients</h5>
         <button use:melt={$close}>
           <XSquare />
         </button>
@@ -88,7 +90,7 @@
 			
       <div class="py-5 px-2">
         <div class="flex gap-2 pb-3">
-          <h4>Currently Selected:</h4>
+          <p class="font-bold">Currently Selected:</p>
           <span>{selectedClient?.name}</span>
         </div>
         
@@ -96,7 +98,7 @@
           <!-- svelte-ignore a11y-label-has-associated-control - $label contains the 'for' attribute -->
           <label class="block" use:melt={$label}>Change Client</label>
           <button
-            class="flex h-10 min-w-[220px] items-center justify-between rounded-lg bg-white px-3 py-2 shadow transition-opacity hover:opacity-90"
+            class="flex h-10 min-w-[220px] items-center justify-between rounded-lg px-3 py-2 shadow transition-opacity hover:opacity-90 bg-background-50 dark:bg-background-300"
             use:melt={$triggerSelect}
             on:m-keydown={(e) => {
               e.preventDefault(); // Cancel default builder behabiour
@@ -130,17 +132,17 @@
           {#if $openSelect}
             <div
               class="z-10 flex max-h-[300px] flex-col
-            overflow-y-auto rounded-lg bg-white p-1
+            overflow-y-auto rounded-lg bg-background-50 dark:bg-background-300 p-1
             shadow focus:!ring-0"
               use:melt={$menu}
             >
               {#each Object.entries(options) as [key, arr]}
                 {#each arr as item}
                   <div
-                    class="relative cursor-pointer rounded-lg py-1 pl-8 pr-4 text-neutral-800
-                    focus:z-10 focus:text-neutral-700
-                  data-[highlighted]:bg-magnum-50 data-[selected]:bg-neutral-100
-                  data-[highlighted]:text-neutral-900 data-[selected]:text-neutral-900"
+                    class="relative cursor-pointer rounded-lg py-1 pl-8 pr-4 text-text-900
+                    focus:z-10 focus:text-text-800
+                  data-[highlighted]:bg-accent-500
+                  data-[highlighted]:text-text-50 data-[selected]:text-text-800"
                     use:melt={$option({ value: item, label: item })}
                     on:m-click={(e) => {
                       e.preventDefault();
@@ -176,6 +178,6 @@
     top: 50%;
     z-index: theme(zIndex.20);
     translate: 0 calc(-50% + 1px);
-    color: theme(colors.magnum.500);
+    color: theme(colors.primary.500);
   }
 </style>

@@ -88,7 +88,7 @@
 			name="notes"
 			id="notes"
 			rows="3"
-			class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-50 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
+			class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-50 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
       required
 		></textarea>
     
@@ -105,17 +105,17 @@
     padding: theme('spacing.1');
     border-radius: theme('borderRadius.md');
  
-    &:hover {
-      background-color: theme('colors.magnum.100');
+    /* &:hover {
+      background-color: theme('colors.primary.100');
     }
  
     &[data-state='on'] {
-      background-color: theme('colors.magnum.200');
-      color: theme('colors.magnum.900');
-    }
+      background-color: theme('colors.primary.200');
+      color: theme('colors.primary.900');
+    } */
  
     &:focus {
-      @apply ring-2 ring-magnum-400;
+      @apply ring-2 ring-inherit;
     }
   }
  
