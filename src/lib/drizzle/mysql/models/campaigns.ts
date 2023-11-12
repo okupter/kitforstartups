@@ -2,6 +2,7 @@ import { drizzleClient } from '$lib/drizzle/mysql/client';
 import type { InsertCampaign, SelectCampaign } from '$lib/types/db.model';
 import { eq } from 'drizzle-orm';
 import { campaigns } from '../schema';
+import { nanoid } from 'nanoid';
 
 const getCampaign = async (clientId: string, campaignId: string): Promise<SelectCampaign | null> => {
   if (!clientId || !campaignId) {
@@ -31,7 +32,7 @@ const getCampaigns = async (clientId: string): Promise<SelectCampaign[]> => {
   return data || [];
 }
 
-const saveCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | null> => {
+const updateCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | null> => {
   if (!campaign) return null;
   const updated = Date.now() as any;
   
@@ -44,6 +45,7 @@ const saveCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | 
       .set({
         name: campaign.name,
         description: campaign.description,
+        url: campaign.url,
         active: campaign.active,
         updated,
       })
@@ -58,10 +60,36 @@ const saveCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | 
     clientId: campaign.clientId,
     name: campaign.name,
     description: campaign.description,
+    url: campaign.url,
     active: campaign.active,
-    created: campaign.created,
     updated,
   } as SelectCampaign;
 }
 
-export { getCampaign, getCampaigns, saveCampaign, };
+const addCampaign = async (campaign: InsertCampaign): Promise<SelectCampaign | null> => {
+  if (!campaign) return null;
+  const updated = Date.now() as any;
+  
+  const dto = {
+    id: nanoid(),
+    clientId: campaign.clientId,
+    name: campaign.name,
+    description: campaign.description,
+    url: campaign.url,
+    active: campaign.active,
+    created: updated,
+    updated,
+  } as InsertCampaign;
+  
+  try {
+    await drizzleClient.insert(campaigns)
+      .values(dto);
+  } catch (ex) {
+    console.error(ex);
+    return null;
+  }
+  
+  return dto as SelectCampaign;
+}
+
+export { getCampaign, getCampaigns, updateCampaign, addCampaign };

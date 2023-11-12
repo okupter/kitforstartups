@@ -61,6 +61,7 @@
 			<button
 				class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-text-50 dark:text-text-900 transition-colors 
 					duration-200 bg-primary-600 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-primary-700 dark:hover:bg-primary-400 dark:bg-primary-300"
+				on:click={() => goto('/app/campaigns/add')}
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +207,7 @@
 							</tr>
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-              {#each $campaigns as campaign}
+              {#each $campaigns as campaign (campaign.id)}
                 <tr>
                   <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
                     <div>
@@ -223,7 +224,7 @@
                       { campaign.active ? 'Active' : 'Inactive' }
                     </div>
                   </td>
-                  <td class="px-4 py-4 text-sm whitespace-nowrap">
+                  <td class="px-4 py-4 text-sm whitespace-break-spaces">
                     <div>
                       <p class="text-gray-500 dark:text-gray-400">
                         { campaign.description ? campaign.description : 'No description' }
@@ -292,14 +293,19 @@
                       </svg>
                     </button>
                     {#if $open}
-                      <div use:melt={$menu} class="menu" transition:fly={{ duration: 150, y: -10 }}>
+                      <div use:melt={$menu} class="menu cursor-pointer" transition:fly={{ duration: 150, y: -10 }}>
                         <div use:melt={$item} class="item"
 													on:m-pointerdown={e => {
 														e.preventDefault();
 														goto(`/app/campaigns/${campaign.id}`)
 													}}
 												>Edit</div>
-                        <div class="item" use:melt={$item}>
+                        <div class="item" use:melt={$item}
+													on:m-pointerdown={e => {
+														e.preventDefault();
+														console.log(e);
+													}}
+												>
                           { campaign.active ? 'Disable' : 'Enable' }
                         </div>
                       </div>
