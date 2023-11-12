@@ -11,18 +11,18 @@
   if (data.users) UserStore.set(data.users);
 </script>
 
-<AddUserDialog />
-
-<div class="max-w-4xl pt-8">
-  <h4 class="text-text-900">Users</h4>
-</div>
-
 <div class="pb-4">
   <Breadcrumb aria-label="Breadcrumb">
     <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-    <BreadcrumbItem>Clients</BreadcrumbItem>
+    <BreadcrumbItem>Users</BreadcrumbItem>
   </Breadcrumb>
 </div>
+
+<div class="max-w-4xl">
+  <h4 class="text-text-900">Users</h4>
+</div>
+
+<AddUserDialog />
 
 <div class="flex flex-row justify-start gap-2 py-4">
   {#each $UserStore as user}
