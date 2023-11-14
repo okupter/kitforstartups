@@ -82,8 +82,8 @@
 					Payroll<ChevronDown class="w-3 h-3 ml-2 text-primary-800 dark:text-white inline" />
 				</NavLi>
 				<Dropdown class="w-44 z-20">
-					<DropdownItem href="/app/pay-cycles">Start Payroll</DropdownItem>
-					<DropdownItem href="/app/payroll/history">History</DropdownItem>
+					<DropdownItem href="/app/payroll-cycles/add">Start Payroll</DropdownItem>
+					<DropdownItem href="/app/payroll-cycles">History</DropdownItem>
 					<DropdownItem href="/app/payroll/search">Find Paystub</DropdownItem>
 				</Dropdown>
 				<NavLi href="/app/employee">Employees</NavLi>

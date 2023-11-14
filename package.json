@@ -79,6 +79,8 @@
 		"drizzle-orm": "^0.28.5",
 		"flowbite": "^2.1.1",
 		"flowbite-svelte": "^0.44.19",
+		"flowbite-svelte-blocks": "^0.5.1",
+		"flowbite-svelte-icons": "^0.4.5",
 		"input-core": "^2.0.1",
 		"lucia": "^2.4.2",
 		"lucide-svelte": "^0.279.0",

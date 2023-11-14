@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { bigint, boolean, mysqlEnum, mysqlTable, text, unique, varchar } from 'drizzle-orm/mysql-core';
+import { bigint, boolean, double, mysqlEnum, mysqlTable, text, tinyint, unique, varchar } from 'drizzle-orm/mysql-core';
 
 const user = mysqlTable('auth_user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -163,9 +163,150 @@ const campaigns = mysqlTable('campaigns', {
 	updated: bigint('updated', { mode: 'bigint' }).notNull(),
 });
 
+const payrollCycle = mysqlTable('payroll_cycle', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	startDate: bigint('start_date', { mode: 'bigint' }).notNull(),
+	endDate: bigint('end_date', { mode: 'bigint' }).notNull(),
+	paymentDate: bigint('payment_date', { mode: 'bigint' }).notNull(),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
+});
+
+const paystub = mysqlTable('paystub', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	payrollCycleId: varchar('payroll_cycle_id', { length: 255 })
+		.notNull()
+		.references(() => payrollCycle.id),
+	campaignId: varchar('campaign_id', { length: 255 })
+		.notNull()
+		.references(() => campaigns.id),
+	totalSales: bigint('total_sales', { mode: 'bigint' }).notNull(),
+	totalOverrides: bigint('total_overrides', { mode: 'bigint' }).notNull(),
+	pieceRate: double('piece_rate').notNull(),
+	grossPay: double('gross_pay').notNull(),
+	netPay: double('net_pay').notNull(),
+	taxDeductions: double('tax_deductions').notNull().default(0),
+	otherDeductions: double('other_deductions').notNull().default(0),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
+});
+
+const paystubRelations = relations(paystub, ({ one, many }) => ({
+	employee: one(employee, {
+		fields: [paystub.employeeId],
+		references: [employee.id],
+	}),
+	sales: many(sale),
+}));
+
+const sale = mysqlTable('sale', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	paystubId: varchar('paystub_id', { length: 255 })
+		.notNull()
+		.references(() => paystub.id),
+	campaignId: varchar('campaign_id', { length: 255 })
+		.notNull()
+		.references(() => campaigns.id),
+	saleDate: bigint('sale_date', { mode: 'bigint' }).notNull(),
+	saleAmount: double('sale_amount').notNull().default(0),
+	isComplete: tinyint('is_complete').notNull().default(0),
+	statusDescription: mysqlEnum('status_description', ['pending', 'approved', 'rejected']).notNull(),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
+});
+
+const saleRelations = relations(sale, ({ one }) => ({
+	paystub: one(paystub, {
+		fields: [sale.paystubId],
+		references: [paystub.id],
+	}),
+	campaign: one(campaigns, {
+		fields: [sale.campaignId],
+		references: [campaigns.id],
+	}),
+	employee: one(employee, {
+		fields: [sale.employeeId],
+		references: [employee.id],
+	}),
+}));
+
+const saleOverride = mysqlTable('sale_override', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	originatingSaleId: varchar('sale_id', { length: 255 })
+		.notNull()
+		.references(() => sale.id),
+	originatingEmployeeId: varchar('originating_employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	beneficiaryEmployeeId: varchar('beneficiary_employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	overrideAmount: double('override_amount').notNull().default(0),
+});
+
+const expenseReport = mysqlTable('expense_report', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	paystubId: varchar('paystub_id', { length: 255 })
+		.notNull()
+		.references(() => paystub.id),
+	submissionDate: bigint('submission_date', { mode: 'bigint' }).notNull(),
+	approvalStatus: mysqlEnum('approval_status', ['pending', 'approved', 'rejected']).notNull(),
+	approvalDate: bigint('approval_date', { mode: 'bigint' }),
+	approvalNotes: text('approval_notes'),
+	totalAmount: double('total_amount').notNull().default(0),
+	created: bigint('created', { mode: 'bigint' }).notNull(),
+	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	deleted: bigint('deleted', { mode: 'bigint' }),
+});
+
+const expenseItem = mysqlTable('expense_item', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	clientId: varchar('client_id', { length: 255 })
+		.notNull()
+		.references(() => client.id),
+	exportReportId: varchar('expense_report_id', { length: 255 })
+		.notNull()
+		.references(() => expenseReport.id),
+	description: text('description').notNull(),
+	amount: double('amount').notNull().default(0),
+	dateIncurred: bigint('date_incurred', { mode: 'bigint' }).notNull(),
+	receiptUrl: varchar('receipt_url', { length: 1024 }),
+});
+
 export {
 	emailVerification, passwordResetToken, user, userKey, userProfile, client, userSession,
 	employee, employeeProfile, employeeCodes, employeeRelations, employeeCodesRelations,
-	employeeNotes, employeeNotesRelations, campaigns,
+	employeeNotes, employeeNotesRelations, campaigns, payrollCycle, paystub, sale, saleOverride,
+	expenseReport, expenseItem, paystubRelations, saleRelations,
 };
 
