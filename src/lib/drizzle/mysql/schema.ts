@@ -185,7 +185,7 @@ const paystub = mysqlTable('paystub', {
 		.notNull()
 		.references(() => client.id),
 	payrollCycleId: varchar('payroll_cycle_id', { length: 255 })
-		.notNull()
+		.default('')
 		.references(() => payrollCycle.id),
 	campaignId: varchar('campaign_id', { length: 255 })
 		.notNull()
@@ -208,6 +208,14 @@ const paystubRelations = relations(paystub, ({ one, many }) => ({
 		references: [employee.id],
 	}),
 	sales: many(sale),
+	campaign: one(campaigns, {
+		fields: [paystub.campaignId],
+		references: [campaigns.id],
+	}),
+	payrollCycle: one(payrollCycle, {
+		fields: [paystub.payrollCycleId],
+		references: [payrollCycle.id],
+	}),
 }));
 
 const sale = mysqlTable('sale', {

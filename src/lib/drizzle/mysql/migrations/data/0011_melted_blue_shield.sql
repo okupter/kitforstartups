@@ -1,0 +1,1 @@
+ALTER TABLE `paystub` MODIFY COLUMN `payroll_cycle_id` varchar(255) DEFAULT '';
