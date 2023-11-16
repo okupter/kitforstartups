@@ -5,6 +5,8 @@
   import dayjs from 'dayjs';
 	import { PlusCircleIcon } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
+	import type { SelectPaystub } from '$lib/types/db.model';
+	import { createToast } from '$lib/components/Toast.svelte';
   
   export let data;
   const { cycleAndPaystubs } = data;
@@ -15,6 +17,32 @@
   const formatCurrency = (amount: any) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   
   console.log(cycle);
+  
+  const detachPayrollCycle = async (paystub: SelectPaystub) => {
+    const result = await fetch('/api/paystubs/detach-payroll-cycle', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: paystub.id,
+        clientId: paystub.clientId,
+      }),
+    });
+    
+    if (result.status != 200) {
+      console.log('Error detaching payroll cycle');
+      return;
+    }
+    
+    paystub.payrollCycleId = null;
+    
+    createToast({
+      title: 'Removed',
+      description: 'Paystub removed from payroll cycle.',
+      type: 'success',
+    });
+  }
 </script>
 
 <div class="container max-w-5xl">
@@ -116,11 +144,19 @@
                   >
                     <input type="hidden" name="paystubId" value={item?.id} />
                     <input type="hidden" name="payrollCycleId" value={cycle?.id} />
-                    <Button type="submit" pill={true} outline={true} class="!p-2" size="lg">
-                      <PlusOutline class="w-3 h-3" />
-                    </Button>
+                    {#if item.payrollCycleId == null}
+                      <Button type="submit" pill={true} outline={true} class="!p-2" size="lg">
+                        <PlusOutline class="w-3 h-3" />
+                      </Button>
+                    {:else}
+                      <!-- <Button href={'/app/paystubs/' + item.id} pill={true} outline={true}>
+                        Edit
+                      </Button> -->
+                      <Button on:click={() => detachPayrollCycle(item)} pill={true} outline={true} color="red">
+                        Remove
+                      </Button>
+                    {/if}
                   </form>
-                  <div>Edit</div>
                 </div>
               </TableBodyCell>
             </TableBodyRow>

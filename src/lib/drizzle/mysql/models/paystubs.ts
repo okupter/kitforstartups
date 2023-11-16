@@ -71,7 +71,7 @@ export const detachPayrollCycleFromPaystub = async (paystubId: string): Promise<
       })
       .where(eq(paystub.id, paystubId));
   } catch (ex) {
-    console.error(ex);
+    console.log(ex);
     return false;
   }
   
