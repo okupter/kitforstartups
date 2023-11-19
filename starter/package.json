@@ -12,7 +12,7 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"generate-migrations:mysql": "drizzle-kit generate:mysql --config=src/lib/drizzle/mysql/drizzle.config.ts",
 		"generate-migrations:postgres": "drizzle-kit generate:pg --config=src/lib/drizzle/postgres/drizzle.config.ts",
-		"generate-migrations:turso": "drizzle-kit generate:turso --config=src/lib/drizzle/turso/drizzle.config.ts",
+		"generate-migrations:turso": "drizzle-kit generate:sqlite --config=src/lib/drizzle/turso/drizzle.config.ts",
 		"push:mysql": "drizzle-kit push:mysql --config=src/lib/drizzle/mysql/drizzle.config.ts",
 		"push:postgres": "drizzle-kit push:pg --config=src/lib/drizzle/postgres/drizzle.config.ts",
 		"push:turso": "drizzle-kit push:sqlite --config=src/lib/drizzle/turso/drizzle.config.ts",
