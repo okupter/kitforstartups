@@ -15,14 +15,14 @@ export const getPayrollCycles = async (clientId: string): Promise<SelectPayrollC
   return data || [];
 }
 
-export const getPayrollCycle = async (id: string): Promise<SelectPayrollCycle | null> => {
-  if (!id) return null;
+export const getPayrollCycle = async (id: string): Promise<SelectPayrollCycle> => {
+  if (!id) return null as unknown as SelectPayrollCycle;
   
   const data = await drizzleClient.query.payrollCycle.findFirst({
     where: (pc, { eq }) => eq(pc.id, id),
   });
   
-  return data || null;
+  return data || null as unknown as SelectPayrollCycle;
 }
 
 export const addPayrollCycle = async (dto: InsertPayrollCycle): Promise<SelectPayrollCycle | null> => {

@@ -1,24 +1,21 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, Heading, P, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-  import { Section } from 'flowbite-svelte-blocks';
-  import { PlusOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
+	import { Breadcrumb, BreadcrumbItem, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+  import { PlusOutline } from 'flowbite-svelte-icons';
   import dayjs from 'dayjs';
-	import { PlusCircleIcon } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
-	import type { SelectPaystub } from '$lib/types/db.model';
+	import type { SelectPayrollCycle, SelectPaystub } from '$lib/types/db.model';
 	import { createToast } from '$lib/components/Toast.svelte';
+	import { writable } from 'svelte/store';
+	import type { PaystubWith } from '$lib/types/paystbus.model';
   
   export let data;
-  const { cycleAndPaystubs } = data;
-  const cycle = cycleAndPaystubs?.cycle;
-  const paystubs = cycleAndPaystubs?.paystubs || [];
+  let { cycleAndPaystubs: { paystubs, cycle } } = data;
+  const paystubs$ = writable(paystubs);
   
   const formatDate = (date: any) => dayjs(Number(date)).format('MMMM D, YYYY');
   const formatCurrency = (amount: any) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   
-  console.log(cycle);
-  
-  const detachPayrollCycle = async (paystub: SelectPaystub) => {
+  const detachPayrollCycle = async (paystub: PaystubWith) => {
     const result = await fetch('/api/paystubs/detach-payroll-cycle', {
       method: 'POST',
       headers: {
@@ -35,7 +32,9 @@
       return;
     }
     
+    paystub.payrollCycle = null as unknown as SelectPayrollCycle;
     paystub.payrollCycleId = null;
+    paystubs$.set([...paystubs.map(p => p.id == paystub.id ? {...paystub} : p)] as PaystubWith[]);
     
     createToast({
       title: 'Removed',
@@ -117,13 +116,13 @@
           </TableHeadCell>
         </TableHead>
         <TableBody tableBodyClass="divide-y">
-          {#each paystubs as item (item.id)}
+          {#each $paystubs$ as item (item.id)}
             <TableBodyRow>
               <TableBodyCell>{item.employee.firstName} {item.employee.lastName}</TableBodyCell>
               <TableBodyCell>{item.campaign.name}</TableBodyCell>
               <TableBodyCell>{formatCurrency(item.netPay)}</TableBodyCell>
               <TableBodyCell>
-                {#if item.payrollCycle != null}
+                {#if item.payrollCycleId != null}
                   {formatDate(item.payrollCycle?.paymentDate)}
                 {:else}
                   <span class="italic text-neutral-400">Unassigned</span>
@@ -137,7 +136,16 @@
                       return async ({ result, update }) => {
                         if (result.status != 200 || !result.data) return;
                         
+                        item.payrollCycle = cycle;
                         item.payrollCycleId = `${cycle?.id}`;
+                        paystubs$.set([...paystubs.map(p => {
+                          if (p.id == item.id) {
+                            p = item;
+                          }
+                          
+                          return p;
+                        })]);
+                        
                         update();
                       }
                     }}
@@ -161,7 +169,7 @@
               </TableBodyCell>
             </TableBodyRow>
           {/each}
-          {#if paystubs.length < 1}
+          {#if $paystubs$.length < 1}
             <TableBodyRow>
               <TableBodyCell colspan="5" class="text-center">
                 No paystubs found.

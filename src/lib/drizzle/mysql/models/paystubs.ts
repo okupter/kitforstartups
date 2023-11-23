@@ -1,11 +1,11 @@
-import type { SelectPaystub } from '$lib/types/db.model';
 import { eq } from 'drizzle-orm';
 import { drizzleClient } from '../client';
 import { paystub } from '../schema';
+import type { PaystubWith } from '$lib/types/paystbus.model';
 
-export const getPaystubs = async (clientId: string, startDate: number, endDate: number): Promise<SelectPaystub[]> => {
+export const getPaystubs = async (clientId: string, startDate: number, endDate: number): Promise<PaystubWith[]> => {
   if (!clientId) {
-    return [];
+    return [] as PaystubWith[];
   }
   
   const data = await drizzleClient.query.paystub.findMany({
@@ -25,9 +25,9 @@ export const getPaystubs = async (clientId: string, startDate: number, endDate: 
         orderBy: (s, { desc }) => [desc(s.saleDate)],
       },
     },
-  });
+  }) as PaystubWith[];
   
-  return data || [];
+  return data || [] as PaystubWith[];
 }
 
 /**
