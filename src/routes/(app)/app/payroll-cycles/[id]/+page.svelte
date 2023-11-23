@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-  import { PlusOutline } from 'flowbite-svelte-icons';
+	import { Breadcrumb, BreadcrumbItem, Button, GradientButton, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+  import { ArrowRightOutline, PlusOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
   import dayjs from 'dayjs';
 	import { enhance } from '$app/forms';
 	import type { SelectPayrollCycle, SelectPaystub } from '$lib/types/db.model';
@@ -11,6 +11,7 @@
   export let data;
   let { cycleAndPaystubs: { paystubs, cycle } } = data;
   const paystubs$ = writable(paystubs);
+  let isEditing = true;
   
   const formatDate = (date: any) => dayjs(Number(date)).format('MMMM D, YYYY');
   const formatCurrency = (amount: any) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -34,13 +35,24 @@
     
     paystub.payrollCycle = null as unknown as SelectPayrollCycle;
     paystub.payrollCycleId = null;
-    paystubs$.set([...paystubs.map(p => p.id == paystub.id ? {...paystub} : p)] as PaystubWith[]);
+    paystubs = [...paystubs.map(p => p.id == paystub.id ? {...paystub} : p)] as PaystubWith[]
+    paystubs$.set(paystubs);
     
     createToast({
       title: 'Removed',
       description: 'Paystub removed from payroll cycle.',
       type: 'success',
     });
+  }
+  
+  const stopEditing = () => {
+    isEditing = false;
+    console.log(`cycleId: ${cycle.id}`)
+    paystubs = paystubs.filter(p => {
+      console.log(`payrollCycleId: ${p.payrollCycleId}`);
+      return p.payrollCycleId == cycle.id
+    });
+    paystubs$.set(paystubs);
   }
 </script>
 
@@ -76,32 +88,46 @@
       <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
         <caption class="p-5 text-lg font-semibold text-left bg-background-100 dark:bg-background-300">
           <h5 class="mb-2 text-background-950 dark:text-background-900">Current Payroll Cycle</h5>
-          <div class="flex flex-row gap-6 text-sm">
-            <div>
-              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-                Payment Date
+          <div class="flex flex-row gap-6 text-sm justify-between">
+            <div class="flex flex-row gap-6">
+              <div>
+                <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                  Payment Date
+                </div>
+                <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
+                  {formatDate(Number(cycle?.paymentDate))}
+                </div>
               </div>
-              <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
-                {formatDate(Number(cycle?.paymentDate))}
+              
+              <div>
+                <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                  Start Date
+                </div>
+                <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
+                  {formatDate(Number(cycle?.startDate))}
+                </div>
+              </div>
+              
+              <div>
+                <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                  End Date
+                </div>
+                <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
+                  {formatDate(Number(cycle?.endDate))}
+                </div>
               </div>
             </div>
             
             <div>
-              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-                Start Date
-              </div>
-              <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
-                {formatDate(Number(cycle?.startDate))}
-              </div>
-            </div>
-            
-            <div>
-              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-                End Date
-              </div>
-              <div class="mb-4 font-light text-neutral-500 dark:text-neutral-300">
-                {formatDate(Number(cycle?.endDate))}
-              </div>
+              {#if isEditing}
+                <GradientButton color="cyanToBlue" on:click={stopEditing}>
+                  Ready to Review <ArrowRightOutline class="w-3.5 h-3.5 ml-2" />
+                </GradientButton>
+              {:else}
+                <GradientButton outline color="cyanToBlue">
+                  Looks good <ThumbsUpSolid class="w-3.5 h-3.5 ml-2" />
+                </GradientButton>
+              {/if}
             </div>
           </div>
           <!-- <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Browse a list of Flowbite products designed to help you work and play, stay organized, get answers, keep in touch, grow your business, and more.</p> -->
@@ -122,7 +148,7 @@
               <TableBodyCell>{item.campaign.name}</TableBodyCell>
               <TableBodyCell>{formatCurrency(item.netPay)}</TableBodyCell>
               <TableBodyCell>
-                {#if item.payrollCycleId != null}
+                {#if item.payrollCycleId}
                   {formatDate(item.payrollCycle?.paymentDate)}
                 {:else}
                   <span class="italic text-neutral-400">Unassigned</span>
@@ -138,13 +164,20 @@
                         
                         item.payrollCycle = cycle;
                         item.payrollCycleId = `${cycle?.id}`;
-                        paystubs$.set([...paystubs.map(p => {
+                        paystubs = [...paystubs.map(p => {
                           if (p.id == item.id) {
                             p = item;
                           }
                           
                           return p;
-                        })]);
+                        })];
+                        paystubs$.set(paystubs);
+                        
+                        createToast({
+                          title: '',
+                          description: 'Paystub added to payroll cycle.',
+                          type: 'success',
+                        });
                         
                         update();
                       }
@@ -152,7 +185,7 @@
                   >
                     <input type="hidden" name="paystubId" value={item?.id} />
                     <input type="hidden" name="payrollCycleId" value={cycle?.id} />
-                    {#if item.payrollCycleId == null}
+                    {#if !item.payrollCycleId}
                       <Button type="submit" pill={true} outline={true} class="!p-2" size="lg">
                         <PlusOutline class="w-3 h-3" />
                       </Button>
