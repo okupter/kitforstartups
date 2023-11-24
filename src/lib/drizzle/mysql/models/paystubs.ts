@@ -78,14 +78,27 @@ export const detachPayrollCycleFromPaystub = async (paystubId: string): Promise<
   return true;
 }
 
+export const detachPaystubFromPayrollCycles = async (paystubId: string): Promise<boolean> => {
+  if (!paystubId) return false;
+  
+  try {
+    await drizzleClient.update(paystub)
+      .set({
+        payrollCycleId: null,
+      })
+      .where(eq(paystub.id, paystubId));
+  } catch (ex) {
+    console.error(ex);
+    return false;
+  }
+  
+  return true;
+}
+
 export const attachPayrollCycleToPaystub = async (paystubId: string, payrollCycleId: string): Promise<boolean> => {
   if (!paystubId || !payrollCycleId) return false;
   
   try {
-    const detachedResult = await detachPayrollCycleFromPaystubs(payrollCycleId);
-    
-    if (!detachedResult) return false;
-    
     await drizzleClient.update(paystub)
       .set({
         payrollCycleId,

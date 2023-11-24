@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Breadcrumb, BreadcrumbItem, Button, GradientButton, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-  import { ArrowRightOutline, PlusOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
+  import { ArrowRightOutline, PlusOutline, RedoOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
   import dayjs from 'dayjs';
 	import { enhance } from '$app/forms';
 	import type { SelectPayrollCycle, SelectPaystub } from '$lib/types/db.model';
@@ -47,11 +47,11 @@
   
   const stopEditing = () => {
     isEditing = false;
-    console.log(`cycleId: ${cycle.id}`)
-    paystubs = paystubs.filter(p => {
-      console.log(`payrollCycleId: ${p.payrollCycleId}`);
-      return p.payrollCycleId == cycle.id
-    });
+    paystubs$.set(paystubs.filter(p => p.payrollCycleId == cycle.id));
+  }
+  
+  const goBack = () => {
+    isEditing = true;
     paystubs$.set(paystubs);
   }
 </script>
@@ -118,15 +118,18 @@
               </div>
             </div>
             
-            <div>
+            <div class="flex flex-row justify-center gap-4">
               {#if isEditing}
-                <GradientButton color="cyanToBlue" on:click={stopEditing}>
+                <GradientButton color="cyanToBlue" on:click={stopEditing} class="self-start">
                   Ready to Review <ArrowRightOutline class="w-3.5 h-3.5 ml-2" />
                 </GradientButton>
               {:else}
-                <GradientButton outline color="cyanToBlue">
+                <Button outline color="red" class="self-start" on:click={goBack}>
+                  Go back! <RedoOutline class="w-3.5 h-3.5 ml-2" />
+                </Button>
+                <Button outline color="green" class="self-start" href="/app/payroll-cycles">
                   Looks good <ThumbsUpSolid class="w-3.5 h-3.5 ml-2" />
-                </GradientButton>
+                </Button>
               {/if}
             </div>
           </div>
@@ -156,48 +159,50 @@
               </TableBodyCell>
               <TableBodyCell>
                 <div class="flex justify-around">
-                  <form action="?/attach-payroll-cycle" method="post"
-                    use:enhance={({ formData, cancel }) => {
-                      
-                      return async ({ result, update }) => {
-                        if (result.status != 200 || !result.data) return;
+                  {#if isEditing}
+                    <form action="?/attach-payroll-cycle" method="post"
+                      use:enhance={({ formData, cancel }) => {
                         
-                        item.payrollCycle = cycle;
-                        item.payrollCycleId = `${cycle?.id}`;
-                        paystubs = [...paystubs.map(p => {
-                          if (p.id == item.id) {
-                            p = item;
-                          }
+                        return async ({ result, update }) => {
+                          if (result.status != 200 || !result.data) return;
                           
-                          return p;
-                        })];
-                        paystubs$.set(paystubs);
-                        
-                        createToast({
-                          title: '',
-                          description: 'Paystub added to payroll cycle.',
-                          type: 'success',
-                        });
-                        
-                        update();
-                      }
-                    }}
-                  >
-                    <input type="hidden" name="paystubId" value={item?.id} />
-                    <input type="hidden" name="payrollCycleId" value={cycle?.id} />
-                    {#if !item.payrollCycleId}
-                      <Button type="submit" pill={true} outline={true} class="!p-2" size="lg">
-                        <PlusOutline class="w-3 h-3" />
-                      </Button>
-                    {:else}
-                      <!-- <Button href={'/app/paystubs/' + item.id} pill={true} outline={true}>
-                        Edit
-                      </Button> -->
-                      <Button on:click={() => detachPayrollCycle(item)} pill={true} outline={true} color="red">
-                        Remove
-                      </Button>
-                    {/if}
-                  </form>
+                          item.payrollCycle = cycle;
+                          item.payrollCycleId = `${cycle?.id}`;
+                          paystubs = [...paystubs.map(p => {
+                            if (p.id == item.id) {
+                              p = item;
+                            }
+                            
+                            return p;
+                          })];
+                          paystubs$.set(paystubs);
+                          
+                          createToast({
+                            title: '',
+                            description: 'Paystub added to payroll cycle.',
+                            type: 'success',
+                          });
+                          
+                          update();
+                        }
+                      }}
+                    >
+                      <input type="hidden" name="paystubId" value={item?.id} />
+                      <input type="hidden" name="payrollCycleId" value={cycle?.id} />
+                      {#if !item.payrollCycleId}
+                        <Button type="submit" pill={true} outline={true} class="!p-2" size="lg">
+                          <PlusOutline class="w-3 h-3" />
+                        </Button>
+                      {:else}
+                        <!-- <Button href={'/app/paystubs/' + item.id} pill={true} outline={true}>
+                          Edit
+                        </Button> -->
+                        <Button on:click={() => detachPayrollCycle(item)} pill={true} outline={true} color="red">
+                          Remove
+                        </Button>
+                      {/if}
+                    </form>
+                  {/if}
                 </div>
               </TableBodyCell>
             </TableBodyRow>
