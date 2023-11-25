@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 type FeedbackType = 'success' | 'error' | 'warning' | 'info';
 type Feedback = {
 	type: FeedbackType;
@@ -32,4 +34,8 @@ const toProperCase = (str: string): string => {
 	});
 }
 
-export { getFeedbackObjectByPath, getFeedbackObjects, type Feedback, toProperCase };
+const formatDate = (date: any) => dayjs(Number(date)).format('MMMM D, YYYY');
+
+const formatCurrency = (amount: any) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+
+export { getFeedbackObjectByPath, getFeedbackObjects, type Feedback, toProperCase, formatDate, formatCurrency };

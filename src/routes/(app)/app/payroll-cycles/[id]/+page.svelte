@@ -7,14 +7,12 @@
 	import { createToast } from '$lib/components/Toast.svelte';
 	import { writable } from 'svelte/store';
 	import type { PaystubWith } from '$lib/types/paystbus.model';
+	import { formatCurrency, formatDate } from '$lib/utils';
   
   export let data;
   let { cycleAndPaystubs: { paystubs, cycle } } = data;
   const paystubs$ = writable(paystubs);
   let isEditing = true;
-  
-  const formatDate = (date: any) => dayjs(Number(date)).format('MMMM D, YYYY');
-  const formatCurrency = (amount: any) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   
   const detachPayrollCycle = async (paystub: PaystubWith) => {
     const result = await fetch('/api/paystubs/detach-payroll-cycle', {

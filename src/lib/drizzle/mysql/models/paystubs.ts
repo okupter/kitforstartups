@@ -111,3 +111,21 @@ export const attachPayrollCycleToPaystub = async (paystubId: string, payrollCycl
   
   return true;
 }
+
+export const numberOfPaystubsByPayrollCycleId = async (payrollCycleId: string): Promise<number> => {
+  let data = 0;
+  if (!payrollCycleId) return data;
+  
+  try {
+    const results = await drizzleClient.query.paystub.findMany({
+      where: (ps, { eq }) => eq(ps.payrollCycleId, payrollCycleId),
+    });
+    
+    data = results.length;
+  } catch (ex) {
+    console.error(ex);
+    return 0;
+  }
+  
+  return data;
+}
