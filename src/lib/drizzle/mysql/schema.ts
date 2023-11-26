@@ -174,6 +174,7 @@ const payrollCycle = mysqlTable('payroll_cycle', {
 	created: bigint('created', { mode: 'bigint' }).notNull(),
 	updated: bigint('updated', { mode: 'bigint' }).notNull(),
 	deleted: bigint('deleted', { mode: 'bigint' }),
+	isClosed: tinyint('is_closed').notNull().default(0),
 });
 
 const paystub = mysqlTable('paystub', {

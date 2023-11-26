@@ -1,4 +1,4 @@
-import { getPayrollCycle } from '$lib/drizzle/mysql/models/payroll-cycles.js';
+import { getPayrollCycle, togglePayrollCycleClose } from '$lib/drizzle/mysql/models/payroll-cycles.js';
 import { attachPayrollCycleToPaystub, getPaystubs } from '$lib/drizzle/mysql/models/paystubs.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import type { SelectPayrollCycle } from '$lib/types/db.model.js';
@@ -53,5 +53,24 @@ export const actions: Actions = {
     const result = await attachPayrollCycleToPaystub(data.paystubId, data.payrollCycleId);
     
     return result;
+  },
+  'toggle-payroll-cycle-close': async ({ request, locals, params }) => {
+    const session = await locals.auth.validate();
+    
+    if (!session) return { status: 401 };
+    
+    const profile = await getUserProfileData(session?.user.userId);
+    
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData) as unknown as {
+      id: string;
+      isClosed: string;
+    };
+    
+    if (!profile || !['super_admin', 'org_admin'].includes(profile.role)) return { status: 403 };
+    
+    const result = await togglePayrollCycleClose(data.id, data.isClosed);
+    
+    return result ? { status: 200 } : { status: 400 };
   },
 };

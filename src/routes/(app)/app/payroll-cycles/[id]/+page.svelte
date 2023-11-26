@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, GradientButton, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-  import { ArrowRightOutline, PlusOutline, RedoOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
+	import { Breadcrumb, BreadcrumbItem, Button, GradientButton, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Tooltip } from 'flowbite-svelte';
+  import { ArrowRightOutline, CheckCircleOutline, PlusOutline, RedoOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
   import dayjs from 'dayjs';
 	import { enhance } from '$app/forms';
 	import type { SelectPayrollCycle, SelectPaystub } from '$lib/types/db.model';
@@ -125,6 +125,43 @@
                 <Button outline color="red" class="self-start" on:click={goBack}>
                   Go back! <RedoOutline class="w-3.5 h-3.5 ml-2" />
                 </Button>
+                
+                <form method="post" action="?/toggle-payroll-cycle-close" use:enhance={({ formData, cancel }) => {
+                  
+                  
+                  return async ({ result, update }) => {
+                    if (result.status != 200) return;
+                    
+                    cycle.isClosed = !!cycle.isClosed ? 0 : 1;
+                    
+                    createToast({
+                      title: '',
+                      description: 'Paystub added to payroll cycle.',
+                      type: 'success',
+                    });
+                    
+                    update();
+                  }
+                }}>
+                  <input type="hidden" name="id" value={cycle?.id} />
+                  <input type="hidden" name="isClosed" value={cycle?.isClosed} />
+                  {#if !cycle?.isClosed}
+                    <Button type="submit" outline color="dark" class="self-start" id="close-button">
+                      Close <CheckCircleOutline class="w-3.5 h-3.5 ml-2" />
+                    </Button>
+                    <Tooltip arrow={false} triggeredBy="#close-button">
+                      Closes the payroll cycle and prevents any further changes.
+                    </Tooltip>
+                  {:else}
+                    <Button type="submit" outline class="self-start" id="reopen-button">
+                      Re-open <RedoOutline class="w-3.5 h-3.5 ml-2" />
+                    </Button>
+                    <Tooltip arrow={false} triggeredBy="#reopen-button">
+                      Re-opens the payroll cycle and allows changes to be made.
+                    </Tooltip>
+                  {/if}
+                </form>
+                
                 <Button outline color="green" class="self-start" href="/app/payroll-cycles">
                   Looks good <ThumbsUpSolid class="w-3.5 h-3.5 ml-2" />
                 </Button>

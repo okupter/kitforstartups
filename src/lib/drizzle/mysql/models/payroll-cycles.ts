@@ -1,4 +1,5 @@
 import type { InsertPayrollCycle, SelectPayrollCycle } from '$lib/types/db.model';
+import { eq } from 'drizzle-orm';
 import { drizzleClient } from '../client';
 import { payrollCycle } from '../schema';
 
@@ -37,4 +38,21 @@ export const addPayrollCycle = async (dto: InsertPayrollCycle): Promise<SelectPa
   }
   
   return {...dto} as SelectPayrollCycle;
+}
+
+export const togglePayrollCycleClose = async (id: string, isClosed: string): Promise<boolean> => {
+  if (!id) return false;
+  
+  try {
+    await drizzleClient.update(payrollCycle)
+      .set({
+        isClosed: isClosed === 'true' ? 1 : 0,
+      })
+      .where(eq(payrollCycle.id, id));
+  } catch (ex) {
+    console.error(ex);
+    return false;
+  }
+  
+  return true;
 }
