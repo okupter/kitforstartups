@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { Breadcrumb, BreadcrumbItem, Button, GradientButton, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Tooltip } from 'flowbite-svelte';
   import { ArrowRightOutline, CheckCircleOutline, PlusOutline, RedoOutline, ThumbsUpSolid } from 'flowbite-svelte-icons';
-  import dayjs from 'dayjs';
 	import { enhance } from '$app/forms';
-	import type { SelectPayrollCycle, SelectPaystub } from '$lib/types/db.model';
+	import type { SelectPayrollCycle } from '$lib/types/db.model';
 	import { createToast } from '$lib/components/Toast.svelte';
 	import { writable } from 'svelte/store';
 	import type { PaystubWith } from '$lib/types/paystbus.model';

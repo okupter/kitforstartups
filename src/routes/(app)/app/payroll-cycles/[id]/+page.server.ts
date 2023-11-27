@@ -1,5 +1,5 @@
 import { getPayrollCycle, togglePayrollCycleClose } from '$lib/drizzle/mysql/models/payroll-cycles.js';
-import { attachPayrollCycleToPaystub, getPaystubs } from '$lib/drizzle/mysql/models/paystubs.js';
+import { attachPayrollCycleToPaystub, getPaystubs, getPaystubsByPayrollCycleId, getPaystubsWoPayrollCycle } from '$lib/drizzle/mysql/models/paystubs.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import type { SelectPayrollCycle } from '$lib/types/db.model.js';
 import type { CycleAndPaystubs, PaystubWith } from '$lib/types/paystbus.model';
@@ -24,7 +24,11 @@ export const load = async ({ locals, params }) => {
       paystubs: [] as PaystubWith[],
     }
     
-    const paystubs = await getPaystubs(profile?.clientId, cycle?.startDate as any, cycle?.endDate as any);
+    const unattachedPaystubs = await getPaystubsWoPayrollCycle(profile?.clientId, cycle?.startDate as any, cycle?.endDate as any);
+    // const paystubs = await getPaystubs(profile?.clientId, cycle?.startDate as any, cycle?.endDate as any);
+    const relatedPaystubs = await getPaystubsByPayrollCycleId(profile?.clientId, cycle.id);
+    
+    const paystubs = [...relatedPaystubs, ...unattachedPaystubs];
     
     return { cycle, paystubs };
   }
