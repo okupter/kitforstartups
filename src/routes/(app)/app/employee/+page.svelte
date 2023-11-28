@@ -8,8 +8,6 @@
   export let data: {
     employees: Employee[];
   }
-  
-  console.log(data)
 </script>
 
 <div class="pb-4">

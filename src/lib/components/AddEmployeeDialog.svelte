@@ -3,6 +3,7 @@
   import { createDialog, melt, createLabel, createSelect } from '@melt-ui/svelte';
 	import { XSquare } from 'lucide-svelte';
   import { createToast } from './Toast.svelte';
+  import { page } from '$app/stores';
   
   const {
     elements: { trigger: triggerSelect, menu, option, group, groupLabel, label },
@@ -25,6 +26,9 @@
   const {
     elements: { root, },
   } = createLabel();
+  
+  const params = Array.from($page.url.searchParams.keys());
+  if (params.includes('add')) open.set(true);
 </script>
 
 <button use:melt={$trigger} class="rounded-md text-text-50 dark:text-text-900 bg-primary-600 dark:bg-primary-300 dark:hover:bg-primary-400 px-3.5 

@@ -2,7 +2,7 @@
 	import type { SelectPayrollCycle } from '$lib/types/db.model';
 	import { formatDate } from '$lib/utils';
 	import { Breadcrumb, BreadcrumbItem, Button, Checkbox, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Toggle } from 'flowbite-svelte';
-	import { PenIcon } from 'lucide-svelte';
+	import { PenIcon, PlusIcon } from 'lucide-svelte';
 
   export let data;
   
@@ -34,12 +34,23 @@
     <div class="py-6 px-1">
       <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
         <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
-          <div class="flex flex-row gap-6">
-            <div>
-              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-                <Toggle checked={showClosed} on:change={() => showClosed = !showClosed}>
-                  Show Closed Payroll Cycles
-                </Toggle>
+          <div class="flex flex-row gap-6 text-sm justify-between">
+            <div class="flex flex-row gap-6">
+              <div>
+                <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                  <Toggle checked={showClosed} on:change={() => showClosed = !showClosed}>
+                    Show Closed Payroll Cycles
+                  </Toggle>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex flex-row justify-center gap-4">
+              <div>
+                <Button href="/app/payroll-cycles/add" class="!p-2">
+                  <span class="sr-only">New</span>
+                  <PlusIcon class="w-3 h-3" />
+                </Button>
               </div>
             </div>
           </div>

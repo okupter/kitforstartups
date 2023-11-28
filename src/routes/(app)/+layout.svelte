@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Dropdown, DropdownItem, DropdownDivider, Button } from 'flowbite-svelte';
 	import { page } from '$app/stores';
+	import { ChevronRightSolid } from 'flowbite-svelte-icons';
 	$: activeUrl = $page.url.pathname;
 	export let data;
 
@@ -85,8 +86,35 @@
 					<DropdownItem href="/app/payroll-cycles/add">Start Payroll</DropdownItem>
 					<DropdownItem href="/app/payroll-cycles">History</DropdownItem>
 					<DropdownItem href="/app/payroll/search">Find Paystub</DropdownItem>
+					<DropdownItem href="/app/payroll/add">New Paystub</DropdownItem>
 				</Dropdown>
-				<NavLi href="/app/employee">Employees</NavLi>
+				<!-- <NavLi href="/app/employee">Employees</NavLi> -->
+				<NavLi class="cursor-pointer">
+					Employee<ChevronDown class="w-3 h-3 ml-2 text-primary-800 dark:text-white inline" />
+				</NavLi>
+				<Dropdown class="w-44 z-20">
+					<DropdownItem class="flex items-center justify-between">
+						Employees<ChevronRightSolid class="w-3 h-3 ml-2 text-primary-700 dark:text-white" />
+					</DropdownItem>
+					<Dropdown placement="right-start">
+						<DropdownItem href="/app/employee">View</DropdownItem>
+						<DropdownItem href="/app/employee?add">Add</DropdownItem>	
+					</Dropdown>
+					<DropdownItem class="flex items-center justify-between">
+						Sales<ChevronRightSolid class="w-3 h-3 ml-2 text-primary-700 dark:text-white" />
+					</DropdownItem>
+					<Dropdown placement="right-start">
+						<DropdownItem href="/app/sales">View</DropdownItem>
+						<DropdownItem href="/app/sales/add">Add</DropdownItem>
+					</Dropdown>
+					<DropdownItem class="flex items-center justify-between">
+						Expenses<ChevronRightSolid class="w-3 h-3 ml-2 text-primary-700 dark:text-white" />
+					</DropdownItem>
+					<Dropdown placement="right-start">
+						<DropdownItem href="/app/expenses">Reports</DropdownItem>
+						<DropdownItem href="/app/expenses/add">Add</DropdownItem>
+					</Dropdown>
+				</Dropdown>
 			{/if}
 			
 			<NavLi href="/app/paystubs">My Pay</NavLi>
