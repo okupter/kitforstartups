@@ -106,6 +106,7 @@
 					<Dropdown placement="right-start">
 						<DropdownItem href="/app/sales">View</DropdownItem>
 						<DropdownItem href="/app/sales/add">Add</DropdownItem>
+						<DropdownItem href="/app/sales/import">Import</DropdownItem>
 					</Dropdown>
 					<DropdownItem class="flex items-center justify-between">
 						Expenses<ChevronRightSolid class="w-3 h-3 ml-2 text-primary-700 dark:text-white" />
