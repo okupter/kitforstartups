@@ -234,6 +234,9 @@ const sale = mysqlTable('sale', {
 		.notNull()
 		.references(() => campaigns.id),
 	saleDate: bigint('sale_date', { mode: 'bigint' }).notNull(),
+	customerFirstName: varchar('customer_first_name', { length: 255 }).notNull(),
+	customerLastName: varchar('customer_last_name', { length: 255 }).notNull(),
+	customerAddress: varchar('customer_address', { length: 255 }).notNull(),
 	saleAmount: double('sale_amount').notNull().default(0),
 	isComplete: tinyint('is_complete').notNull().default(0),
 	statusDescription: mysqlEnum('status_description', ['pending', 'approved', 'rejected']).notNull(),
