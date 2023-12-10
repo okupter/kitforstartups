@@ -26,11 +26,11 @@
     </Breadcrumb>
   </div>
   
-  <form action="?/add" method="post" class="grid grid-cols-2 gap-4"
+  <form method="post" class="grid grid-cols-2 gap-4"
     use:enhance={({ formElement, formData, action, cancel, submitter }) => {
       
-      console.log(Object.fromEntries(formData.entries()));
-      cancel();
+      // console.log(Object.fromEntries(formData.entries()));
+      // cancel();
         
       return async ({ result, update }) => {
         if (result.status != 200) return;
@@ -46,6 +46,13 @@
     }}
   >
     <div class="mb-6">
+      <Label class="block mb-2">Employee</Label>
+      <Select name="employee_id" id="employee_id" items={data?.employees} required />
+    </div>
+    
+    <div class="mb-6">&nbsp;</div>
+    
+    <div class="mb-6">
       <Label class="block mb-2">Sale Date</Label>
       <Input let:props>
         <input type="date" name="sale_date" id="sale_date" {...props} value={Date.now()} required />
@@ -54,7 +61,7 @@
     
     <div class="mb-6">
       <Label class="block mb-2">Campaign</Label>
-      <Select name="campaign" id="campaign" items={campaigns} />
+      <Select name="campaign_id" id="campaign_id" items={campaigns} />
     </div>
     
     <div class="mb-6">
@@ -76,7 +83,7 @@
       <Label class="block mb-2">Sale Amount</Label>
       <Input let:props>
         <CurrencyInput size={3} showMask
-          id="amount" name="amount" type="text"
+          id="sale_amount" name="sale_amount" type="text"
           {...props}
           required
         />

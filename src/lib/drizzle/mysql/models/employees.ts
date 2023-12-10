@@ -4,22 +4,28 @@ import { employee, employeeNotes, employeeProfile } from '../schema';
 import type { Employee, InsertEmployee, InsertEmployeeNotes, InsertEmployeeProfile } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
 
-const getEmployees = async (clientId: string): Promise<Employee[]> => {
+const getEmployees = async (clientId: string, isCommissionable = false): Promise<Employee[]> => {
   if (!clientId) {
-    return [];
+    return [] as Employee[];
   }
   
-  const data = await db.query.employee.findMany({ 
-    with: {
-      employeeProfile: true,
-      employeeCodes: {
-        where: (code, { eq }) => eq(code.isActive, true),
+  try {
+    return await db.query.employee.findMany({ 
+      with: {
+        employeeProfile: true,
+        employeeCodes: {
+          where: (code, { eq }) => eq(code.isActive, true),
+        },
       },
-    },
-    where: (employee, { eq }) => eq(employee.clientId, clientId),
-  })
-    
-  return data;
+      where: (employee, { eq, and }) => and(
+        eq(employee.clientId, clientId),
+        eq(employee.isCommissionable, isCommissionable ? 1 : 0),
+      ),
+    });
+  } catch (ex) {
+    console.error(ex);
+    return [] as Employee[];
+  }
 }
 
 const getEmployee = async (employeeId: string, withProfile = true, withCodes = true, withNotes = true): Promise<Employee | undefined> => {

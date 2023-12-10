@@ -39,9 +39,10 @@ const employee = mysqlTable('employee', {
 		.references(() => client.id),
 	firstName: varchar('first_name', { length: 255 }).notNull(),
 	lastName: varchar('last_name', { length: 255 }).notNull(),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
+	isCommissionable: tinyint('is_commissionable').notNull().default(0),
 });
 
 const employeeRelations = relations(employee, ({ many, one }) => ({
@@ -75,7 +76,7 @@ const employeeNotes = mysqlTable('employee_notes', {
 		.notNull()
 		.references(() => employee.id),
 	note: text('note').notNull(),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
+	created: bigint('created', { mode: 'number' }).notNull(),
 })
 
 const employeeNotesRelations = relations(employeeNotes, ({ one }) => ({
@@ -112,7 +113,7 @@ const emailVerification = mysqlTable('email_verification', {
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expires: bigint('expires', { mode: 'bigint' }).notNull()
+	expires: bigint('expires', { mode: 'number' }).notNull()
 });
 
 const passwordResetToken = mysqlTable('password_reset_token', {
@@ -120,7 +121,7 @@ const passwordResetToken = mysqlTable('password_reset_token', {
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expires: bigint('expires', { mode: 'bigint' }).notNull()
+	expires: bigint('expires', { mode: 'number' }).notNull()
 });
 
 const userKey = mysqlTable('user_key', {
@@ -136,9 +137,9 @@ const client = mysqlTable('client', {
 	name: varchar('name', { length: 255 }).notNull(),
 	contactUserId: varchar('contact_user_id', { length: 255 })
 		.references(() => user.id),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
 });
 
 const userSession = mysqlTable('user_session', {
@@ -146,8 +147,8 @@ const userSession = mysqlTable('user_session', {
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	activeExpires: bigint('active_expires', { mode: 'bigint' }).notNull(),
-	idleExpires: bigint('idle_expires', { mode: 'bigint' }).notNull()
+	activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
+	idleExpires: bigint('idle_expires', { mode: 'number' }).notNull()
 });
 
 const campaigns = mysqlTable('campaigns', {
@@ -159,8 +160,8 @@ const campaigns = mysqlTable('campaigns', {
 	url: varchar('url', { length: 255 }).default(''),
 	description: text('description').default(''),
 	active: boolean('active').default(false).notNull(),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
 });
 
 const payrollCycle = mysqlTable('payroll_cycle', {
@@ -168,12 +169,12 @@ const payrollCycle = mysqlTable('payroll_cycle', {
 	clientId: varchar('client_id', { length: 255 })
 		.notNull()
 		.references(() => client.id),
-	startDate: bigint('start_date', { mode: 'bigint' }).notNull(),
-	endDate: bigint('end_date', { mode: 'bigint' }).notNull(),
-	paymentDate: bigint('payment_date', { mode: 'bigint' }).notNull(),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	startDate: bigint('start_date', { mode: 'number' }).notNull(),
+	endDate: bigint('end_date', { mode: 'number' }).notNull(),
+	paymentDate: bigint('payment_date', { mode: 'number' }).notNull(),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
 	isClosed: tinyint('is_closed').notNull().default(0),
 });
 
@@ -191,16 +192,16 @@ const paystub = mysqlTable('paystub', {
 	campaignId: varchar('campaign_id', { length: 255 })
 		.notNull()
 		.references(() => campaigns.id),
-	totalSales: bigint('total_sales', { mode: 'bigint' }).notNull(),
-	totalOverrides: bigint('total_overrides', { mode: 'bigint' }).notNull(),
+	totalSales: bigint('total_sales', { mode: 'number' }).notNull(),
+	totalOverrides: bigint('total_overrides', { mode: 'number' }).notNull(),
 	pieceRate: double('piece_rate').notNull(),
 	grossPay: double('gross_pay').notNull(),
 	netPay: double('net_pay').notNull(),
 	taxDeductions: double('tax_deductions').notNull().default(0),
 	otherDeductions: double('other_deductions').notNull().default(0),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
 });
 
 const paystubRelations = relations(paystub, ({ one, many }) => ({
@@ -228,21 +229,21 @@ const sale = mysqlTable('sale', {
 		.notNull()
 		.references(() => client.id),
 	paystubId: varchar('paystub_id', { length: 255 })
-		.notNull()
+		.default('')
 		.references(() => paystub.id),
 	campaignId: varchar('campaign_id', { length: 255 })
 		.notNull()
 		.references(() => campaigns.id),
-	saleDate: bigint('sale_date', { mode: 'bigint' }).notNull(),
+	saleDate: bigint('sale_date', { mode: 'number' }).notNull(),
 	customerFirstName: varchar('customer_first_name', { length: 255 }).notNull(),
 	customerLastName: varchar('customer_last_name', { length: 255 }).notNull(),
 	customerAddress: varchar('customer_address', { length: 255 }).notNull(),
 	saleAmount: double('sale_amount').notNull().default(0),
 	isComplete: tinyint('is_complete').notNull().default(0),
 	statusDescription: mysqlEnum('status_description', ['pending', 'approved', 'rejected']).notNull(),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
 });
 
 const saleRelations = relations(sale, ({ one }) => ({
@@ -291,14 +292,14 @@ const expenseReport = mysqlTable('expense_report', {
 	paystubId: varchar('paystub_id', { length: 255 })
 		.notNull()
 		.references(() => paystub.id),
-	submissionDate: bigint('submission_date', { mode: 'bigint' }).notNull(),
+	submissionDate: bigint('submission_date', { mode: 'number' }).notNull(),
 	approvalStatus: mysqlEnum('approval_status', ['pending', 'approved', 'rejected']).notNull(),
-	approvalDate: bigint('approval_date', { mode: 'bigint' }),
+	approvalDate: bigint('approval_date', { mode: 'number' }),
 	approvalNotes: text('approval_notes'),
 	totalAmount: double('total_amount').notNull().default(0),
-	created: bigint('created', { mode: 'bigint' }).notNull(),
-	updated: bigint('updated', { mode: 'bigint' }).notNull(),
-	deleted: bigint('deleted', { mode: 'bigint' }),
+	created: bigint('created', { mode: 'number' }).notNull(),
+	updated: bigint('updated', { mode: 'number' }).notNull(),
+	deleted: bigint('deleted', { mode: 'number' }),
 });
 
 const expenseItem = mysqlTable('expense_item', {
@@ -311,7 +312,7 @@ const expenseItem = mysqlTable('expense_item', {
 		.references(() => expenseReport.id),
 	description: text('description').notNull(),
 	amount: double('amount').notNull().default(0),
-	dateIncurred: bigint('date_incurred', { mode: 'bigint' }).notNull(),
+	dateIncurred: bigint('date_incurred', { mode: 'number' }).notNull(),
 	receiptUrl: varchar('receipt_url', { length: 1024 }),
 });
 

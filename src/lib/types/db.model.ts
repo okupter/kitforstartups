@@ -40,3 +40,18 @@ export type InsertPayrollCycle = typeof payrollCycle.$inferInsert;
 
 export type SelectSale = typeof sale.$inferSelect;
 export type InsertSale = typeof sale.$inferInsert;
+export interface SaleDto {
+  id: string;
+  client_id: string;
+  campaign_id: string;
+  sale_amount: number;
+  sale_date: number;
+  status_description: string;
+  is_complete: boolean;
+  employee_id: string;
+  created: number;
+  updated: number;
+  customer_first_name: string;
+  customer_last_name: string;
+  customer_address: string;
+}
