@@ -2,6 +2,7 @@ import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns';
 import { getEmployees } from '$lib/drizzle/mysql/models/employees';
 import { getSales } from '$lib/drizzle/mysql/models/sales';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
+import type { SaleWithEmployee } from '$lib/types/sale.model';
 import { redirect } from '@sveltejs/kit';
 import dayjs from 'dayjs';
 
@@ -35,7 +36,7 @@ export const load = async ({ locals, request }) => {
       },
     };
     
-    return getSales(clientId, startDate, endDate, withStmt);
+    return getSales<SaleWithEmployee>(clientId, startDate, endDate, withStmt);
   }
   
   return {

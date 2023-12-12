@@ -1,19 +1,59 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, Checkbox, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Toggle } from 'flowbite-svelte';
+	import { Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Checkbox, Datepicker, InputAddon, Label, Select, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Toggle } from 'flowbite-svelte';
 	import { PenIcon, PlusIcon } from 'lucide-svelte';
   import { formatDate } from '$lib/utils';
+  import dayjs from 'dayjs';
+	import { CloseCircleSolid, CloseSolid } from 'flowbite-svelte-icons';
   
   export let data;
   
-  const { campaigns, employees, startDate, endDate, sales } = data;
-  
-  console.log(sales);
-  let showClosed = false;
+  const { campaigns, employees, startDate, endDate, sales: allSales } = data;
   
   const usd = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
+  
+  $: employeeItems = employees.map((employee) => {
+    return {
+      name: `${employee.firstName} ${employee.lastName}`,
+      value: employee.id,
+    };
+  });
+  
+  $: campaignItems = campaigns.map((campaign) => {
+    return {
+      name: campaign.name,
+      value: campaign.id,
+    };
+  });
+  
+  let selectedEmployeeItem: string;
+  let selectedCampaignItem: string;
+  
+  const handleEmployeeChange = () => {
+    console.dir(selectedEmployeeItem);
+  }
+  
+  const handleCampaignChange = () => {
+    console.dir(selectedCampaignItem);
+  }
+  
+  $: sales = selectedEmployeeItem || selectedCampaignItem
+    ? allSales.filter((sale) => {
+        if (selectedCampaignItem && selectedEmployeeItem) {
+          return sale.employee.id == selectedEmployeeItem && sale.campaign.id == selectedCampaignItem;
+        }
+      
+        if (selectedEmployeeItem) {
+          return sale.employee.id == selectedEmployeeItem;
+        }
+  
+        if (selectedCampaignItem) {
+          return sale.campaign.id == selectedCampaignItem;
+        }
+      })
+    : allSales;
 </script>
 
 <div class="container max-w-3xl p-4">
@@ -39,13 +79,17 @@
       <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
         <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
           <div class="flex flex-row gap-6 text-sm justify-between">
-            <div class="flex flex-row gap-6">
-              <div>
-                <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-                  <Toggle checked={showClosed} on:change={() => showClosed = !showClosed}>
-                    Show Closed Payroll Cycles
-                  </Toggle>
-                </div>
+            <div class="flex flex-row gap-6 items-center">
+              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                <Label class="block mb-2">Start Date</Label>
+                <Datepicker datepickerButtons value={dayjs(startDate).format('MM/DD/YYYY')} datepickerTitle="Start Date" />
+              </div>
+              
+              <p>to</p>
+              
+              <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+                <Label class="block mb-2">End Date</Label>
+                <Datepicker datepickerButtons value={dayjs(endDate).format('MM/DD/YYYY')} datepickerTitle="End Date" />
               </div>
             </div>
             
@@ -58,11 +102,40 @@
               </div>
             </div>
           </div>
+          
+          <div class="flex flex-row gap-5 text-sm">
+            <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+              <Label class="block mb-2 pt-4">
+                <span>
+                  Employee
+                  {#if selectedEmployeeItem}
+                    <Button color="alternative" pill={true} class="!p-2" size="xs">
+                      <CloseSolid class="w-2 h-2" />
+                    </Button>
+                  {/if}
+                </span>
+                <Select class="mt-2" items={employeeItems} bind:value={selectedEmployeeItem} on:change={handleEmployeeChange} />
+              </Label>
+            </div>
+            
+            <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+              <Label class="block mb-2 pt-4">
+                Campaign
+                {#if selectedCampaignItem}
+                  <Button color="alternative" pill={true} class="!p-2" size="xs">
+                    <CloseSolid class="w-2 h-2" />
+                  </Button>
+                {/if}
+                <Select class="mt-2" items={campaignItems} bind:value={selectedCampaignItem} on:change={handleCampaignChange} />
+              </Label>
+            </div>
+          </div>
         </caption>
         <TableHead class="text-sm text-background-800 font-semibold">
           <TableHeadCell>Sale Date</TableHeadCell>
-          <TableHeadCell>First Name</TableHeadCell>
-          <TableHeadCell>Last Name</TableHeadCell>
+          <TableHeadCell>Employee</TableHeadCell>
+          <TableHeadCell>Campaign</TableHeadCell>
+          <TableHeadCell>Customer</TableHeadCell>
           <TableHeadCell>Address</TableHeadCell>
           <TableHeadCell>Status</TableHeadCell>
           <TableHeadCell>Amount</TableHeadCell>
@@ -75,8 +148,9 @@
           {#each sales as sale (sale.id)}
             <TableBodyRow>
               <TableBodyCell>{formatDate(sale.saleDate * 1000)}</TableBodyCell>
-              <TableBodyCell>{sale.customerFirstName}</TableBodyCell>
-              <TableBodyCell>{sale.customerLastName}</TableBodyCell>
+              <TableBodyCell>{sale.employee?.firstName} {sale.employee?.lastName}</TableBodyCell>
+              <TableBodyCell>{sale.campaign.name}</TableBodyCell>
+              <TableBodyCell>{sale.customerFirstName} {sale.customerLastName}</TableBodyCell>
               <TableBodyCell>{sale.customerAddress}</TableBodyCell>
               <TableBodyCell>{sale.statusDescription}</TableBodyCell>
               <TableBodyCell>{usd.format(sale.saleAmount)}</TableBodyCell>

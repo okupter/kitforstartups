@@ -1,9 +1,10 @@
-import type { InsertSale, SaleDto, SelectSale } from '$lib/types/db.model';
+import type { InsertSale, SaleDto, SelectEmployee, SelectSale } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
 import { drizzleClient } from '../client';
 import { sale } from '../schema';
 import dayjs from 'dayjs';
 import { desc } from 'drizzle-orm';
+import type { SaleWithEmployee } from '$lib/types/sale.model';
 
 export const toInsertSale = (data: any): InsertSale => ({
   id: data.id || nanoid(),
@@ -50,7 +51,7 @@ export const saveSale = async (dto: InsertSale): Promise<SelectSale> => {
   return dto as SelectSale;
 }
 
-export const getSales = async (clientId: string, startDate: string, endDate: string, withStmt: any = undefined): Promise<SelectSale[]> => {
+export const getSales = async <T = SelectSale>(clientId: string, startDate: string, endDate: string, withStmt: any = undefined): Promise<T[]> => {
   const sales = await drizzleClient.query.sale.findMany({
     with: withStmt || undefined,
     orderBy: s => desc(s.saleDate),
@@ -61,5 +62,5 @@ export const getSales = async (clientId: string, startDate: string, endDate: str
     ),
   });
   
-  return sales as SelectSale[];
+  return sales as T[];
 }
