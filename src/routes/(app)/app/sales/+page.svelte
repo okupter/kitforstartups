@@ -54,6 +54,16 @@
         }
       })
     : allSales;
+    
+  const clearFilter = (filter: string) => {
+    if (filter === 'employee') {
+      selectedEmployeeItem = '';
+    }
+    
+    if (filter === 'campaign') {
+      selectedCampaignItem = '';
+    }
+  }
 </script>
 
 <div class="container max-w-3xl p-4">
@@ -109,7 +119,7 @@
                 <span>
                   Employee
                   {#if selectedEmployeeItem}
-                    <Button color="alternative" pill={true} class="!p-2" size="xs">
+                    <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('employee')}>
                       <CloseSolid class="w-2 h-2" />
                     </Button>
                   {/if}
@@ -122,7 +132,7 @@
               <Label class="block mb-2 pt-4">
                 Campaign
                 {#if selectedCampaignItem}
-                  <Button color="alternative" pill={true} class="!p-2" size="xs">
+                  <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('campaign')}>
                     <CloseSolid class="w-2 h-2" />
                   </Button>
                 {/if}
