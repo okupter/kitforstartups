@@ -83,6 +83,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
+  xlsx:
+    specifier: https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz
+    version: '@cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz'
   zod:
     specifier: ^3.22.2
     version: 3.22.2
@@ -4935,3 +4938,11 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+
+  '@cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz':
+    resolution: {tarball: https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz}
+    name: xlsx
+    version: 0.20.1
+    engines: {node: '>=0.8'}
+    hasBin: true
+    dev: false

@@ -90,6 +90,7 @@
 		"resend": "^1.0.0",
 		"svelte-input-mask": "^1.1.0",
 		"tailwind-merge": "^2.0.0",
+		"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz",
 		"zod": "^3.22.2"
 	}
 }

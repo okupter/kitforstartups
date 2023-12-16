@@ -1,7 +1,12 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { createToast } from '$lib/components/Toast.svelte';
 	import { Button, Breadcrumb, BreadcrumbItem, Label, Fileupload, Table, TableBody, TableBodyRow, TableBodyCell, TableHead, TableHeadCell } from 'flowbite-svelte';
+	import type { PageData } from './$types';
 
+  export let data: PageData;
   
+  console.dir(data);
 </script>
 
 <div class="container max-w-3xl p-4">
@@ -39,6 +44,10 @@
               <TableBodyCell>The date of the sale</TableBodyCell>
             </TableBodyRow>
             <TableBodyRow>
+              <TableBodyCell>sales_code</TableBodyCell>
+              <TableBodyCell>Employee's sale code for the given campaign</TableBodyCell>
+            </TableBodyRow>
+            <TableBodyRow>
               <TableBodyCell>customer_name</TableBodyCell>
               <TableBodyCell>The name of the customer</TableBodyCell>
             </TableBodyRow>
@@ -59,15 +68,15 @@
       </div>
       
       <div class="pt-2">
-        <p>
+        <p class="mb-4">
           The file should be in the format below for easiest ingestion:
         </p>
         
         <pre>
-          sale_date, customer_name, address, commissionable, amount
-          2021-01-01, John Doe, 123 Main St, Accepted, 100
-          2021-01-01, John Doe, 123 Main St, Pending Enrollment, 100
-          2021-01-01, John Doe, 123 Main St, Rejected, 100
+          sale_date, sales_code, customer_name, address, commissionable, amount
+          2021-01-01, 1234, John Doe, 123 Main St, Accepted, 100
+          2021-01-01, 1234, John Doe, 123 Main St, Pending Enrollment, 100
+          2021-01-01, 1234, John Doe, 123 Main St, Rejected, 100
         </pre>
       </div>
       
@@ -81,13 +90,35 @@
       </div>
     </section>
     
-    <div class="pb-4">
-      <Label for="file" class="block mb-2">Upload CSV File</Label>
-      <Fileupload id="file" name="file" accept=".csv,.xls,.xlsx" />
-    </div>
-    
-    <div class="pb-4">
-      <Button pill color="primary" size="sm">Import</Button>
-    </div>
+    <form action="?/import" method="post"
+      use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+        
+        // console.log(Object.fromEntries(formData.entries()));
+        // cancel();
+          
+        return async ({ result, update }) => {
+          console.dir(result);
+          
+          if (result.status != 200) return;
+          
+          createToast({
+            title: 'Success!',
+            description: 'Sale saved successfully!',
+            type: 'success',
+          });
+          
+          update();
+        }
+      }}
+    >
+      <div class="pb-4">
+        <Label for="file" class="block mb-2">Upload CSV File</Label>
+        <Fileupload id="file" name="file" accept=".csv,.xls,.xlsx" enctype="multipart/form-data" />
+      </div>
+      
+      <div class="pb-4">
+        <Button type="submit" pill color="primary" size="sm">Import</Button>
+      </div>
+    </form>
   </div>
 </div>
