@@ -1,6 +1,9 @@
 import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns';
+import { processImport } from '$lib/drizzle/mysql/models/sales.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
-import { redirect, type Actions } from '@sveltejs/kit';
+import type { InsertSale } from '$lib/types/db.model.js';
+import type { ImportRow } from '$lib/types/sale.model.js';
+import { redirect, type Actions, error } from '@sveltejs/kit';
 import { read, utils, writeFile } from 'xlsx';
 
 export const load = async ({ locals, request }) => {
@@ -29,51 +32,56 @@ export const load = async ({ locals, request }) => {
 const importHeaders = {
   date: 'sale_date',
   salesCode: 'sales_code',
-  customerName: 'customer_name',
-  address: 'address',
-  commissionable: {
-    header: 'commissionable',
-    values: ['accepted', 'pending', 'rejected'],
-  },
-  amount: 'amount',
+  customerFirstName: 'customer_first_name',
+  customerLastName: 'customer_last_name',
+  customerAddress: 'customer_address',
+  statusDescription: 'status_description',
+  saleAmount: 'sale_amount',
 } as any;
 
 export const actions: Actions = {
   import: async ({ locals, request }) => {
     const session = await locals.auth.validate();
     
-    if (!session) return { status: 401 };
+    if (!session) throw error(401, { message: 'Unauthorized' });
     
     const profile = await getUserProfileData(session?.user.userId);
     
-    if (!profile?.clientId) return { status: 401 };
-    if (!['org_admin', 'super_admin'].includes(profile?.role)) return { status: 401 };
+    if (!profile?.clientId) throw error(401, { message: 'Unauthorized' });
+    if (!['org_admin', 'super_admin'].includes(profile?.role)) throw error(401, { message: 'Unauthorized' });
     
+    const result = {
+      good: [] as InsertSale[],
+      bad: [] as InsertSale[],
+    };
     const data = Object.fromEntries(await request.formData());
     
+    const campaignId = data.campaign_id as string;
     const file = data.file as File;
     
     const workbook = read(await file.arrayBuffer(), { type: 'array' });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = utils.sheet_to_json<{ [key: string]: any }>(sheet);
+    const rows = utils.sheet_to_json<ImportRow>(sheet);
     
-    const headers = Object.keys(rows[0]);
+    const headers = Object.keys(rows[0]).map(h => h.toLowerCase().trim());
     
-    if (headers.length !== Object.keys(importHeaders).length) {
-      return { status: 400, body: { message: 'Invalid or wrong number of headers provided' } };
-    }
+    if (headers.length !== Object.keys(importHeaders).length) 
+      throw error(400, { message: 'Invalid or wrong number of headers provided', } as Error);
     
-    const missingHeaders = Object.keys(importHeaders).map(k => {
-      if (typeof importHeaders[k] === 'object') {
-        return importHeaders[k].header;
-      }
-      
-      return importHeaders[k];
-    }).filter(h => !headers.includes(h));
+    const missingHeaders = Object.keys(importHeaders).map(k => importHeaders[k]).filter(h => !headers.includes(h));
     
-    if (missingHeaders.length > 0) {
-      return { status: 400, body: { message: 'Missing headers', data: missingHeaders } };
-    }
+    if (missingHeaders.length > 0) 
+      throw error(400, { message: 'Missing headers', cause: missingHeaders } as Error);
+    
+    const dtos = await processImport(profile.clientId, campaignId, rows);
+    
+    // check for missing employee ids
+    dtos.forEach(d => {
+      if (d.employeeId === 'MISSING')
+        result.bad.push(d);
+      else 
+        result.good.push(d);
+    });
     
     // const sales = rows.map((value, index, arr) => {
     //   const sale = {} as { [key: string]: any };
@@ -88,6 +96,6 @@ export const actions: Actions = {
     //   return sale;
     // });
     
-    return rows;
+    return result;
   },
 };

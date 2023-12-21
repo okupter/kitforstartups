@@ -4,7 +4,8 @@ import { drizzleClient } from '../client';
 import { sale } from '../schema';
 import dayjs from 'dayjs';
 import { desc } from 'drizzle-orm';
-import type { SaleWithEmployee } from '$lib/types/sale.model';
+import type { ImportRow, SaleWithEmployee } from '$lib/types/sale.model';
+import { getEmployeeIdByCampaignSalesCode } from './employees';
 
 export const toInsertSale = (data: any): InsertSale => ({
   id: data.id || nanoid(),
@@ -63,4 +64,53 @@ export const getSales = async <T = SelectSale>(clientId: string, startDate: stri
   });
   
   return sales as T[];
+}
+
+const formatStatusDescription = (statusDescription: string): 'accepted' | 'pending' | 'rejected' => {
+  const status = statusDescription.toLowerCase().trim();
+  
+  if (status.includes('accepted') || status.includes('confirmed')) return 'accepted';
+  if (status.includes('pending')) return 'pending';
+  if (status.includes('rejected') || status.includes('rescinded') || status.includes('invalid')) return 'rejected';
+  
+  return 'pending';
+}
+
+export const processImport = async (client_id: string, campaign_id: string, rows: ImportRow[]): Promise<InsertSale[]> => {
+  const employeeDict = {} as Record<string, string>;
+  const getEmployeeId = async (campaignId: string, salesCode: string): Promise<string> => {
+    const key = `${campaignId}|${salesCode}`;
+    if (employeeDict[key]) return employeeDict[key];
+    const employeeId = await getEmployeeIdByCampaignSalesCode(campaignId, salesCode);
+    employeeDict[key] = employeeId;
+    return employeeId;
+  }
+  
+  const insertRows = await Promise.all(rows.map(async r => {
+    for (const p in r) {
+      const fixedP = p.toLowerCase().trim();
+      if (fixedP !== p) {
+        r[fixedP] = r[p];
+        delete r[p];
+      }
+    }
+    const isComplete = r.status_description.toLowerCase().trim().includes('accepted');
+    const employee_id = await getEmployeeId(campaign_id, r.sales_code) || 'MISSING';
+    
+    const dto = {
+      employee_id,
+      client_id,
+      campaign_id,
+      sale_date: r.sale_date,
+      customer_first_name: r.customer_first_name,
+      customer_last_name: r.customer_last_name,
+      customer_address: r.customer_address,
+      status_description: formatStatusDescription(r.status_description),
+      is_complete: isComplete,
+      sale_amount: r.sale_amount,
+    }
+    return toInsertSale(dto);
+  }));
+  
+  return insertRows;
 }

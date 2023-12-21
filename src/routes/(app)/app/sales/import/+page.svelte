@@ -1,12 +1,39 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { createToast } from '$lib/components/Toast.svelte';
-	import { Button, Breadcrumb, BreadcrumbItem, Label, Fileupload, Table, TableBody, TableBodyRow, TableBodyCell, TableHead, TableHeadCell } from 'flowbite-svelte';
+	import { Button, Breadcrumb, BreadcrumbItem, Label, Fileupload, Table, TableBody, TableBodyRow, TableBodyCell, TableHead, TableHeadCell, Select } from 'flowbite-svelte';
 	import type { PageData } from './$types';
+	import { read, utils } from 'xlsx';
+  import type { ImportSalesResult } from '$lib/types/sale.model';
+	import type { ActionResult } from '@sveltejs/kit';
 
   export let data: PageData;
+  const { campaigns, } = data;
   
-  console.dir(data);
+  const handleSuccessfulImport = async (result: ActionResult<Record<string, unknown> | undefined, Record<string, unknown> | undefined>, update: (options?: {
+    reset: boolean;
+} | undefined) => Promise<void>) => {
+    console.dir(result);
+          
+    if (result.status != 200) return;
+    const payload = (result as any).data as ImportSalesResult;
+    
+    if (payload?.good.length > 0) {
+      createToast({
+        title: 'Success!',
+        description: `Imported ${(payload?.good?.length || 0)} sales successfully!`,
+        type: result.type as "success" | "error" | "warning" | "info",
+      });
+    }
+    
+    if (payload?.bad.length > 0) {
+      createToast({
+        title: 'Error!',
+        description: `Failed to import ${(payload?.bad?.length || 0)} sales!`,
+        type: 'error',
+      });
+    }
+  }
 </script>
 
 <div class="container max-w-3xl p-4">
@@ -90,30 +117,47 @@
       </div>
     </section>
     
-    <form action="?/import" method="post"
-      use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+    <form action="?/import" method="post" class="mt-4"
+      use:enhance={async ({ formElement, formData, action, cancel, submitter }) => {
         
-        // console.log(Object.fromEntries(formData.entries()));
+        // const form = Object.fromEntries(formData.entries());
+        // const file = form.file;
+        
+        // const workbook = read(await file.arrayBuffer(), { type: 'array' });
+        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        // const rows = utils.sheet_to_json(sheet);
+        // console.dir(rows);
+        
         // cancel();
           
-        return async ({ result, update }) => {
-          console.dir(result);
+        return async ({ result, update }) => handleSuccessfulImport(result, update);
+        // return async ({ result, update }) => {
+        //   console.dir(result);
           
-          if (result.status != 200) return;
+        //   if (result.status != 200) return;
           
-          createToast({
-            title: 'Success!',
-            description: 'Sale saved successfully!',
-            type: 'success',
-          });
+        //   handleSuccessfulImport(result, update);
           
-          update();
-        }
+        //   createToast({
+        //     title: 'Success!',
+        //     description: 'Sale saved successfully!',
+        //     type: 'success',
+        //   });
+          
+        //   update();
+        // }
       }}
     >
       <div class="pb-4">
         <Label for="file" class="block mb-2">Upload CSV File</Label>
         <Fileupload id="file" name="file" accept=".csv,.xls,.xlsx" enctype="multipart/form-data" />
+      </div>
+      
+      <div class="pb-4">
+        <Label class="block mb-2">
+          Campaign
+          <Select class="mt-2" name="campaign_id" items={campaigns} required></Select>
+        </Label>
       </div>
       
       <div class="pb-4">

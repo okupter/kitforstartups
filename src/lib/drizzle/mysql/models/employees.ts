@@ -1,7 +1,7 @@
 import { drizzleClient as db } from '$lib/drizzle/mysql/client';
-import { eq } from 'drizzle-orm';
-import { employee, employeeNotes, employeeProfile } from '../schema';
-import type { Employee, InsertEmployee, InsertEmployeeNotes, InsertEmployeeProfile } from '$lib/types/db.model';
+import { and, eq } from 'drizzle-orm';
+import { employee, employeeCodes, employeeNotes, employeeProfile } from '../schema';
+import type { Employee, InsertEmployee, InsertEmployeeNotes, InsertEmployeeProfile, SelectEmployee } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
 
 const getEmployees = async (clientId: string, isCommissionable = false): Promise<Employee[]> => {
@@ -130,6 +130,39 @@ const addEmployeeNote = async (employeeId: string, note: string) => {
     return { success: false, };
   }
   
+}
+
+export const getEmployeeIdByCampaignSalesCode = async (campaignId: string, salesCode: string): Promise<string> => {
+  if (!salesCode) return '';
+  
+  try {
+    // const ee = await db.query.employee.findFirst({
+    //   with: {
+    //     employeeCodes: {
+    //       where: (code, { eq, and }) => and(
+    //         eq(code.campaignId, campaignId),
+    //         eq(code.employeeCode, salesCode),
+    //       ),
+    //     },
+    //   },
+    // });
+    
+    const res = (await db.select({ id: employee.id, })
+      .from(employee)
+      .innerJoin(employeeCodes, eq(employee.id, employeeCodes.employeeId))
+      .where(and(
+        eq(employeeCodes.campaignId, campaignId),
+        eq(employeeCodes.employeeCode, salesCode),
+      ))
+      .execute());
+      
+    // const employeeId = res[0]?.id || '';
+    
+    return res[0]?.id || '';
+  } catch (ex) {
+    console.error(ex);
+    return '';
+  }
 }
 
 export { getEmployees, getEmployee, createEmployee, updateEmployee, deleteEmployee,
