@@ -14,6 +14,6 @@ export interface ImportRow {
 }
 
 export interface ImportSalesResult {
-  bad: InsertSale[];
+  bad: { property: string, sales: InsertSale[], }[];
   good: InsertSale[];
 }

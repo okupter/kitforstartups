@@ -6,9 +6,14 @@
 	import { read, utils } from 'xlsx';
   import type { ImportSalesResult } from '$lib/types/sale.model';
 	import type { ActionResult } from '@sveltejs/kit';
+	import type { InsertSale } from '$lib/types/db.model';
+	import { formatCurrency, formatDate } from '$lib/utils';
 
   export let data: PageData;
   const { campaigns, } = data;
+  
+  let baddies = [] as { property: string, sales: InsertSale[], }[];
+  $: reconcileBadSales = baddies?.length > 0;
   
   const handleSuccessfulImport = async (result: ActionResult<Record<string, unknown> | undefined, Record<string, unknown> | undefined>, update: (options?: {
     reset: boolean;
@@ -26,7 +31,12 @@
       });
     }
     
-    if (payload?.bad.length > 0) {
+    if (Object.keys(payload?.bad).length > 0) {
+      const { bad } = payload;
+      
+      // do something here to show the bad sales grouped by each sale
+      baddies = [...bad];
+      
       createToast({
         title: 'Error!',
         description: `Failed to import ${(payload?.bad?.length || 0)} sales!`,
@@ -36,7 +46,7 @@
   }
 </script>
 
-<div class="container max-w-3xl p-4">
+<div class={reconcileBadSales ? 'container p-4 max-w-4xl' : 'container p-4 max-w-3xl'}>
   <div class="pb-8">
     <h4>Import Sales</h4>
     <p>
@@ -55,114 +65,128 @@
   </div>
   
   <div class="flex flex-col pt-4 pb-6 px-1">
-    <section>
-      <h5>Instructions</h5>
-      <p>To import sales, you need to have a CSV, XLS, or XLSX file with the following columns:</p>
-      
-      <div class="p-4">
-        <Table>
-          <TableHead>
-            <TableHeadCell>Column</TableHeadCell>
-            <TableBodyCell>Description</TableBodyCell>
-          </TableHead>
-          <TableBody>
-            <TableBodyRow>
-              <TableBodyCell>sale_date</TableBodyCell>
-              <TableBodyCell>The date of the sale</TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-              <TableBodyCell>sales_code</TableBodyCell>
-              <TableBodyCell>Employee's sale code for the given campaign</TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-              <TableBodyCell>customer_name</TableBodyCell>
-              <TableBodyCell>The name of the customer</TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-              <TableBodyCell>address</TableBodyCell>
-              <TableBodyCell>The address of the customer</TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-              <TableBodyCell>commissionable</TableBodyCell>
-              <TableBodyCell>The status of the sale (Accepted, Pending Enrollment, Rejected)</TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-              <TableBodyCell>amount</TableBodyCell>
-              <TableBodyCell>The amount of the sale</TableBodyCell>
-            </TableBodyRow>
-          </TableBody>
-        </Table>
-      </div>
-      
-      <div class="pt-2">
-        <p class="mb-4">
-          The file should be in the format below for easiest ingestion:
-        </p>
+    {#if reconcileBadSales}
+      <section>
+        <h5>Reconcile {baddies?.length} that we couldn't import?</h5>
+        <p>We weren't able to import these records because of missing data. </p>
         
-        <pre>
-          sale_date, sales_code, customer_name, address, commissionable, amount
-          2021-01-01, 1234, John Doe, 123 Main St, Accepted, 100
-          2021-01-01, 1234, John Doe, 123 Main St, Pending Enrollment, 100
-          2021-01-01, 1234, John Doe, 123 Main St, Rejected, 100
-        </pre>
-      </div>
-      
-      <div class="pt-2">
-        <p class="text-sm">
-          Note: The column names should be exactly as shown above. The order of the columns does not matter. If you cannot provide all the columns, 
-          the import will build out a review table with as much information as possible but you will be required to fill in the missing information. 
+        <div class="p-4">
+          <Table>
+            <TableHead>
+              <TableHeadCell>Date</TableHeadCell>
+              <TableHeadCell>Customer Name</TableHeadCell>
+              <TableHeadCell>Address</TableHeadCell>
+              <TableHeadCell>Status</TableHeadCell>
+              <TableHeadCell>Amount</TableHeadCell>
+            </TableHead>
+            <TableBody>
+              {#each baddies as { property, sales } (property)}
+                <TableBodyRow>
+                  <TableBodyCell colspan="2">
+                    <h6 class="font-bold text-lg">{property}</h6>
+                  </TableBodyCell>
+                  <TableBodyCell colspan="3">
+                    TEST
+                  </TableBodyCell>
+                </TableBodyRow>
+                
+                {#each sales as sale (sale.id)}
+                  <TableBodyRow>
+                    <TableBodyCell>{formatDate(sale.saleDate * 1000)}</TableBodyCell>
+                    <TableBodyCell>{sale.customerFirstName} {sale.customerLastName}</TableBodyCell>
+                    <TableBodyCell>{sale.customerAddress}</TableBodyCell>
+                    <TableBodyCell>{sale.statusDescription}</TableBodyCell>
+                    <TableBodyCell>{formatCurrency(sale.saleAmount)}</TableBodyCell>
+                  </TableBodyRow>
+                {/each}
+              {/each}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+    {:else}
+      <section>
+        <h5>Instructions</h5>
+        <p>To import sales, you need to have a CSV, XLS, or XLSX file with the following columns:</p>
+        
+        <div class="p-4">
+          <Table>
+            <TableHead>
+              <TableHeadCell>Column</TableHeadCell>
+              <TableBodyCell>Description</TableBodyCell>
+            </TableHead>
+            <TableBody>
+              <TableBodyRow>
+                <TableBodyCell>sale_date</TableBodyCell>
+                <TableBodyCell>The date of the sale</TableBodyCell>
+              </TableBodyRow>
+              <TableBodyRow>
+                <TableBodyCell>sales_code</TableBodyCell>
+                <TableBodyCell>Employee's sale code for the given campaign</TableBodyCell>
+              </TableBodyRow>
+              <TableBodyRow>
+                <TableBodyCell>customer_name</TableBodyCell>
+                <TableBodyCell>The name of the customer</TableBodyCell>
+              </TableBodyRow>
+              <TableBodyRow>
+                <TableBodyCell>address</TableBodyCell>
+                <TableBodyCell>The address of the customer</TableBodyCell>
+              </TableBodyRow>
+              <TableBodyRow>
+                <TableBodyCell>commissionable</TableBodyCell>
+                <TableBodyCell>The status of the sale (Accepted, Pending Enrollment, Rejected)</TableBodyCell>
+              </TableBodyRow>
+              <TableBodyRow>
+                <TableBodyCell>amount</TableBodyCell>
+                <TableBodyCell>The amount of the sale</TableBodyCell>
+              </TableBodyRow>
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div class="pt-2">
+          <p class="mb-4">
+            The file should be in the format below for easiest ingestion:
+          </p>
           
-          If headers do not match, you will be prompted to map the headers to the correct columns.
-        </p>
-      </div>
-    </section>
+          <pre>
+            sale_date, sales_code, customer_name, address, commissionable, amount
+            2021-01-01, 1234, John Doe, 123 Main St, Accepted, 100
+            2021-01-01, 1234, John Doe, 123 Main St, Pending Enrollment, 100
+            2021-01-01, 1234, John Doe, 123 Main St, Rejected, 100
+          </pre>
+        </div>
+        
+        <div class="pt-2">
+          <p class="text-sm">
+            Note: The column names should be exactly as shown above. The order of the columns does not matter. If you cannot provide all the columns, 
+            the import will build out a review table with as much information as possible but you will be required to fill in the missing information. 
+            
+            If headers do not match, you will be prompted to map the headers to the correct columns.
+          </p>
+        </div>
+      </section>
+      
+      <form action="?/import" method="post" class="mt-4"
+        use:enhance={async () => async ({ result, update }) => handleSuccessfulImport(result, update) }
+      >
+        <div class="pb-4">
+          <Label for="file" class="block mb-2">Upload CSV File</Label>
+          <Fileupload id="file" name="file" accept=".csv,.xls,.xlsx" enctype="multipart/form-data" />
+        </div>
+        
+        <div class="pb-4">
+          <Label class="block mb-2">
+            Campaign
+            <Select class="mt-2" name="campaign_id" items={campaigns} required></Select>
+          </Label>
+        </div>
+        
+        <div class="pb-4">
+          <Button type="submit" pill color="primary" size="sm">Import</Button>
+        </div>
+      </form>
+    {/if}
     
-    <form action="?/import" method="post" class="mt-4"
-      use:enhance={async ({ formElement, formData, action, cancel, submitter }) => {
-        
-        // const form = Object.fromEntries(formData.entries());
-        // const file = form.file;
-        
-        // const workbook = read(await file.arrayBuffer(), { type: 'array' });
-        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        // const rows = utils.sheet_to_json(sheet);
-        // console.dir(rows);
-        
-        // cancel();
-          
-        return async ({ result, update }) => handleSuccessfulImport(result, update);
-        // return async ({ result, update }) => {
-        //   console.dir(result);
-          
-        //   if (result.status != 200) return;
-          
-        //   handleSuccessfulImport(result, update);
-          
-        //   createToast({
-        //     title: 'Success!',
-        //     description: 'Sale saved successfully!',
-        //     type: 'success',
-        //   });
-          
-        //   update();
-        // }
-      }}
-    >
-      <div class="pb-4">
-        <Label for="file" class="block mb-2">Upload CSV File</Label>
-        <Fileupload id="file" name="file" accept=".csv,.xls,.xlsx" enctype="multipart/form-data" />
-      </div>
-      
-      <div class="pb-4">
-        <Label class="block mb-2">
-          Campaign
-          <Select class="mt-2" name="campaign_id" items={campaigns} required></Select>
-        </Label>
-      </div>
-      
-      <div class="pb-4">
-        <Button type="submit" pill color="primary" size="sm">Import</Button>
-      </div>
-    </form>
   </div>
 </div>

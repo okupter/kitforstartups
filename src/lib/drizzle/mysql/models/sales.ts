@@ -95,7 +95,7 @@ export const processImport = async (client_id: string, campaign_id: string, rows
       }
     }
     const isComplete = r.status_description.toLowerCase().trim().includes('accepted');
-    const employee_id = await getEmployeeId(campaign_id, r.sales_code) || 'MISSING';
+    const employee_id = await getEmployeeId(campaign_id, r.sales_code) || `MISSING|${r.sales_code}`;
     
     const dto = {
       employee_id,

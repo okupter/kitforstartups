@@ -52,7 +52,8 @@ export const actions: Actions = {
     
     const result = {
       good: [] as InsertSale[],
-      bad: [] as InsertSale[],
+      bad: [] as { property: string, sales: InsertSale[], }[],
+      // bad: [] as InsertSale[],
     };
     const data = Object.fromEntries(await request.formData());
     
@@ -74,27 +75,22 @@ export const actions: Actions = {
       throw error(400, { message: 'Missing headers', cause: missingHeaders } as Error);
     
     const dtos = await processImport(profile.clientId, campaignId, rows);
+    const badOnes = {} as { [key: string]: InsertSale[] };
     
     // check for missing employee ids
     dtos.forEach(d => {
-      if (d.employeeId === 'MISSING')
-        result.bad.push(d);
-      else 
-        result.good.push(d);
+      if (d.employeeId.includes('MISSING')) {
+        const [, salesCode] = d.employeeId.split('|');
+        
+        if (badOnes[salesCode]?.length) badOnes[salesCode].push(d);
+        else badOnes[salesCode] = [d];
+      }
+      else result.good.push(d);
     });
     
-    // const sales = rows.map((value, index, arr) => {
-    //   const sale = {} as { [key: string]: any };
-      
-    //   for (const p in value) {
-    //     if (value[p] === '') {
-    //       delete value[p];
-    //     }
-    //     sale[p] = value[p];
-    //   }
-      
-    //   return sale;
-    // });
+    for (const p in badOnes) {
+      result.bad.push({ property: p, sales: badOnes[p], });
+    }
     
     return result;
   },
