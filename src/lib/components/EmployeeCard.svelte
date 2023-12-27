@@ -45,7 +45,7 @@
 			{employee?.firstName}
 			{employee?.lastName}
 		</h4>
-		<p class="text-base font-normal text-text-800 dark:text-text-900">{employee?.employeeProfile.email}</p>
+		<p class="text-base font-normal text-text-800 dark:text-text-900">{employee?.employeeProfile?.email}</p>
 	</div>
 	<div class="w-[100%] px-2 mt-6 mb-3 flex justify-end gap-14 md:!gap-14">
     <a href={windowUrl + employee?.id} class="text-accent-700 dark:text-text-800">

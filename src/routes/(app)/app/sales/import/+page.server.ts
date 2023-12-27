@@ -1,5 +1,6 @@
 import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns';
-import { processImport } from '$lib/drizzle/mysql/models/sales.js';
+import { getEmployees } from '$lib/drizzle/mysql/models/employees';
+import { processImport, saveSales } from '$lib/drizzle/mysql/models/sales.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import type { InsertSale } from '$lib/types/db.model.js';
 import type { ImportRow } from '$lib/types/sale.model.js';
@@ -24,8 +25,18 @@ export const load = async ({ locals, request }) => {
     }));
   };
   
+  const employees = async () => {
+    const employees = await getEmployees(clientId, true);
+    
+    return employees.map(e => ({
+      name: `${e.firstName} ${e.lastName}`,
+      value: e.id,
+    }));
+  }
+  
   return {
     campaigns: campaigns(),
+    employees: employees(),
   };
 };
 
@@ -60,7 +71,7 @@ export const actions: Actions = {
     const campaignId = data.campaign_id as string;
     const file = data.file as File;
     
-    const workbook = read(await file.arrayBuffer(), { type: 'array' });
+    const workbook = read(await file.arrayBuffer(), { type: 'array', raw: false, cellDates: true, });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = utils.sheet_to_json<ImportRow>(sheet);
     
@@ -91,6 +102,11 @@ export const actions: Actions = {
     for (const p in badOnes) {
       result.bad.push({ property: p, sales: badOnes[p], });
     }
+    
+    if (result.bad.length) return result;
+    
+    // save all of the good records
+    await saveSales(result.good);
     
     return result;
   },

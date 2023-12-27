@@ -1,13 +1,19 @@
-import { drizzleClient as db } from '$lib/drizzle/mysql/client';
+import { drizzleClient as db, drizzleClient } from '$lib/drizzle/mysql/client';
 import { and, eq } from 'drizzle-orm';
 import { employee, employeeCodes, employeeNotes, employeeProfile } from '../schema';
-import type { Employee, InsertEmployee, InsertEmployeeNotes, InsertEmployeeProfile, SelectEmployee } from '$lib/types/db.model';
+import type { Employee, InsertEmployee, InsertEmployeeCode, InsertEmployeeNotes, InsertEmployeeProfile, SelectEmployee, SelectEmployeeCode } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
+import { error } from '@sveltejs/kit';
 
 const getEmployees = async (clientId: string, isCommissionable = false): Promise<Employee[]> => {
   if (!clientId) {
     return [] as Employee[];
   }
+  
+  const andQuery = (employee: any, { eq, and }: { eq: any, and: any }) => isCommissionable ? and(
+    eq(employee.clientId, clientId),
+    eq(employee.isCommissionable, 1),
+  ) : eq(employee.clientId, clientId);
   
   try {
     return await db.query.employee.findMany({ 
@@ -17,10 +23,7 @@ const getEmployees = async (clientId: string, isCommissionable = false): Promise
           where: (code, { eq }) => eq(code.isActive, true),
         },
       },
-      where: (employee, { eq, and }) => and(
-        eq(employee.clientId, clientId),
-        eq(employee.isCommissionable, isCommissionable ? 1 : 0),
-      ),
+      where: andQuery,
     });
   } catch (ex) {
     console.error(ex);
@@ -66,7 +69,7 @@ const _createEmployee = async (employeeData: InsertEmployee) => {
 }
 
 const createEmployee = async (employeeData: InsertEmployee, employeeProfileData: InsertEmployeeProfile) => {
-  const employeeResult = await _createEmployee(employeeData);
+  const employeeResult = await _createEmployee({...employeeData, isCommissionable: 1,});
   
   if (!employeeResult.success) {
     return employeeResult;
@@ -163,6 +166,60 @@ export const getEmployeeIdByCampaignSalesCode = async (campaignId: string, sales
     console.error(ex);
     return '';
   }
+}
+
+export const upsertEmployeeCodes = async (dtos: { employeeId: string, employeeCode: string, campaignId: string, isActive: boolean }[]) => {
+  if (!dtos || dtos.length < 1) return;
+  
+  const results: { id: string, employeeId: string, employeeCode: string, campaignId: string, isActive: boolean }[] = [];
+  
+  dtos.forEach(async dto => {
+    const curr = await db.query.employeeCodes.findFirst({
+      where: (code, { eq }) => and(
+        eq(code.employeeId, dto.employeeId),
+        eq(code.campaignId, dto.campaignId),
+      ),
+    }) as SelectEmployeeCode;
+    
+    try {
+      if (curr && curr.employeeCode !== dto.employeeCode) {
+        await db.update(employeeCodes)
+          .set({
+            employeeCode: dto.employeeCode,
+            isActive: dto.isActive,
+          })
+          .where(eq(employeeCodes.id, curr.id));
+          
+        results.push({
+          ...dto,
+          id: curr.id,
+        });
+      } else if (!curr) {
+        const insertId = nanoid();
+        
+        await db.insert(employeeCodes)
+          .values({
+            id: insertId,
+            employeeId: dto.employeeId,
+            employeeCode: dto.employeeCode,
+            campaignId: dto.campaignId,
+            isActive: dto.isActive,
+            created: Date.now() as any,
+            updated: Date.now() as any,
+          } as InsertEmployeeCode);
+          
+        results.push({
+          ...dto,
+          id: insertId,
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
+      throw error(500, { message: 'Error upserting employee codes' });
+    }
+  });
+  
+  return results;
 }
 
 export { getEmployees, getEmployee, createEmployee, updateEmployee, deleteEmployee,

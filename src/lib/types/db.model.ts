@@ -28,7 +28,8 @@ export type EmployeeWithNotes = Employee & { employeeNotes: SelectEmployeeNotes[
 export type InsertEmployeeNotes = typeof employeeNotes.$inferInsert;
 export type InsertEmployee = typeof employee.$inferInsert;
 export type InsertEmployeeProfile = typeof employeeProfile.$inferInsert;
-
+export type InsertEmployeeCode = typeof employeeCodes.$inferInsert;
+export type SelectEmployeeCode = typeof employeeCodes.$inferSelect;
 export type SelectCampaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = typeof campaigns.$inferInsert;
 

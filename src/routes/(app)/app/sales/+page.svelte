@@ -28,29 +28,45 @@
     };
   });
   
+  const saleStatusItems = [
+    {
+      name: 'All',
+      value: null,
+    },
+    {
+      name: 'Pending',
+      value: 'pending',
+    },
+    {
+      name: 'Approved',
+      value: 'approved',
+    },
+    {
+      name: 'Declined',
+      value: 'declined',
+    },
+  ];
+  
   let selectedEmployeeItem: string;
   let selectedCampaignItem: string;
+  let selectedSaleStatusItem: string;
   
-  const handleEmployeeChange = () => {
-    console.dir(selectedEmployeeItem);
-  }
-  
-  const handleCampaignChange = () => {
-    console.dir(selectedCampaignItem);
-  }
-  
-  $: sales = selectedEmployeeItem || selectedCampaignItem
+  $: sales = selectedEmployeeItem || selectedCampaignItem || selectedSaleStatusItem
     ? allSales.filter((sale) => {
-        if (selectedCampaignItem && selectedEmployeeItem) {
+        if (selectedCampaignItem && selectedEmployeeItem && selectedSaleStatusItem) {
+          return sale.employee.id == selectedEmployeeItem && sale.campaign.id == selectedCampaignItem && sale.statusDescription == selectedSaleStatusItem;
+        } else if (selectedCampaignItem && selectedEmployeeItem) {
           return sale.employee.id == selectedEmployeeItem && sale.campaign.id == selectedCampaignItem;
-        }
-      
-        if (selectedEmployeeItem) {
-          return sale.employee.id == selectedEmployeeItem;
-        }
-  
-        if (selectedCampaignItem) {
+        } else if (selectedCampaignItem && selectedSaleStatusItem) {
+          return sale.campaign.id == selectedCampaignItem && sale.statusDescription == selectedSaleStatusItem;
+        } else if (selectedEmployeeItem && selectedSaleStatusItem) {
+          return sale.employee.id == selectedEmployeeItem && sale.statusDescription == selectedSaleStatusItem;
+        } else if (selectedCampaignItem) {
           return sale.campaign.id == selectedCampaignItem;
+        } else if (selectedEmployeeItem) {
+          return sale.employee.id == selectedEmployeeItem;
+        } else if (selectedSaleStatusItem) {
+          return sale.statusDescription == selectedSaleStatusItem;
         }
       })
     : allSales;
@@ -62,6 +78,10 @@
     
     if (filter === 'campaign') {
       selectedCampaignItem = '';
+    }
+    
+    if (filter === 'saleStatus') {
+      selectedSaleStatusItem = '';
     }
   }
 </script>
@@ -124,7 +144,7 @@
                     </Button>
                   {/if}
                 </span>
-                <Select class="mt-2" items={employeeItems} bind:value={selectedEmployeeItem} on:change={handleEmployeeChange} />
+                <Select class="mt-2" items={employeeItems} bind:value={selectedEmployeeItem} />
               </Label>
             </div>
             
@@ -136,7 +156,19 @@
                     <CloseSolid class="w-2 h-2" />
                   </Button>
                 {/if}
-                <Select class="mt-2" items={campaignItems} bind:value={selectedCampaignItem} on:change={handleCampaignChange} />
+                <Select class="mt-2" items={campaignItems} bind:value={selectedCampaignItem} />
+              </Label>
+            </div>
+            
+            <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+              <Label class="block mb-2 pt-4">
+                Status
+                {#if selectedSaleStatusItem}
+                  <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('saleStatus')}>
+                    <CloseSolid class="w-2 h-2" />
+                  </Button>
+                {/if}
+                <Select class="mt-2" items={saleStatusItems} bind:value={selectedSaleStatusItem} />
               </Label>
             </div>
           </div>

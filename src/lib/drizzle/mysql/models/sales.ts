@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { desc } from 'drizzle-orm';
 import type { ImportRow, SaleWithEmployee } from '$lib/types/sale.model';
 import { getEmployeeIdByCampaignSalesCode } from './employees';
+import { error } from '@sveltejs/kit';
 
 export const toInsertSale = (data: any): InsertSale => ({
   id: data.id || nanoid(),
@@ -52,6 +53,18 @@ export const saveSale = async (dto: InsertSale): Promise<SelectSale> => {
   return dto as SelectSale;
 }
 
+export const saveSales = async (dtos: InsertSale[]): Promise<SelectSale[]> => {
+  
+  try {
+    await drizzleClient.insert(sale).values(dtos);
+  } catch (ex) {
+    console.error(ex);
+    throw error(500, { message: 'Error saving sales' });
+  }
+  
+  return dtos as SelectSale[];
+}
+
 export const getSales = async <T = SelectSale>(clientId: string, startDate: string, endDate: string, withStmt: any = undefined): Promise<T[]> => {
   const sales = await drizzleClient.query.sale.findMany({
     with: withStmt || undefined,
@@ -66,16 +79,24 @@ export const getSales = async <T = SelectSale>(clientId: string, startDate: stri
   return sales as T[];
 }
 
-const formatStatusDescription = (statusDescription: string): 'accepted' | 'pending' | 'rejected' => {
+const formatStatusDescription = (statusDescription: string): 'approved' | 'pending' | 'rejected' => {
   const status = statusDescription.toLowerCase().trim();
   
-  if (status.includes('accepted') || status.includes('confirmed')) return 'accepted';
+  if (status.includes('accepted') || status.includes('confirmed')) return 'approved';
   if (status.includes('pending')) return 'pending';
   if (status.includes('rejected') || status.includes('rescinded') || status.includes('invalid')) return 'rejected';
   
   return 'pending';
 }
 
+/**
+ * Processes xlsx import file and returns an object with good and bad sales
+ * 
+ * @param client_id 
+ * @param campaign_id 
+ * @param rows 
+ * @returns Promise<InsertSale[]>
+ */
 export const processImport = async (client_id: string, campaign_id: string, rows: ImportRow[]): Promise<InsertSale[]> => {
   const employeeDict = {} as Record<string, string>;
   const getEmployeeId = async (campaignId: string, salesCode: string): Promise<string> => {

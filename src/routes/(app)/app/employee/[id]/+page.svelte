@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
   import { page } from '$app/stores';
 	import EmployeeNotes from '$lib/components/EmployeeNotes.svelte';
 	import MaskInput from '$lib/components/MaskInput.svelte';
@@ -33,7 +34,15 @@
   </Breadcrumb>
 </div>
 
-<form action="?/save" method="post">
+<form action="?/save" method="post" 
+  use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+          
+    return async ({ result, update }) => {
+      console.dir(result);
+    }
+  }}
+>
+  <input type="hidden" name="employeeId" value={ee?.id} required />
   <div class="bg-background-100 border-gray-100 border dark:border-gray-800 shadow-lg rounded-2xl px-6 pb-6">
     <div class="border-b border-gray-900/10 pb-12">
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -89,9 +98,9 @@
 
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-3">
-          <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">First name</label>
+          <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">First name</label>
           <div class="mt-2">
-            <input type="text" name="first-name" id="first-name"
+            <input type="text" name="firstName" id="firstName"
               value={employee?.firstName}
               autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
@@ -100,9 +109,9 @@
         </div>
 
         <div class="sm:col-span-3">
-          <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Last name</label>
+          <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Last name</label>
           <div class="mt-2">
-            <input type="text" name="last-name" id="last-name" 
+            <input type="text" name="lastName" id="lastName" 
               value={employee?.lastName}
               autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required  
@@ -114,7 +123,7 @@
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Email address</label>
           <div class="mt-2">
             <input id="email" name="email" type="email" 
-              value={profile?.email}
+              value={profile?.email || ''}
               autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required 
             />
@@ -158,9 +167,9 @@
         </div> -->
 
         <div class="col-span-full">
-          <label for="street-address" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Street address</label>
+          <label for="address" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Street address</label>
           <div class="mt-2">
-            <input type="text" name="street-address" id="street-address" 
+            <input type="text" name="address" id="address" 
               value={profile?.address}
               autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
@@ -180,7 +189,7 @@
           <div class="mt-2">
             <input type="text" name="region" id="region" 
               value={profile?.state}
-              autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
+              autocomplete="address-level3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
           </div>
         </div>
 
@@ -212,7 +221,7 @@
               <div class="space-y-6">
                 <div class="relative flex gap-x-3">
                   <div class="flex items-center">
-                    <input name={'code_campaign_' + campaign?.id} type="text" 
+                    <input name={'code|campaign|' + campaign?.id} type="text" 
                       value={getCodeForCampaign(campaign?.id)}
                       class="rounded border-gray-300 text-900 focus:ring-primary-600 dark:border-gray-100 dark:text-100 dark:focus:ring-primary-200 max-w-[120px] dark:bg-neutral-700">
                   </div>

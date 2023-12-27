@@ -10,7 +10,7 @@
 	import { formatCurrency, formatDate } from '$lib/utils';
 
   export let data: PageData;
-  const { campaigns, } = data;
+  const { campaigns, employees } = data;
   
   let baddies = [] as { property: string, sales: InsertSale[], }[];
   $: reconcileBadSales = baddies?.length > 0;
@@ -23,7 +23,7 @@
     if (result.status != 200) return;
     const payload = (result as any).data as ImportSalesResult;
     
-    if (payload?.good.length > 0) {
+    if (payload?.good.length > 0 && payload?.bad.length < 1) {
       createToast({
         title: 'Success!',
         description: `Imported ${(payload?.good?.length || 0)} sales successfully!`,
@@ -36,13 +36,9 @@
       
       // do something here to show the bad sales grouped by each sale
       baddies = [...bad];
-      
-      createToast({
-        title: 'Error!',
-        description: `Failed to import ${(payload?.bad?.length || 0)} sales!`,
-        type: 'error',
-      });
     }
+    
+    update();
   }
 </script>
 
@@ -67,8 +63,12 @@
   <div class="flex flex-col pt-4 pb-6 px-1">
     {#if reconcileBadSales}
       <section>
-        <h5>Reconcile {baddies?.length} that we couldn't import?</h5>
-        <p>We weren't able to import these records because of missing data. </p>
+        <h5>Unassigned Sales</h5>
+        <p>
+          There are {baddies.length} sets of sales that need to be assigned to an employee. Select the apporpriate employee for each set of sales, 
+          then click the save button to assign the sales to the employee. If the employee is not available in the list, you will need to make sure that the 
+          employee is active and has a sales code for the campaign from the <a href="/app/employee">Employees</a> page.
+        </p>
         
         <div class="p-4">
           <Table>
@@ -86,7 +86,17 @@
                     <h6 class="font-bold text-lg">{property}</h6>
                   </TableBodyCell>
                   <TableBodyCell colspan="3">
-                    TEST
+                    <form action="?/attach-sales-code" method="post" class="flex justify-between">
+                      <Label class="sr-only">
+                        Select Employee to assign sales code
+                      </Label>
+                      <Select size="sm" name="employee_id" items={employees}
+                          placeholder="Select Employee"
+                          required></Select>
+                      <div class="flex justify-center items-center p-2">
+                        <Button type="submit" size="sm">Save</Button>
+                      </div>
+                    </form>
                   </TableBodyCell>
                 </TableBodyRow>
                 
