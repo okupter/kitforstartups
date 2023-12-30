@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Checkbox, Datepicker, InputAddon, Label, Select, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Toggle } from 'flowbite-svelte';
+	import { Breadcrumb, BreadcrumbItem, Button, Datepicker, Label, Select, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { PenIcon, PlusIcon } from 'lucide-svelte';
   import { formatDate } from '$lib/utils';
   import dayjs from 'dayjs';
-	import { CloseCircleSolid, CloseSolid } from 'flowbite-svelte-icons';
+	import { CloseSolid } from 'flowbite-svelte-icons';
+	import { enhance } from '$app/forms';
   
   export let data;
   
-  const { campaigns, employees, startDate, endDate, sales: allSales } = data;
+  let { campaigns, employees, startDate, endDate, sales: allSales } = data;
   
   const usd = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -84,6 +85,12 @@
       selectedSaleStatusItem = '';
     }
   }
+  
+  startDate = dayjs(startDate).format('YYYY-MM-DD');
+  endDate = dayjs(endDate).format('YYYY-MM-DD');
+  const inputClass = 'bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+  
+  let submitBtn: HTMLButtonElement;
 </script>
 
 <div class="container max-w-3xl p-4">
@@ -109,19 +116,22 @@
       <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
         <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
           <div class="flex flex-row gap-6 text-sm justify-between">
-            <div class="flex flex-row gap-6 items-center">
+            <form method="post" action="?/search" class="flex flex-row gap-6 items-center" use:enhance>
               <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
                 <Label class="block mb-2">Start Date</Label>
-                <Datepicker datepickerButtons value={dayjs(startDate).format('MM/DD/YYYY')} datepickerTitle="Start Date" />
+                <!-- <Datepicker datepickerButtons bind:value={startDate} datepickerTitle="Start Date" on:change={() => submitBtn.click()} /> -->
+                <input type="date" name="start" id="start" bind:value={startDate} class={inputClass} on:change={() => submitBtn.click()} />
               </div>
               
               <p>to</p>
               
               <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
                 <Label class="block mb-2">End Date</Label>
-                <Datepicker datepickerButtons value={dayjs(endDate).format('MM/DD/YYYY')} datepickerTitle="End Date" />
+                <!-- <Datepicker datepickerButtons bind:value={endDate} datepickerTitle="End Date" on:change={() => submitBtn.click()} /> -->
+                <input type="date" name="end" id="end" bind:value={endDate} on:change={() => submitBtn.click()} class={inputClass} />
               </div>
-            </div>
+              <button type="submit" bind:this={submitBtn} class="hidden"></button>
+            </form>
             
             <div class="flex flex-row justify-center gap-4">
               <div>
