@@ -18,7 +18,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 		// redirect them to the login page
 		if (event.url.pathname.startsWith(protectedRoutesBase) ||
 			event.url.pathname.startsWith(superAdminRoutesBase)) {
-			throw redirect(302, '/auth/login');
+			redirect(302, '/auth/login');
 		}
 	}
 
@@ -31,7 +31,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 			authRoutesBase.some((route) => event.url.pathname.startsWith(route)) &&
 			event.url.search !== '?/logout'
 		) {
-			throw redirect(302, '/app/profile');
+			redirect(302, '/app/profile');
 		}
 
 		// If the user is logged in, but their email is not verified
@@ -43,7 +43,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 			event.url.pathname.startsWith(protectedRoutesBase)) &&
 			!event.url.pathname.startsWith(emailVerificationPath)
 		) {
-			throw redirect(302, '/app/email-verification');
+			redirect(302, '/app/email-verification');
 		}
 		
 		if (event.url.pathname.startsWith(superAdminRoutesBase)) {
@@ -51,7 +51,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 			const profile = await getUserProfileData(session?.user?.userId);
 			
 			if (profile?.role !== 'super_admin') {
-				throw redirect(302, referer);
+				redirect(302, referer);
 			}
 		}
 	}

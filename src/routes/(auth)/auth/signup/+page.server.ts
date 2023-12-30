@@ -114,6 +114,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/email-verification');
+		redirect(302, '/app/email-verification');
 	}
 };

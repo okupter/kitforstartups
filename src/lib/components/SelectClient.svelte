@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
 	import SelectedClientStore from '$lib/stores/client';
+	import type { SelectClient as ISelectClient } from '$lib/types/db.model';
   import Icon from '@iconify/svelte';
 	import { createDialog, melt, createSelect } from '@melt-ui/svelte';
   import { Check, ChevronDown, XSquare } from 'lucide-svelte';
@@ -21,13 +22,13 @@
   });
   
   export let selectedClientId: string;
-  export let clients: App.Client[];
-  let selectedClient: App.Client;
+  export let clients: ISelectClient[];
+  let selectedClient: ISelectClient;
   let unsubs = [] as Unsubscriber[];
 
   unsubs.push(SelectedClientStore.subscribe(clientId => {
     selectedClientId = clientId;
-    selectedClient = clients.find(x => x.id === selectedClientId) as App.Client;
+    selectedClient = clients.find(x => x.id === selectedClientId) as ISelectClient;
   }));
   
 	const {

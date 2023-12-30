@@ -59,7 +59,7 @@ export const saveSales = async (dtos: InsertSale[]): Promise<SelectSale[]> => {
     await drizzleClient.insert(sale).values(dtos);
   } catch (ex) {
     console.error(ex);
-    throw error(500, { message: 'Error saving sales' });
+    error(500, { message: 'Error saving sales' });
   }
   
   return dtos as SelectSale[];

@@ -5,6 +5,7 @@
   import dayjs from 'dayjs';
 	import { CloseSolid } from 'flowbite-svelte-icons';
 	import { enhance } from '$app/forms';
+	import { error } from '@sveltejs/kit';
   
   export let data;
   
@@ -116,7 +117,18 @@
       <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
         <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
           <div class="flex flex-row gap-6 text-sm justify-between">
-            <form method="post" action="?/search" class="flex flex-row gap-6 items-center" use:enhance>
+            <form method="post" action="?/search" class="flex flex-row gap-6 items-center"
+              use:enhance={({ cancel }) => {
+                
+                return ({ result, update }) => {
+                  if (result.status !== 200) return;
+                  
+                  const { startDate, endDate, sales } = result.data;
+                  
+                  allSales = [...sales];
+                }
+              }}
+            >
               <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
                 <Label class="block mb-2">Start Date</Label>
                 <!-- <Datepicker datepickerButtons bind:value={startDate} datepickerTitle="Start Date" on:change={() => submitBtn.click()} /> -->

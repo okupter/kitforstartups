@@ -71,7 +71,7 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	},
 
 	logout: async ({ cookies, locals }) => {
@@ -98,9 +98,9 @@ export const actions = {
 		locals.auth.setSession(null);
 
 		// Remove OAuth cookies
-		cookies.delete('github_oauth_state');
-		cookies.delete('google_oauth_state');
+		/* @migration task: add path argument */ cookies.delete('github_oauth_state');
+		/* @migration task: add path argument */ cookies.delete('google_oauth_state');
 
-		throw redirect(302, '/auth/login');
+		redirect(302, '/auth/login');
 	}
 };

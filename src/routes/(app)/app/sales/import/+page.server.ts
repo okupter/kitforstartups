@@ -11,8 +11,8 @@ export const load = async ({ locals, request }) => {
   const session = await locals.auth.validate();
 	const profile = await getUserProfileData(session?.user.userId);
   
-  if (!session || !profile?.clientId) throw redirect(302, '/');
-  if (!['org_admin', 'super_admin'].includes(profile?.role)) throw redirect(302, '/');
+  if (!session || !profile?.clientId) redirect(302, '/');
+  if (!['org_admin', 'super_admin'].includes(profile?.role)) redirect(302, '/');
   
   const clientId = profile.clientId
   
@@ -54,12 +54,12 @@ export const actions: Actions = {
   import: async ({ locals, request }) => {
     const session = await locals.auth.validate();
     
-    if (!session) throw error(401, { message: 'Unauthorized' });
+    if (!session) error(401, { message: 'Unauthorized' });
     
     const profile = await getUserProfileData(session?.user.userId);
     
-    if (!profile?.clientId) throw error(401, { message: 'Unauthorized' });
-    if (!['org_admin', 'super_admin'].includes(profile?.role)) throw error(401, { message: 'Unauthorized' });
+    if (!profile?.clientId) error(401, { message: 'Unauthorized' });
+    if (!['org_admin', 'super_admin'].includes(profile?.role)) error(401, { message: 'Unauthorized' });
     
     const result = {
       good: [] as InsertSale[],
@@ -78,12 +78,12 @@ export const actions: Actions = {
     const headers = Object.keys(rows[0]).map(h => h.toLowerCase().trim());
     
     if (headers.length !== Object.keys(importHeaders).length) 
-      throw error(400, { message: 'Invalid or wrong number of headers provided', } as Error);
+      error(400, { message: 'Invalid or wrong number of headers provided', } as Error);
     
     const missingHeaders = Object.keys(importHeaders).map(k => importHeaders[k]).filter(h => !headers.includes(h));
     
     if (missingHeaders.length > 0) 
-      throw error(400, { message: 'Missing headers', cause: missingHeaders } as Error);
+      error(400, { message: 'Missing headers', cause: missingHeaders } as Error);
     
     const dtos = await processImport(profile.clientId, campaignId, rows);
     const badOnes = {} as { [key: string]: InsertSale[] };

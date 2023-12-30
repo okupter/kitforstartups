@@ -32,10 +32,10 @@ export const load = async ({ locals, request }) => {
   const session = await locals.auth.validate();
 	const profile = await getUserProfileData(session?.user.userId);
   
-  if (!session || !profile?.clientId) throw redirect(302, '/');
-  if (!['org_admin', 'super_admin'].includes(profile?.role)) throw redirect(302, '/');
+  if (!session || !profile?.clientId) redirect(302, '/');
+  if (!['org_admin', 'super_admin'].includes(profile?.role)) redirect(302, '/');
   
-  const clientId = profile.clientId;
+  const clientId = profile?.clientId as string;
   
   const startDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
   const endDate = dayjs().format('YYYY-MM-DD');
@@ -43,11 +43,11 @@ export const load = async ({ locals, request }) => {
   const sales = async () => searchSales(clientId, startDate, endDate);
   
   return {
-    sales: sales(),
+    sales: await sales(),
     startDate,
     endDate,
-    campaigns: getCampaigns(clientId),
-    employees: getEmployees(clientId, true),
+    campaigns: await getCampaigns(clientId),
+    employees: await getEmployees(clientId, true),
   }
 };
 
@@ -56,14 +56,14 @@ export const actions: Actions = {
     const session = await locals.auth.validate();
     const profile = await getUserProfileData(session?.user.userId);
     
-    if (!session || !profile?.clientId) throw error(401, 'Unauthorized');
-    if (!['org_admin', 'super_admin'].includes(profile?.role)) throw error(401, 'Unauthorized');
+    if (!session || !profile?.clientId) error(401, 'Unauthorized');
+    if (!['org_admin', 'super_admin'].includes(profile?.role)) error(401, 'Unauthorized');
     
-    const clientId = profile.clientId;
+    const clientId = profile?.clientId as string;
     const formData = Object.fromEntries(await request.formData());
     
-    const startDate = dayjs(formData.startDate as string).format('YYYY-MM-DD');
-    const endDate = dayjs(formData.endDate as string).format('YYYY-MM-DD');
+    const startDate = dayjs(formData.startDate as string, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    const endDate = dayjs(formData.endDate as string, 'YYYY-MM-DD').format('YYYY-MM-DD');
     
     const sales = async () => {
       const result = searchSales(clientId, startDate, endDate);
@@ -74,11 +74,11 @@ export const actions: Actions = {
     };
     
     return {
-      sales: sales(),
+      sales: await sales(),
       startDate,
       endDate,
-      campaigns: getCampaigns(clientId),
-      employees: getEmployees(clientId, true),
+      campaigns: await getCampaigns(clientId),
+      employees: await getEmployees(clientId, true),
     }
   },
 };

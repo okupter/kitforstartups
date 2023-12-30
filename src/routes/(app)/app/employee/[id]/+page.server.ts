@@ -25,7 +25,7 @@ export const actions = {
   'add-note': async ({ locals, request }) => {
     const session = await locals.auth.validate();
     
-    if (!session) throw error(401, { message: 'Unauthorized' });
+    if (!session) error(401, { message: 'Unauthorized' });
     
     const profile = await getUserProfileData(session?.user.userId);
     const myClientId = profile.clientId;
@@ -53,7 +53,7 @@ export const actions = {
   save: async ({ locals, request }) => {
     const session = await locals.auth.validate();
     
-    if (!session) throw error(401, { message: 'Unauthorized' });
+    if (!session) error(401, { message: 'Unauthorized' });
     
     const profile = await getUserProfileData(session?.user.userId);
     const clientId = profile?.clientId;
@@ -63,7 +63,7 @@ export const actions = {
     
     const emp = await getEmployee(employeeId, true, false);
     
-    if (emp?.clientId !== clientId) throw error(403, { message: 'Unauthorized' });
+    if (emp?.clientId !== clientId) error(403, { message: 'Unauthorized' });
     
     const campaigns: { employeeId: string, employeeCode: string, campaignId: string, isActive: boolean }[] = [];
     

@@ -1,4 +1,4 @@
-import type { campaigns, employee, employeeCodes, employeeNotes, employeeProfile, payrollCycle, paystub, sale, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
+import type { campaigns, client, employee, employeeCodes, employeeNotes, employeeProfile, payrollCycle, paystub, sale, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
 
 
 export type InsertUserKey = typeof userKey.$inferInsert;
@@ -17,6 +17,8 @@ export type RoleTypes = "user" | "supervisor" | "admin" | "org_admin" | "super_a
 
 export type UserProfile = SelectUserProfile;
 export type User = { auth_user: SelectUser, user_profile: SelectUserProfile };
+
+export type SelectClient = typeof client.$inferSelect;
 
 export type SelectEmployee = typeof employee.$inferSelect;
 export type SelectEmployeeProfile = typeof employeeProfile.$inferSelect;

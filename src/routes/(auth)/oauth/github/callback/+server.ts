@@ -27,7 +27,7 @@ export const GET = async ({ url, cookies, locals }) => {
 			}
 
 			if (!githubUser.email) {
-				throw error(400, 'No email provided by GitHub');
+				error(400, 'No email provided by GitHub');
 			}
 
 			const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);

@@ -8,6 +8,6 @@ export const load = async ({ locals }) => {
 	return {
 		user: session?.user,
 		profile,
-		clients: getClients(),
+		clients: await getClients(),
 	};
 };

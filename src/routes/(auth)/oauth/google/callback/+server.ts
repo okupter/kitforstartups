@@ -32,7 +32,7 @@ export const GET = async ({ url, cookies, locals }) => {
 			}
 
 			if (!googleUser.email) {
-				throw error(400, 'Google email not found');
+				error(400, 'Google email not found');
 			}
 
 			const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);

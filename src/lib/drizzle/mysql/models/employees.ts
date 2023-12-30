@@ -215,7 +215,7 @@ export const upsertEmployeeCodes = async (dtos: { employeeId: string, employeeCo
       }
     } catch (ex) {
       console.error(ex);
-      throw error(500, { message: 'Error upserting employee codes' });
+      error(500, { message: 'Error upserting employee codes' });
     }
   });
   

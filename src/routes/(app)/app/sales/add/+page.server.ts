@@ -10,8 +10,8 @@ export const load = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
 	const profile = await getUserProfileData(session?.user.userId);
   
-  if (!session || !profile?.clientId) throw redirect(302, '/');
-  if (!['org_admin', 'super_admin'].includes(profile?.role)) throw redirect(302, '/');
+  if (!session || !profile?.clientId) redirect(302, '/');
+  if (!['org_admin', 'super_admin'].includes(profile?.role)) redirect(302, '/');
   
   const clientId = profile.clientId
   

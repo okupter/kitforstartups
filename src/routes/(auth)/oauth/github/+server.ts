@@ -13,5 +13,5 @@ export const GET = async ({ cookies }) => {
 		maxAge: 60 * 60
 	});
 
-	throw redirect(302, url.toString());
+	redirect(302, url.toString());
 };
