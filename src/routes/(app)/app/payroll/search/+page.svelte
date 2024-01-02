@@ -1,0 +1,2 @@
+
+<p>search page</p>

@@ -218,6 +218,10 @@ const paystubRelations = relations(paystub, ({ one, many }) => ({
 		fields: [paystub.payrollCycleId],
 		references: [payrollCycle.id],
 	}),
+	client: one(client, {
+		fields: [paystub.clientId],
+		references: [client.id],
+	}),
 }));
 
 const sale = mysqlTable('sale', {

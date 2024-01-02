@@ -2,6 +2,8 @@ import { eq, or } from 'drizzle-orm';
 import { drizzleClient } from '../client';
 import { paystub } from '../schema';
 import type { PaystubWith } from '$lib/types/paystbus.model';
+import type { SelectPaystub } from '$lib/types/db.model';
+import { error } from '@sveltejs/kit';
 
 export const getPaystubs = async (clientId: string, startDate: number, endDate: number): Promise<PaystubWith[]> => {
   if (!clientId) {
@@ -28,6 +30,33 @@ export const getPaystubs = async (clientId: string, startDate: number, endDate: 
   }) as PaystubWith[];
   
   return data || [] as PaystubWith[];
+}
+
+export const getPaystubById = async (clientId: string, paystubId: string): Promise<PaystubWith> => {
+  if (!clientId || !paystubId) return null as unknown as Promise<PaystubWith>;
+  
+  try {
+    return await drizzleClient.query.paystub.findFirst({
+      where: (ps, { eq, and }) => and(
+        eq(ps.clientId, clientId),
+        eq(ps.id, paystubId),
+      ),
+      with: {
+        sales: true,
+        employee: {
+          with: {
+            employeeProfile: true,
+          },
+        },
+        campaign: true,
+        payrollCycle: true,
+        client: true,
+      },
+    }) as PaystubWith;
+  } catch (ex) {
+    console.error(ex);
+    error(500, 'Internal Server Error');
+  }
 }
 
 export const getPaystubsWoPayrollCycle = async (clientId: string, startDate: number, endDate: number): Promise<PaystubWith[]> => {
