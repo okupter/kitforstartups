@@ -3,8 +3,8 @@ import type { SaleWithEmployee } from './sale.model';
 
 
 export interface SaleTableInputData {
-  campaigns: SelectCampaign[];
-  employees: SelectEmployee[];
+  campaigns?: SelectCampaign[];
+  employees?: SelectEmployee[];
   sales: SaleWithEmployee[];
   startDate: string;
   endDate: string;

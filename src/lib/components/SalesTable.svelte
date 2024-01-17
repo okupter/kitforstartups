@@ -10,6 +10,7 @@
 	import { PlusIcon, PenIcon } from 'lucide-svelte';
   
   export let data: SaleTableInputData;
+  export let viewOnly = false;
   
   let { campaigns, employees, startDate, endDate, sales: allSales } = data;
   
@@ -104,97 +105,103 @@
 </script>
 
 <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300">
-  <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
-    <div class="flex flex-row gap-6 text-sm justify-between">
-      <form method="post" action="?/search" class="flex flex-row gap-6 items-center"
-        use:enhance={({ cancel }) => {
+  {#if !viewOnly}
+    <caption class="p-5 text-left bg-background-100 dark:bg-background-300">
+      <div class="flex flex-row gap-6 text-sm justify-between">
+        <form method="post" action="?/search" class="flex flex-row gap-6 items-center"
+          use:enhance={({ cancel }) => {
+            
+            return ({ result, update }) => {
+              if (result.status !== 200) return;
+              
+              const { startDate, endDate, sales } = result.data;
+              
+              allSales = [...sales];
+            }
+          }}
+        >
+          <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+            <Label class="block mb-2">Start Date</Label>
+            <!-- <Datepicker datepickerButtons bind:value={startDate} datepickerTitle="Start Date" on:change={() => submitBtn.click()} /> -->
+            <input type="date" name="start" id="start" bind:value={startDate} class={inputClass} on:change={() => submitBtn.click()} />
+          </div>
           
-          return ({ result, update }) => {
-            if (result.status !== 200) return;
-            
-            const { startDate, endDate, sales } = result.data;
-            
-            allSales = [...sales];
-          }
-        }}
-      >
-        <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-          <Label class="block mb-2">Start Date</Label>
-          <!-- <Datepicker datepickerButtons bind:value={startDate} datepickerTitle="Start Date" on:change={() => submitBtn.click()} /> -->
-          <input type="date" name="start" id="start" bind:value={startDate} class={inputClass} on:change={() => submitBtn.click()} />
-        </div>
+          <p>to</p>
+          
+          <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+            <Label class="block mb-2">End Date</Label>
+            <!-- <Datepicker datepickerButtons bind:value={endDate} datepickerTitle="End Date" on:change={() => submitBtn.click()} /> -->
+            <input type="date" name="end" id="end" bind:value={endDate} on:change={() => submitBtn.click()} class={inputClass} />
+          </div>
+          <button type="submit" bind:this={submitBtn} class="hidden"></button>
+        </form>
         
-        <p>to</p>
-        
-        <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-          <Label class="block mb-2">End Date</Label>
-          <!-- <Datepicker datepickerButtons bind:value={endDate} datepickerTitle="End Date" on:change={() => submitBtn.click()} /> -->
-          <input type="date" name="end" id="end" bind:value={endDate} on:change={() => submitBtn.click()} class={inputClass} />
-        </div>
-        <button type="submit" bind:this={submitBtn} class="hidden"></button>
-      </form>
-      
-      <div class="flex flex-row justify-center gap-4">
-        <div>
-          <Button href="/app/sales/add" class="!p-2">
-            <span class="sr-only">New</span>
-            <PlusIcon class="w-3 h-3" />
-          </Button>
+        <div class="flex flex-row justify-center gap-4">
+          <div>
+            <Button href="/app/sales/add" class="!p-2">
+              <span class="sr-only">New</span>
+              <PlusIcon class="w-3 h-3" />
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="flex flex-row gap-5 text-sm">
-      <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-        <Label class="block mb-2 pt-4">
-          <span>
-            Employee
-            {#if selectedEmployeeItem}
-              <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('employee')}>
+      
+      <div class="flex flex-row gap-5 text-sm">
+        <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+          <Label class="block mb-2 pt-4">
+            <span>
+              Employee
+              {#if selectedEmployeeItem}
+                <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('employee')}>
+                  <CloseSolid class="w-2 h-2" />
+                </Button>
+              {/if}
+            </span>
+            <Select class="mt-2" items={employeeItems} bind:value={selectedEmployeeItem} />
+          </Label>
+        </div>
+        
+        <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+          <Label class="block mb-2 pt-4">
+            Campaign
+            {#if selectedCampaignItem}
+              <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('campaign')}>
                 <CloseSolid class="w-2 h-2" />
               </Button>
             {/if}
-          </span>
-          <Select class="mt-2" items={employeeItems} bind:value={selectedEmployeeItem} />
-        </Label>
+            <Select class="mt-2" items={campaignItems} bind:value={selectedCampaignItem} />
+          </Label>
+        </div>
+        
+        <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
+          <Label class="block mb-2 pt-4">
+            Status
+            {#if selectedSaleStatusItem}
+              <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('saleStatus')}>
+                <CloseSolid class="w-2 h-2" />
+              </Button>
+            {/if}
+            <Select class="mt-2" items={saleStatusItems} bind:value={selectedSaleStatusItem} />
+          </Label>
+        </div>
       </div>
-      
-      <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-        <Label class="block mb-2 pt-4">
-          Campaign
-          {#if selectedCampaignItem}
-            <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('campaign')}>
-              <CloseSolid class="w-2 h-2" />
-            </Button>
-          {/if}
-          <Select class="mt-2" items={campaignItems} bind:value={selectedCampaignItem} />
-        </Label>
-      </div>
-      
-      <div class="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-200">
-        <Label class="block mb-2 pt-4">
-          Status
-          {#if selectedSaleStatusItem}
-            <Button color="alternative" pill={true} class="!p-2" size="xs" on:click={() => clearFilter('saleStatus')}>
-              <CloseSolid class="w-2 h-2" />
-            </Button>
-          {/if}
-          <Select class="mt-2" items={saleStatusItems} bind:value={selectedSaleStatusItem} />
-        </Label>
-      </div>
-    </div>
-  </caption>
+    </caption>
+  {/if}
   <TableHead class="text-sm text-background-800 font-semibold">
     <TableHeadCell>Sale Date</TableHeadCell>
     <TableHeadCell>Employee</TableHeadCell>
-    <TableHeadCell>Campaign</TableHeadCell>
+    {#if !viewOnly}
+      <TableHeadCell>Campaign</TableHeadCell>
+    {/if}
     <TableHeadCell>Customer</TableHeadCell>
     <TableHeadCell>Address</TableHeadCell>
     <TableHeadCell>Status</TableHeadCell>
     <TableHeadCell>Amount</TableHeadCell>
-    <TableHeadCell>
-      <span class="sr-only">Edit</span>
-    </TableHeadCell>
+    {#if !viewOnly}
+      <TableHeadCell>
+        <span class="sr-only">Edit</span>
+      </TableHeadCell>
+    {/if}
   </TableHead>
   
   <TableBody tableBodyClass="divide-y">
@@ -202,17 +209,21 @@
       <TableBodyRow>
         <TableBodyCell>{formatDate(sale.saleDate * 1000)}</TableBodyCell>
         <TableBodyCell>{sale?.employee?.firstName} {sale?.employee?.lastName}</TableBodyCell>
-        <TableBodyCell>{getCampaignName(sale.campaignId)}</TableBodyCell>
+        {#if !viewOnly}
+          <TableBodyCell>{getCampaignName(sale.campaignId)}</TableBodyCell>
+        {/if}
         <TableBodyCell>{sale.customerFirstName} {sale.customerLastName}</TableBodyCell>
         <TableBodyCell>{sale.customerAddress}</TableBodyCell>
         <TableBodyCell>{sale.statusDescription}</TableBodyCell>
         <TableBodyCell>{usd.format(sale.saleAmount)}</TableBodyCell>
-        <TableBodyCell>
-          <Button href={`/app/sales/${sale.id}`} class="!p-2">
-            <span class="sr-only">Edit</span>
-            <PenIcon class="w-3 h-3" />
-          </Button>
-        </TableBodyCell>
+        {#if !viewOnly}
+          <TableBodyCell>
+            <Button href={`/app/sales/${sale.id}`} class="!p-2">
+              <span class="sr-only">Edit</span>
+              <PenIcon class="w-3 h-3" />
+            </Button>
+          </TableBodyCell>
+        {/if}
       </TableBodyRow>
     {/each}
   </TableBody>
