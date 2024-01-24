@@ -2,8 +2,9 @@ import { eq, or } from 'drizzle-orm';
 import { drizzleClient } from '../client';
 import { paystub } from '../schema';
 import type { PaystubWith } from '$lib/types/paystbus.model';
-import type { SelectPaystub } from '$lib/types/db.model';
+import type { InsertPaystub, SelectPaystub } from '$lib/types/db.model';
 import { error } from '@sveltejs/kit';
+import { nanoid } from 'nanoid';
 
 export const getPaystubs = async (clientId: string, startDate: number, endDate: number): Promise<PaystubWith[]> => {
   if (!clientId) {
@@ -214,4 +215,21 @@ export const numberOfPaystubsByPayrollCycleId = async (payrollCycleId: string): 
   }
   
   return data;
+}
+
+export const generatePendingPaystub = (clientId: string, employeeId: string, campaignId: string): InsertPaystub => {
+  return {
+    id: nanoid(),
+    clientId,
+    employeeId,
+    campaignId,
+    payrollCycleId: null,
+    totalSales: 0,
+    totalOverrides: 0,
+    grossPay: 0,
+    netPay: 0,
+    pieceRate: 0,
+    otherDeductions: 0,
+    taxDeductions: 0,
+  } as InsertPaystub;
 }

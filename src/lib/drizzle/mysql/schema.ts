@@ -45,6 +45,17 @@ const employee = mysqlTable('employee', {
 	isCommissionable: tinyint('is_commissionable').notNull().default(0),
 });
 
+const overridingEmployee = mysqlTable('overriding_employee', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	employeeId: varchar('employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	overridesEmployeeId: varchar('overrides_employee_id', { length: 255 })
+		.notNull()
+		.references(() => employee.id),
+	overrideAmount: double('override_amount').notNull().default(0),
+});
+
 const employeeRelations = relations(employee, ({ many, one }) => ({
 	employeeProfile: one(employeeProfile, {
 		fields: [employee.id],
@@ -52,6 +63,10 @@ const employeeRelations = relations(employee, ({ many, one }) => ({
 	}),
 	employeeCodes: many(employeeCodes),
 	employeeNotes: many(employeeNotes),
+	overrideTo: one(overridingEmployee, {
+		fields: [employee.id],
+		references: [overridingEmployee.overridesEmployeeId],
+	}),
 }));
 
 const employeeProfile = mysqlTable('employee_profile', {
@@ -222,6 +237,7 @@ const paystubRelations = relations(paystub, ({ one, many }) => ({
 		fields: [paystub.clientId],
 		references: [client.id],
 	}),
+	overrides: many(saleOverride),
 }));
 
 const sale = mysqlTable('sale', {
@@ -267,9 +283,6 @@ const saleRelations = relations(sale, ({ one }) => ({
 
 const saleOverride = mysqlTable('sale_override', {
 	id: varchar('id', { length: 255 }).primaryKey(),
-	employeeId: varchar('employee_id', { length: 255 })
-		.notNull()
-		.references(() => employee.id),
 	clientId: varchar('client_id', { length: 255 })
 		.notNull()
 		.references(() => client.id),
@@ -283,7 +296,20 @@ const saleOverride = mysqlTable('sale_override', {
 		.notNull()
 		.references(() => employee.id),
 	overrideAmount: double('override_amount').notNull().default(0),
+	paidOnPaystubId: varchar('paid_on_paystub_id', { length: 255 })
+		.references(() => paystub.id),
 });
+
+const saleOverrideRelations = relations(saleOverride, ({ one }) => ({
+	paystub: one(paystub, {
+		fields: [saleOverride.paidOnPaystubId],
+		references: [paystub.id],
+	}),
+	sale: one(sale, {
+		fields: [saleOverride.originatingSaleId],
+		references: [sale.id],
+	}),
+}));
 
 const expenseReport = mysqlTable('expense_report', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -324,6 +350,6 @@ export {
 	emailVerification, passwordResetToken, user, userKey, userProfile, client, userSession,
 	employee, employeeProfile, employeeCodes, employeeRelations, employeeCodesRelations,
 	employeeNotes, employeeNotesRelations, campaigns, payrollCycle, paystub, sale, saleOverride,
-	expenseReport, expenseItem, paystubRelations, saleRelations,
+	saleOverrideRelations, expenseReport, expenseItem, paystubRelations, saleRelations, overridingEmployee, 
 };
 

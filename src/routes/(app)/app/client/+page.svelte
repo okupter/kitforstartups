@@ -69,12 +69,12 @@
 	<h5>Clients</h5>
 
 	<div class="flex flex-col gap-2 pt-4">
-		{#each data.clients as client}
+		{#each data?.clients as client}
 			<!-- content here -->
 			<div class="border border-primary-500 rounded-md shadow-md p-4">
-				<p class="font-bold">{client.name}</p>
-				{#if client.contactUserId}
-					<p>Contact User ID: {client.contactUserId}</p>
+				<p class="font-bold">{client?.name}</p>
+				{#if client?.contactUserId}
+					<p>Contact User ID: {client?.contactUserId}</p>
 				{/if}
 			</div>
 		{/each}

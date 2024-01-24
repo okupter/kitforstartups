@@ -1,5 +1,4 @@
 import { getClients, createClient } from '$lib/drizzle/mysql/models/clients';
-import type { client } from '$lib/drizzle/mysql/schema';
 import { json } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 
@@ -8,7 +7,7 @@ export const load = async ({ locals }) => {
 
   return {
     session,
-    clients: getClients(),
+    clients: await getClients(),
   };
 };
 

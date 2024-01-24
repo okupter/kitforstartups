@@ -31,7 +31,7 @@ const getEmployees = async (clientId: string, isCommissionable = false): Promise
   }
 }
 
-const getEmployee = async (employeeId: string, withProfile = true, withCodes = true, withNotes = true): Promise<Employee | undefined> => {
+const getEmployee = async (employeeId: string, withProfile = true, withCodes = true, withNotes = true, withOverride = true): Promise<Employee | undefined> => {
   if (!employeeId) {
     return null as unknown as Employee;
   }
@@ -44,6 +44,9 @@ const getEmployee = async (employeeId: string, withProfile = true, withCodes = t
       } : false as any,
       employeeNotes: withNotes ? {
         orderBy: (employeeNotes, { desc }) => [desc(employeeNotes.created)],
+      } : false as any,
+      overrideTo: withOverride ? {
+        employeeId: true,
       } : false as any,
     },
     where: (employee, { eq }) => eq(employee.id, employeeId),

@@ -1,4 +1,4 @@
-import type { campaigns, client, employee, employeeCodes, employeeNotes, employeeProfile, payrollCycle, paystub, sale, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
+import type { campaigns, client, employee, employeeCodes, employeeNotes, employeeProfile, overridingEmployee, payrollCycle, paystub, sale, saleOverride, user, userKey, userProfile } from '$lib/drizzle/mysql/schema';
 
 
 export type InsertUserKey = typeof userKey.$inferInsert;
@@ -24,7 +24,7 @@ export type SelectEmployee = typeof employee.$inferSelect;
 export type SelectEmployeeProfile = typeof employeeProfile.$inferSelect;
 export type EmployeeProfile = SelectEmployeeProfile;
 export type SelectEmployeeCodes = typeof employeeCodes.$inferSelect;
-export type Employee = SelectEmployee & { employeeProfile: SelectEmployeeProfile, employeeCodes: SelectEmployeeCodes[] };
+export type Employee = SelectEmployee & { employeeProfile: SelectEmployeeProfile, employeeCodes: SelectEmployeeCodes[], overrideTo: SelectOverridingEmployee };
 export type SelectEmployeeNotes = typeof employeeNotes.$inferSelect;
 export type EmployeeWithNotes = Employee & { employeeNotes: SelectEmployeeNotes[] };
 export type InsertEmployeeNotes = typeof employeeNotes.$inferInsert;
@@ -40,6 +40,11 @@ export type InsertPaystub = typeof paystub.$inferInsert;
 
 export type SelectPayrollCycle = typeof payrollCycle.$inferSelect;
 export type InsertPayrollCycle = typeof payrollCycle.$inferInsert;
+
+export type SelectOverridingEmployee = typeof overridingEmployee.$inferSelect;
+export type InsertOverridingEmployee = typeof overridingEmployee.$inferInsert;
+export type SelectSaleOverride = typeof saleOverride.$inferSelect;
+export type InsertSaleOverride = typeof saleOverride.$inferInsert;
 
 export type SelectSale = typeof sale.$inferSelect;
 export type InsertSale = typeof sale.$inferInsert;

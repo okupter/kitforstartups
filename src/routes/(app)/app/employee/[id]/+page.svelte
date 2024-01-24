@@ -4,13 +4,13 @@
 	import EmployeeNotes from '$lib/components/EmployeeNotes.svelte';
 	import MaskInput from '$lib/components/MaskInput.svelte';
 	import SubmitButton from '$lib/components/SubmitButton.svelte';
-	import type { EmployeeWithNotes } from '$lib/types/db.model.js';
-	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
+	import type { EmployeeWithNotes } from '$lib/types/db.model';
+	import { Breadcrumb, BreadcrumbItem, Input, Label, Select } from 'flowbite-svelte';
 	export let data;
   
   // how you read the id param from the url 
   
-  let { ee, campaigns } = data;
+  let { ee, campaigns, employees, } = data;
   const { employeeProfile: profile, employeeCodes: codes, ...employee } = (ee || { employeeProfile: null }) as EmployeeWithNotes;
   
   campaigns = campaigns || [];
@@ -98,39 +98,35 @@
 
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-3">
-          <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">First name</label>
-          <div class="mt-2">
-            <input type="text" name="firstName" id="firstName"
-              value={employee?.firstName}
-              autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
-              required  
-            >
-          </div>
+          <Label>
+            First name
+            <Input name="firstName" value={employee?.firstName} autocomplete="given-name" required />
+          </Label>
         </div>
 
         <div class="sm:col-span-3">
-          <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Last name</label>
-          <div class="mt-2">
-            <input type="text" name="lastName" id="lastName" 
-              value={employee?.lastName}
-              autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
-              required  
-            >
-          </div>
+          <Label>
+            Last name
+            <Input name="lastName" value={employee?.lastName} autocomplete="family-name" required />
+          </Label>
         </div>
 
         <div class="sm:col-span-4">
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Email address</label>
-          <div class="mt-2">
-            <input id="email" name="email" type="email" 
-              value={profile?.email || ''}
-              autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
-              required 
-            />
-          </div>
+          <Label>
+            Email
+            <Input type="email" name="email" value={profile?.email} autocomplete="email" required />
+          </Label>
         </div>
         
         <div class="sm:col-span-3">
+          <!-- Todo: need to style this to work and replace old maskinput -->
+          <!-- <Label>
+            Phone
+            <MaskInput alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
+              value={profile?.phone}
+              id="phone" name="phone" type="phone"
+              required />
+          </Label> -->
           <label for="phone" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Phone number</label>
           <div class="mt-2">
             <MaskInput alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
@@ -139,13 +135,16 @@
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700"
               required
             />
-            <!-- <input id="phone" name="phone" type="phone" 
-              value={profile?.phone}
-              autocomplete="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6"> -->
           </div>
         </div>
         
         <div class="sm:col-span-3">
+          <!-- <Label>
+            Secondary Phone
+            <MaskInput alwaysShowMask mask={'1-000-000-0000'} size={20} showMask maskChar="_" 
+              value={profile?.phone2}
+              id="phone2" name="phone2" type="phone2" />
+          </Label> -->
           <label for="phone2" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Secondary phone</label>
           <div class="mt-2">
             <MaskInput id="phone2" name="phone2" type="phone2" 
@@ -155,51 +154,32 @@
           </div>
         </div>
 
-        <!-- <div class="sm:col-span-3">
-          <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
-          <div class="mt-2">
-            <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:max-w-xs sm:text-sm sm:leading-6">
-              <option>United States</option>
-              <option>Canada</option>
-              <option>Mexico</option>
-            </select>
-          </div>
-        </div> -->
-
         <div class="col-span-full">
-          <label for="address" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">Street address</label>
-          <div class="mt-2">
-            <input type="text" name="address" id="address" 
-              value={profile?.address}
-              autocomplete="street-address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
-          </div>
+          <Label>
+            Address
+            <Input name="address" value={profile?.address} autocomplete="street-address" required />
+          </Label>
         </div>
 
         <div class="sm:col-span-2 sm:col-start-1">
-          <label for="city" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">City</label>
-          <div class="mt-2">
-            <input type="text" name="city" id="city" 
-              value={profile?.city}
-              autocomplete="address-level2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
-          </div>
+          <Label>
+            City
+            <Input name="city" value={profile?.city} autocomplete="address-level2" />
+          </Label>
         </div>
 
         <div class="sm:col-span-2">
-          <label for="region" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">State / Province</label>
-          <div class="mt-2">
-            <input type="text" name="region" id="region" 
-              value={profile?.state}
-              autocomplete="address-level3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
-          </div>
+          <Label>
+            State
+            <Input name="state" value={profile?.state} autocomplete="address-level3" required />
+          </Label>
         </div>
 
         <div class="sm:col-span-2">
-          <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-50">ZIP / Postal code</label>
-          <div class="mt-2">
-            <input type="text" name="postal-code" id="postal-code" 
-              value={profile?.zip}
-              autocomplete="postal-code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-200 sm:text-sm sm:leading-6 dark:bg-neutral-700">
-          </div>
+          <Label>
+            Zip Code
+            <Input name="zip" value={profile?.zip} autocomplete="postal-code" required />
+          </Label>
         </div>
       </div>
     </div>
@@ -215,22 +195,21 @@
       {#if campaigns?.length}
         <div class="flex mt-10 sm:gap-1 md:gap-6">
           {#each campaigns as campaign}
-            <!-- content here -->
-            <fieldset>
-              <legend class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">{campaign?.name}</legend>
-              <div class="space-y-6">
-                <div class="relative flex gap-x-3">
-                  <div class="flex items-center">
-                    <input name={'code|campaign|' + campaign?.id} type="text" 
-                      value={getCodeForCampaign(campaign?.id)}
-                      class="rounded border-gray-300 text-900 focus:ring-primary-600 dark:border-gray-100 dark:text-100 dark:focus:ring-primary-200 max-w-[120px] dark:bg-neutral-700">
-                  </div>
-                </div>
-              </div>
-            </fieldset>
+            <Label>
+              {campaign?.name}
+              <Input type="text" name={'code|campaign|' + campaign?.id} 
+                value={getCodeForCampaign(campaign?.id)} />
+            </Label>
           {/each}
         </div>
       {/if}
+    </div>
+    
+    <div class="flex my-4">
+      <Label class="min-w-36">
+        Overrides to
+        <Select placeholder="Select Manager" items={employees} name="overridesToEmployeeId" value={ee?.overrideTo.employeeId} />
+      </Label>
     </div>
 
     <!-- <div class="border-b border-gray-900/10 pb-12">

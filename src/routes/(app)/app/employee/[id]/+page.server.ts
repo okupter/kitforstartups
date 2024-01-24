@@ -1,23 +1,36 @@
 import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns.js';
-import { addEmployeeNote, getEmployee, upsertEmployeeCodes } from '$lib/drizzle/mysql/models/employees';
+import { addEmployeeNote, getEmployee, getEmployees, upsertEmployeeCodes } from '$lib/drizzle/mysql/models/employees';
+import { saveOverridingEmployee } from '$lib/drizzle/mysql/models/overrides.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users.js';
+import type { EmployeeWithNotes, SelectOverridingEmployee } from '$lib/types/db.model';
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ locals, params }) => {
   const id = params.id;
   const session = await locals.auth.validate();
   
-  if (!session) return { status: 401 };
+  if (!session) error(401, 'Unauthorized');
+  
+  const profile = await getUserProfileData(session?.user.userId);
+  const clientId = profile?.clientId || '';
+  
+  if (!clientId) error(403, 'Forbidden');
   
   const campaigns = async () => {
-    const profile = await getUserProfileData(session?.user.userId);
-    const clientId = profile.clientId;
     return getCampaigns(clientId as string)
   };
   
+  const allEmployees = async () => (await getEmployees(clientId)).map(ee => ({
+    name: `${ee.firstName} ${ee.lastName}`,
+    value: ee.id,
+  }));
+  
+  const employee = async () => (await getEmployee(id)) as unknown as (EmployeeWithNotes & { overrideTo: SelectOverridingEmployee });
+  
   return {
-    ee: await getEmployee(id),
+    ee: await employee(),
     campaigns: await campaigns(),
+    employees: await allEmployees(),
   };
 }
 
@@ -88,6 +101,12 @@ export const actions = {
     
     // todo: make the rest of the form update
     // need to implement the rest of this stuff... but for now, it updates the sales codes.... lol 
+    
+    const overridesToEmployeeId = data.overridesToEmployeeId as string;
+    
+    if (overridesToEmployeeId) {
+      await saveOverridingEmployee(employeeId, overridesToEmployeeId);
+    }
     
     return data;
   }
