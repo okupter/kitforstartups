@@ -14,7 +14,6 @@
   const manualOverrides = getManualOverrides();
   
   let { overrides } = data;
-  // let { startDate, endDate, sales: allSales } = data;
   
   const unsub = manualOverrides.subscribe(mo => {
     overrides = [...overrides, ...(mo as any[])];

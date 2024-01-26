@@ -233,3 +233,16 @@ export const generatePendingPaystub = (clientId: string, employeeId: string, cam
     taxDeductions: 0,
   } as InsertPaystub;
 }
+
+export const insertPaystub = async (dto: InsertPaystub): Promise<InsertPaystub> => {
+  if (!dto) return null as unknown as InsertPaystub;
+  
+  try {
+    await drizzleClient.insert(paystub).values({...dto});
+  } catch (ex) {
+    console.error(ex);
+    error(500, 'Error saving paystub');
+  }
+  
+  return dto;
+}

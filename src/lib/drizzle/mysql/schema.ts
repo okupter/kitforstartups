@@ -287,7 +287,6 @@ const saleOverride = mysqlTable('sale_override', {
 		.notNull()
 		.references(() => client.id),
 	originatingSaleId: varchar('sale_id', { length: 255 })
-		.notNull()
 		.references(() => sale.id),
 	originatingEmployeeId: varchar('originating_employee_id', { length: 255 })
 		.notNull()

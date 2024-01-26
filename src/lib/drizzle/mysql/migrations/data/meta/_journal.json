@@ -141,6 +141,13 @@
       "when": 1705768284696,
       "tag": "0019_numerous_tyrannus",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1706239302363,
+      "tag": "0020_left_sway",
+      "breakpoints": true
     }
   ]
 }
