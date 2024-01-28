@@ -8,8 +8,6 @@
   const dispatch = createEventDispatcher();
 	  
   export let data: SaleTableInputData;
-  
-  // let { startDate, endDate, sales: allSales } = data;
 
   const usd = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -28,19 +26,26 @@
     const saleId = checkbox.value;
     const sale = sales.find(s => s.id === saleId);
     
-    console.log(sale);
-    
     selectedSales = (checkbox.checked ? [...selectedSales, sale] : selectedSales.filter(s => s.id !== saleId)) as SaleWithEmployee[];
     
     dispatch('saleSelected', selectedSales);
   };
+  
+  const selectAll = () => {
+    sales = sales.map(s => {
+      s.checked = !s.checked;
+      return s;
+    });
+  }
 </script>
 
 <div class="mb-6">
   <h5 class="mb-2">Pending Sales</h5>
   <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300 max-h-80 overflow-y-auto">
     <TableHead class="text-sm text-background-800 font-semibold">
-      <TableHeadCell>&nbsp;</TableHeadCell>
+      <TableHeadCell>
+        <Checkbox on:change={() => selectAll()}></Checkbox>
+      </TableHeadCell>
       <TableHeadCell>Sale Date</TableHeadCell>
       <TableHeadCell>Customer</TableHeadCell>
       <TableHeadCell>Address</TableHeadCell>
@@ -52,7 +57,7 @@
       {#each sales as sale (sale.id)}
         <TableBodyRow>
           <TableBodyCell>
-            <Checkbox on:change={e => handleCheckboxChange(e)} value={sale.id}></Checkbox>
+            <Checkbox on:change={e => handleCheckboxChange(e)} value={sale.id} checked={sale.checked}></Checkbox>
           </TableBodyCell>
           <TableBodyCell>{formatDate(sale.saleDate * 1000)}</TableBodyCell>
           <TableBodyCell>{sale.customerFirstName} {sale.customerLastName}</TableBodyCell>

@@ -3,13 +3,18 @@ import { eq } from 'drizzle-orm';
 import { drizzleClient } from '../client';
 import { payrollCycle } from '../schema';
 
-export const getPayrollCycles = async (clientId: string): Promise<SelectPayrollCycle[]> => {
+export const getPayrollCycles = async (clientId: string, showIsClosed = true): Promise<SelectPayrollCycle[]> => {
   if (!clientId) {
     return [];
   }
   
   const data = await drizzleClient.query.payrollCycle.findMany({
-    where: (pc, { eq }) => eq(pc.clientId, clientId),
+    where: showIsClosed 
+      ? (pc, { eq }) => eq(pc.clientId, clientId)
+      : (pc, { and, eq }) => and(
+        eq(pc.clientId, clientId),
+        eq(pc.isClosed, 0),
+      ),
     orderBy: (pc, { asc }) => [asc(pc.startDate)],
   });
   

@@ -1,10 +1,10 @@
-import type { InsertSale, SaleDto, SelectEmployee, SelectSale } from '$lib/types/db.model';
+import type { InsertSale, SaleDto, SelectSale } from '$lib/types/db.model';
 import { nanoid } from 'nanoid';
 import { drizzleClient } from '../client';
 import { sale } from '../schema';
 import dayjs from 'dayjs';
 import { desc, inArray } from 'drizzle-orm';
-import type { ImportRow, SaleWithEmployee } from '$lib/types/sale.model';
+import type { ImportRow } from '$lib/types/sale.model';
 import { getEmployeeIdByCampaignSalesCode } from './employees';
 import { error } from '@sveltejs/kit';
 
@@ -88,7 +88,10 @@ export const getUnallocatedSalesByEmployee = async (clientId: string, campaignId
       eq(sale.paystubId, ''),
       eq(sale.isComplete, 0),
     ),
-    orderBy: s => desc(s.saleDate),
+    orderBy: (s, { desc, asc }) => [
+      asc(s.statusDescription),
+      desc(s.saleDate),
+    ],
   });
   
   return sales;
@@ -156,7 +159,7 @@ export const updateSelectedSalesToPaystub = async (sales: SelectSale[], paystubI
   
   try {
     await drizzleClient.update(sale)
-      .set({ paystubId, })
+      .set({ paystubId, isComplete: 1, })
       .where(inArray(sale.id, sales.map(s => s.id)));
   } catch (ex) {
     console.error(ex);

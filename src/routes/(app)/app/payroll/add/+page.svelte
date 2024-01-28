@@ -4,11 +4,10 @@
 	import SelectSalesTable from '$lib/components/SelectSalesTable.svelte';
 	import { getEmployeeOptions, getManualOverrides, getSelectedEmployee, setEmployeeOptions, setSelectedEmployee } from '$lib/components/context.js';
 	import type { SelectEmployee, SelectSale, SelectSaleOverride } from '$lib/types/db.model';
+	import type { OverrideTableInputData } from '$lib/types/override-table-input-data.model.js';
 	import type { SaleTableInputData } from '$lib/types/sale-table-input-data.model';
 	import { Breadcrumb, BreadcrumbItem, Button, Card, Helper, Label, Select } from 'flowbite-svelte';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-
-  type OverrideWithSales = { overrides: (SelectSaleOverride & { sale: (SelectSale & { employee: SelectEmployee }); })[] };
   
   export let data;
   const { employees, campaigns, cycles } = data;
@@ -33,7 +32,7 @@
   
   let overrideTableData = {
     overrides: [],
-  } as OverrideWithSales;
+  } as OverrideTableInputData;
   
   const handleSaleSelected = (e: CustomEvent<SelectSale[]>) => {
     const sales = e.detail;

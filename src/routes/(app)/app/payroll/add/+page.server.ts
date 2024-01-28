@@ -35,7 +35,7 @@ export const load = async ({ locals }) => {
     }));
   };
   const payrollCycles = async () => {
-    const cycles = await getPayrollCycles(profile?.clientId || '');
+    const cycles = await getPayrollCycles(profile?.clientId || '', false);
     return cycles.map(cc => ({
       name: `${formatDate(cc.startDate)} - ${formatDate(cc.endDate)}`,
       value: cc.id,
@@ -114,8 +114,16 @@ export const actions = {
       pendingPaystub.totalOverrides = selectedOverrides.length + pendingManualOverrides.length;
     } 
     
+    const getSaleAmount = (sale: SelectSale) => {
+      const saleDesc = sale.statusDescription.toLowerCase().trim();
+      if (saleDesc === 'pending') return 0;
+      if (saleDesc === 'rejected') return sale.saleAmount;
+      if (saleDesc === 'approved') return sale.saleAmount;
+      return 0;
+    }
+    
     pendingPaystub.totalSales = selectedSales.length;
-    pendingPaystub.grossPay += selectedSales.reduce((acc, curr) => acc + curr.saleAmount, 0);
+    pendingPaystub.grossPay += selectedSales.reduce((acc, curr) => acc + getSaleAmount(curr), 0);
     pendingPaystub.netPay = pendingPaystub.grossPay;
     
     // update selected sales with paystub id

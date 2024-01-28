@@ -5,19 +5,18 @@
 	import { createEventDispatcher, onDestroy } from 'svelte';
 	import AddOverrideModal from './AddOverrideModal.svelte';
 	import { getManualOverrides } from './context';
+	import type { OverrideTableInputData } from '$lib/types/override-table-input-data.model';
   const dispatch = createEventDispatcher();
 	  
-  export let data: {
-    overrides: (SelectSaleOverride & { sale: (SelectSale & { employee: SelectEmployee }); isManual: boolean; })[];
-  }
+  export let data: OverrideTableInputData;
   
   const manualOverrides = getManualOverrides();
   
-  let { overrides } = data;
-  
   const unsub = manualOverrides.subscribe(mo => {
-    overrides = [...overrides, ...(mo as any[])];
+    if (mo && mo.length) overrides = [...overrides, ...(mo as any[])];
   });
+  
+  $: overrides = data && data.overrides ? data.overrides : [];
   
   onDestroy(() => unsub());
 
@@ -39,8 +38,10 @@
   };
   
   const selectAll = () => {
-    // todo: implement select all
-    console.log('implement select all');
+    overrides = overrides.map(o => {
+      if (!o.isManual) o.checked = !o.checked;
+      return o;
+    });
   }
   
   let openAddOverrideModal = false;
@@ -68,7 +69,7 @@
       {#each overrides as over (over.id)}
         <TableBodyRow>
           <TableBodyCell>
-            <Checkbox on:change={e => handleCheckboxChange(e)} value={over?.id} checked={over.isManual} disabled={over.isManual}></Checkbox>
+            <Checkbox on:change={e => handleCheckboxChange(e)} value={over?.id} checked={over.isManual || over.checked} disabled={over.isManual}></Checkbox>
           </TableBodyCell>
           <TableBodyCell>{over?.sale?.saleDate ? formatDate(over?.sale?.saleDate * 1000) : '(manual)'}</TableBodyCell>
           <TableBodyCell>{over?.sale?.employee?.firstName} {over?.sale?.employee?.lastName}</TableBodyCell>

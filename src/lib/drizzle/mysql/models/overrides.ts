@@ -10,7 +10,10 @@ export const getPendingSaleOverrides = async (employeeId: string): Promise<Selec
   
   try {
     return await drizzleClient.query.saleOverride.findMany({
-      where: (so, { eq }) => eq(so.beneficiaryEmployeeId, employeeId),
+      where: (so, { eq, and, isNull }) => and(
+        eq(so.beneficiaryEmployeeId, employeeId),
+        isNull(so.paidOnPaystubId),
+      ),
       with: {
         sale: {
           with: {
