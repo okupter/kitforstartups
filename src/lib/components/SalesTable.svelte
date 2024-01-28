@@ -189,8 +189,8 @@
   {/if}
   <TableHead class="text-sm text-background-800 font-semibold">
     <TableHeadCell>Sale Date</TableHeadCell>
-    <TableHeadCell>Employee</TableHeadCell>
     {#if !viewOnly}
+      <TableHeadCell>Employee</TableHeadCell>
       <TableHeadCell>Campaign</TableHeadCell>
     {/if}
     <TableHeadCell>Customer</TableHeadCell>
@@ -208,8 +208,8 @@
     {#each sales as sale (sale.id)}
       <TableBodyRow>
         <TableBodyCell>{formatDate(sale.saleDate * 1000)}</TableBodyCell>
-        <TableBodyCell>{sale?.employee?.firstName} {sale?.employee?.lastName}</TableBodyCell>
         {#if !viewOnly}
+          <TableBodyCell>{sale?.employee?.firstName} {sale?.employee?.lastName}</TableBodyCell>
           <TableBodyCell>{getCampaignName(sale.campaignId)}</TableBodyCell>
         {/if}
         <TableBodyCell>{sale.customerFirstName} {sale.customerLastName}</TableBodyCell>

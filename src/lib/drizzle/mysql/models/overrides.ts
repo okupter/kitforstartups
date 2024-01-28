@@ -3,6 +3,7 @@ import { drizzleClient } from '../client';
 import { overridingEmployee, saleOverride } from '../schema';
 import type { InsertSaleOverride, SelectSale, SelectSaleOverride } from '$lib/types/db.model';
 import type { InsertManualOverride } from '$lib/types/override.model';
+import { error } from '@sveltejs/kit';
 
 export const getPendingSaleOverrides = async (employeeId: string): Promise<SelectSaleOverride[]> => {
   if (!employeeId) return [] as SelectSaleOverride[];
@@ -49,35 +50,45 @@ export const saveOverridingEmployee = async (employeeId: string, overridesToEmpl
   return true;
 }
 
-export const saveSaleOverrides = async (sales: SelectSale[], overridesToEmployeeId: string, paystubId: string | null = null): Promise<{ success: boolean; total: number }> => {
-  if (!sales?.length) return false;
+/**
+ * Takes a list of sales for an employee, finds the corresponding override_employee records to determine all 
+ * employees that should receive an override from this set of sales and then creates those records and submits them. 
+ * These records cannot be attached to a paystub as they are being created when the agent's paystub is being created. 
+ * There is risk in doing it this way in the instance where the admin manually adds overrides for an employee before 
+ * adding them for the agents. The payroll admin is responsible for reviewing and removing any overrides that should not apply. 
+ * 
+ * @param sales 
+ * @returns 
+ */
+export const createOverridesFromSalesForOverridingManagers = async (sales: SelectSale[]): Promise<{ success: boolean; total: number }> => {
+  if (!sales?.length) error(400, 'Bad Request');
   
   let total = 0;
-  const overrideEmployeeMap = {} as { [key: string]: number };
+  const saleEmployeeIds = Array.from((new Set(sales.map(s => s.employeeId))).values());
   
-  (await drizzleClient.query.overridingEmployee.findMany({
-    where: (oe, { eq }) => eq(oe.overridesEmployeeId, overridesToEmployeeId),
-    columns: {
-      overridesEmployeeId: true,
-      overrideAmount: true,
-    },
-  }))?.forEach(oe => overrideEmployeeMap[oe.overridesEmployeeId] = oe.overrideAmount);
+  // get the override amounts for each employee
+  const employeesReceivingOverrides = await drizzleClient.query.overridingEmployee.findMany({
+    where: (oe, { inArray }) => inArray(oe.overridesEmployeeId, saleEmployeeIds),
+  });
   
-  const saleOverrides = sales.map(s => {
-    const dto = {
-      id: nanoid(),
-      originatingSaleId: s.id,
-      originatingEmployeeId: s.employeeId,
-      clientId: s.clientId,
-      beneficiaryEmployeeId: overridesToEmployeeId,
-      overrideAmount: overrideEmployeeMap[s.employeeId] || 0, // todo: we need to figure this out... update the sql db and add a column for this 
-      paidOnPaystubId: paystubId,
-    } as InsertSaleOverride;
-    
-    const amt = dto.overrideAmount || 0;
-    total += amt;
-    
-    return dto;
+  const saleOverrides = [] as InsertSaleOverride[];
+  
+  sales.forEach(s => {
+    employeesReceivingOverrides.forEach(oe => {
+      const dto = {
+        id: nanoid(),
+        originatingSaleId: s.id,
+        originatingEmployeeId: s.employeeId,
+        clientId: s.clientId,
+        beneficiaryEmployeeId: oe.employeeId,
+        overrideAmount: oe.overrideAmount, // todo: we need to figure this out... update the sql db and add a column for this 
+      } as InsertSaleOverride;
+      
+      const amt = dto.overrideAmount || 0;
+      total += amt;
+      
+      saleOverrides.push(dto);
+    });
   });
   
   try {
@@ -92,16 +103,16 @@ export const saveSaleOverrides = async (sales: SelectSale[], overridesToEmployee
 
 export const saveManualOverrides = async (clientId: string, paystubId: string, pendingManualOverrides: InsertManualOverride[]): Promise<{ success: boolean; total: number }> => {
   let total = 0;
-  const overrideEmployeeMap = {} as { [key: string]: number };
-  const overridesToEmployeeId = pendingManualOverrides[0].beneficiaryEmployeeId;
+  // const overrideEmployeeMap = {} as { [key: string]: number };
+  // const beneficiaryEmployeeId = pendingManualOverrides[0].beneficiaryEmployeeId;
   
-  (await drizzleClient.query.overridingEmployee.findMany({
-    where: (oe, { eq }) => eq(oe.overridesEmployeeId, overridesToEmployeeId),
-    columns: {
-      overridesEmployeeId: true,
-      overrideAmount: true,
-    },
-  }))?.forEach(oe => overrideEmployeeMap[oe.overridesEmployeeId] = oe.overrideAmount);
+  // (await drizzleClient.query.overridingEmployee.findMany({
+  //   where: (oe, { eq }) => eq(oe.overridesEmployeeId, beneficiaryEmployeeId),
+  //   columns: {
+  //     overridesEmployeeId: true,
+  //     overrideAmount: true,
+  //   },
+  // }))?.forEach(oe => overrideEmployeeMap[oe.overridesEmployeeId] = oe.overrideAmount);
   
   const saleOverrides = pendingManualOverrides.map(s => {
     const dto = {
@@ -109,8 +120,8 @@ export const saveManualOverrides = async (clientId: string, paystubId: string, p
       originatingSaleId: null,
       originatingEmployeeId: s.originatingEmployeeId,
       clientId,
-      beneficiaryEmployeeId: overridesToEmployeeId,
-      overrideAmount: overrideEmployeeMap[s.originatingEmployeeId] || 0, // todo: we need to figure this out... update the sql db and add a column for this
+      beneficiaryEmployeeId: s.beneficiaryEmployeeId,
+      overrideAmount: Number(s.overrideAmount), // todo: we need to figure this out... update the sql db and add a column for this
       paidOnPaystubId: paystubId,
     };
     

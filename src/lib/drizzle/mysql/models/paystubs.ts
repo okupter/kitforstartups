@@ -5,6 +5,7 @@ import type { PaystubWith } from '$lib/types/paystbus.model';
 import type { InsertPaystub, SelectPaystub } from '$lib/types/db.model';
 import { error } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 
 export const getPaystubs = async (clientId: string, startDate: number, endDate: number): Promise<PaystubWith[]> => {
   if (!clientId) {
@@ -43,7 +44,11 @@ export const getPaystubById = async (clientId: string, paystubId: string): Promi
         eq(ps.id, paystubId),
       ),
       with: {
-        sales: true,
+        sales: {
+          with: {
+            employee: true,
+          },
+        },
         employee: {
           with: {
             employeeProfile: true,
@@ -231,6 +236,8 @@ export const generatePendingPaystub = (clientId: string, employeeId: string, cam
     pieceRate: 0,
     otherDeductions: 0,
     taxDeductions: 0,
+    created: dayjs().unix(),
+    updated: dayjs().unix(),
   } as InsertPaystub;
 }
 

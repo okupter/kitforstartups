@@ -6,6 +6,7 @@
 	import dayjs from 'dayjs';
   
   export let data;
+  console.dir(data);
   
   const { paystub, campaigns } = data;
   
@@ -13,8 +14,8 @@
     sales: paystub.sales as any,
     campaigns,
     employees: [paystub.employee],
-    startDate: dayjs(paystub.payrollCycle.startDate).format('YYYY-MM-DD'),
-    endDate: dayjs(paystub.payrollCycle.endDate).format('YYYY-MM-DD'), 
+    startDate: paystub.payrollCycle ? dayjs(paystub.payrollCycle.startDate).format('YYYY-MM-DD') : null,
+    endDate: paystub.payrollCycle ? dayjs(paystub.payrollCycle.endDate).format('YYYY-MM-DD') : null, 
   } as SaleTableInputData;
   
   let campaignName: string;
@@ -29,7 +30,11 @@
   <div class="flex">
     <div>
       <h1 class="text-2xl font-bold">Earnings Statement</h1>
-      <p class="text-gray-500">Payment Date: {formatDate(paystub.payrollCycle.paymentDate)}</p>
+      {#if paystub?.payrollCycle}
+        <p class="text-gray-500">Payment Date: {formatDate(paystub?.payrollCycle?.paymentDate)}</p>
+      {:else}
+        <p class="text-gray-500">Payment Date: <span class="italic">Not Assigned to Pay Cycle</span></p>
+      {/if}
     </div>
   </div>
   
@@ -62,10 +67,18 @@
       
       <div>
         <p class="mb-2 tracking-tight">
-          <span class="font-bold">Pay Date:</span> {formatDate(paystub.payrollCycle.paymentDate)}
+          {#if paystub?.payrollCycle}
+            <span class="font-bold">Pay Date:</span> {formatDate(paystub?.payrollCycle?.paymentDate)}
+          {:else}
+            <span class="font-bold">Pay Date: </span><span class="text-gray-500 italic">Not Assigned to Pay Cycle</span>
+          {/if}
         </p>
         <p class="mb-2 tracking-tight">
-          <span class="font-bold">Weekending:</span> {formatDate(paystub.payrollCycle.endDate)}
+          {#if paystub?.payrollCycle}
+            <span class="font-bold">Weekending:</span> {formatDate(paystub?.payrollCycle?.endDate)}
+          {:else}
+            <span class="font-bold">Weekending: </span><span class="text-gray-500 italic">Not Assigned to Pay Cycle</span>
+          {/if}
         </p>
       </div>
     </div>
@@ -102,7 +115,7 @@
           </p>
         </div>
         <div>
-          <h6 class="mb-2 text-md font-bold tracking-tight"># of Sales</h6>
+          <h6 class="mb-2 text-md font-bold tracking-tight">Sales</h6>
           <p class="text-center">
             {paystub.totalSales}
           </p>
@@ -111,7 +124,7 @@
           <div>
             <h6 class="mb-2 text-md font-bold tracking-tight">Overrides</h6>
             <p class="text-center">
-              {formatCurrency(paystub.totalOverrides)}
+              {paystub.totalOverrides}
             </p>
           </div>
         <!-- {/if} -->

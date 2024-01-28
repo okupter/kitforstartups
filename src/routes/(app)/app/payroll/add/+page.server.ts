@@ -1,9 +1,9 @@
 import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns.js';
 import { getEmployee, getEmployees } from '$lib/drizzle/mysql/models/employees.js';
-import { getPendingSaleOverrides, saveManualOverrides, saveSaleOverrides } from '$lib/drizzle/mysql/models/overrides.js';
+import { getPendingSaleOverrides, saveManualOverrides, createOverridesFromSalesForOverridingManagers } from '$lib/drizzle/mysql/models/overrides.js';
 import { getPayrollCycles } from '$lib/drizzle/mysql/models/payroll-cycles.js';
 import { generatePendingPaystub, insertPaystub } from '$lib/drizzle/mysql/models/paystubs.js';
-import { getUnallocatedSalesByEmployee, saveSales } from '$lib/drizzle/mysql/models/sales.js';
+import { getUnallocatedSalesByEmployee, saveSales, updateSelectedSalesToPaystub } from '$lib/drizzle/mysql/models/sales.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import type { Employee, SelectSale, SelectSaleOverride } from '$lib/types/db.model';
 import type { InsertManualOverride } from '$lib/types/override.model.js';
@@ -68,7 +68,7 @@ export const actions = {
     
     return { sales, overrides };
   },
-  'save-selected-sales': async ({ locals, request }) => {
+  'save-paystub': async ({ locals, request }) => {
     const session = await locals.auth.validate();
     
     if (!session) error(401, 'Unauthorized');
@@ -98,7 +98,7 @@ export const actions = {
     if (overrideTo) {
       // todo: how do i save pending overrides without overlapping with the selected overrides? 
       // save sale overrides based on the default agent rule
-      const overridesSaved = await saveSaleOverrides(selectedSales, overrideTo.employeeId, pendingPaystub.id);
+      const overridesSaved = await createOverridesFromSalesForOverridingManagers(selectedSales);
       if (!overridesSaved.success) {
         console.error('Error saving sale overrides');
         error(500, 'Error saving sale overrides');
@@ -110,14 +110,17 @@ export const actions = {
         error(500, 'Error saving manual overrides');
       }
       
-      pendingPaystub.grossPay += (overridesSaved.total + manualOverridesSaved.total);
-      pendingPaystub.totalOverrides = selectedSales.length + pendingManualOverrides.length;
+      pendingPaystub.grossPay += (selectedOverrides.reduce((c, v) => c + v.overrideAmount, 0) + manualOverridesSaved.total);
+      pendingPaystub.totalOverrides = selectedOverrides.length + pendingManualOverrides.length;
     } 
     
-    const sales = await saveSales(selectedSales);
-    pendingPaystub.totalSales = sales.length;
-    pendingPaystub.grossPay += sales.reduce((acc, curr) => acc + curr.saleAmount, 0);
+    pendingPaystub.totalSales = selectedSales.length;
+    pendingPaystub.grossPay += selectedSales.reduce((acc, curr) => acc + curr.saleAmount, 0);
     pendingPaystub.netPay = pendingPaystub.grossPay;
+    
+    // update selected sales with paystub id
+    const updated = await updateSelectedSalesToPaystub(selectedSales, pendingPaystub.id);
+    if (!updated) error(500, 'Error updating sales');
     
     // save the paystub
     const paystubSaved = await insertPaystub(pendingPaystub);

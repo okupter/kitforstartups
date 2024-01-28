@@ -54,7 +54,7 @@
     </div>
     <AddOverrideModal bind:open={openAddOverrideModal}></AddOverrideModal>
   </div>
-  <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300 max-h-80 overflow-y-scroll">
+  <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300 max-h-80 overflow-y-auto">
     <TableHead class="text-sm text-background-800 font-semibold">
       <TableHeadCell>
         <Checkbox on:change={() => selectAll()}></Checkbox>

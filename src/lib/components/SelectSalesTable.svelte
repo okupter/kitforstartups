@@ -38,7 +38,7 @@
 
 <div class="mb-6">
   <h5 class="mb-2">Pending Sales</h5>
-  <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300 max-h-80 overflow-y-scroll">
+  <Table striped={true} shadow={true} divClass="bg-background-100 dark:bg-background-300 max-h-80 overflow-y-auto">
     <TableHead class="text-sm text-background-800 font-semibold">
       <TableHeadCell>&nbsp;</TableHeadCell>
       <TableHeadCell>Sale Date</TableHeadCell>

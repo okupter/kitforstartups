@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { drizzleClient } from '../client';
 import { sale } from '../schema';
 import dayjs from 'dayjs';
-import { desc } from 'drizzle-orm';
+import { desc, inArray } from 'drizzle-orm';
 import type { ImportRow, SaleWithEmployee } from '$lib/types/sale.model';
 import { getEmployeeIdByCampaignSalesCode } from './employees';
 import { error } from '@sveltejs/kit';
@@ -151,3 +151,17 @@ export const processImport = async (client_id: string, campaign_id: string, rows
   return insertRows;
 }
 
+export const updateSelectedSalesToPaystub = async (sales: SelectSale[], paystubId: string): Promise<boolean> => {
+  if (!sales?.length) return Promise.resolve(false);
+  
+  try {
+    await drizzleClient.update(sale)
+      .set({ paystubId, })
+      .where(inArray(sale.id, sales.map(s => s.id)));
+  } catch (ex) {
+    console.error(ex);
+    return Promise.resolve(false);
+  }
+    
+  return true;
+}

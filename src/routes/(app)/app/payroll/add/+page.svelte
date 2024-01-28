@@ -122,7 +122,7 @@
   </div>
   
   <div class="flex justify-end my-6">
-    <form action="?/save-selected-sales" method="post" use:enhance={async ({ cancel, formData }) => {
+    <form action="?/save-paystub" method="post" use:enhance={async ({ cancel, formData }) => {
       return ({ result, update }) => {
         console.dir(result);
       }
