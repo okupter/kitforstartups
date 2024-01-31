@@ -1,6 +1,7 @@
 import { getCampaigns } from '$lib/drizzle/mysql/models/campaigns';
 import { getEmployees } from '$lib/drizzle/mysql/models/employees';
 import { getPayrollCycles } from '$lib/drizzle/mysql/models/payroll-cycles';
+import { getPaystubs } from '$lib/drizzle/mysql/models/paystubs.js';
 import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
 import { formatDate } from '$lib/utils';
 import { error } from '@sveltejs/kit';
@@ -18,17 +19,23 @@ export const load = async ({ locals }) => {
   
   const campaigns = async () => {
     const camps = await getCampaigns(profile?.clientId || '');
-    return camps.map(cc => ({
+    return [{
+      name: 'All Campaigns',
+      value: '',
+    }, ...camps.map(cc => ({
       name: cc.name,
       value: cc.id,
-    }));
+    }))];
   };
   const employees = async () => {
     const emps = await getEmployees(profile?.clientId || '');
-    return emps.map(ee => ({
+    return [{
+      name: 'All Employees',
+      value: '',
+    }, ...emps.map(ee => ({
       name: `${ee.firstName} ${ee.lastName}`,
       value: ee.id,
-    }));
+    }))];
   };
   
   const startDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
@@ -52,14 +59,19 @@ export const actions = {
     
     if (!profile || !['super_admin', 'org_admin'].includes(profile.role)) error(403, 'Forbidden');
     
+    const clientId = profile?.clientId || '';
     const payload = await request.formData();
     const data = Object.fromEntries(payload.entries());
-    const { employeeId, startDate: startDateStr, endDate: endDateStr, campaignId } = data;
+    const { employeeId: rawEeId, startDate: startDateStr, endDate: endDateStr, campaignId: rawCampaignId } = data;
     const startDate = dayjs(startDateStr as string, 'YYYY-MM-DD').unix();
     const endDate = dayjs(endDateStr as string, 'YYYY-MM-DD').unix();
+    const employeeId = rawEeId as string;
+    const campaignId = rawCampaignId as string;
     
+    const paystubs = async () => getPaystubs(clientId, startDate, endDate, employeeId, campaignId);
     
-    
-    return { campaignId, employeeId, startDate, endDate };
+    return { 
+      paystubs: await paystubs(),
+    };
   }
 }
