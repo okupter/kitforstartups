@@ -21,9 +21,8 @@
   <AddEmployeeDialog />
 </div>
 
-<div class="flex gap-4 mt-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
   {#each data?.employees as employee}
-     <!-- content here -->
-     <EmployeeCard employee={employee} />
+    <div class="space-y-6"><EmployeeCard employee={employee} /></div>
   {/each}
 </div>

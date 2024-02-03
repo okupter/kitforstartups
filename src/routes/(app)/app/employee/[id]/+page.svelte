@@ -208,7 +208,7 @@
     <div class="flex my-4">
       <Label class="min-w-36">
         Overrides to
-        <Select placeholder="Select Manager" items={employees} name="overridesToEmployeeId" value={ee?.overrideTo.employeeId} />
+        <Select placeholder="Select Manager" items={employees} name="overridesToEmployeeId" value={ee?.overrideTo?.employeeId} />
       </Label>
     </div>
 
