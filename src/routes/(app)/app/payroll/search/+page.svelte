@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { SelectSale, SelectSaleOverride } from '$lib/types/db.model';
 	import type { PaystubWith } from '$lib/types/paystbus.model';
 	import { formatCurrency, formatDate } from '$lib/utils';
 	import { Breadcrumb, BreadcrumbItem, Card, Label, Select, Input, Table, TableHead, TableHeadCell, TableBody, TableBodyCell, TableBodyRow, Button } from 'flowbite-svelte';
+  import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import type { Snapshot } from './$types.js';
 
   export let data;
   const { campaigns, employees, startDate, endDate, } = data;
@@ -13,6 +14,19 @@
   let submitBtn: HTMLButtonElement;
   let selectedEmployee = '';
   let selectedCampaign = '';
+  
+  export const snapshot: Snapshot = {
+    capture: () => ({
+      paystubs,
+      selectedEmployee,
+      selectedCampaign,
+    }),
+    restore: (value) => {
+      paystubs = value.paystubs;
+      selectedEmployee = value.selectedEmployee;
+      selectedCampaign = value.selectedCampaign;
+    },
+  }
 </script>
 
 <div class="container max-w-5xl">
@@ -86,7 +100,12 @@
     <TableBody>
       {#each paystubs as paystub (paystub.id)}
         <TableBodyRow>
-          <TableBodyCell>{paystub.employee.firstName} {paystub.employee.lastName}</TableBodyCell>
+          <TableBodyCell>
+            <a href={`/app/payroll/${paystub.id}`} class="flex items-baseline">
+              <span>{paystub.employee?.firstName} {paystub.employee?.lastName}</span>
+              <ArrowUpRightFromSquareOutline class="w-3 h-3 ml-1" />
+            </a>
+          </TableBodyCell>
           <TableBodyCell>{paystub.campaign?.name}</TableBodyCell>
           <TableBodyCell>{paystub.totalSales}</TableBodyCell>
           <TableBodyCell>{formatCurrency(paystub.netPay)}</TableBodyCell>
