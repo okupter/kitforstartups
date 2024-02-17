@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/turso/client';
-import { user, userProfile } from '$lib/drizzle/turso/schema';
+import { drizzleClient } from '$lib/server/drizzle/turso/client';
+import { user, userProfile } from '$lib/server/drizzle/turso/schema';
 import { eq } from 'drizzle-orm';
 
 const getUserByEmail = async (email: string | undefined) => {

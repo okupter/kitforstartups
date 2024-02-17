@@ -1,11 +1,11 @@
 import { dev } from '$app/environment';
-import { dbClient } from '$lib/drizzle/turso/client';
+import { dbClient } from '$lib/server/drizzle/turso/client';
 import {
 	adapterOptions,
 	generateUserAttributes,
 	githubAuthOptions,
 	googleAuthOptions
-} from '$lib/lucia/utils';
+} from '$lib/server/lucia/utils';
 import { libsql } from '@lucia-auth/adapter-sqlite';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';

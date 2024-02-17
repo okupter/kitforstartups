@@ -1,4 +1,4 @@
-import { getUserProfileData } from '$lib/drizzle/mysql/models/users';
+import { getUserProfileData } from '$lib/server/drizzle/mysql/models/users';
 import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {

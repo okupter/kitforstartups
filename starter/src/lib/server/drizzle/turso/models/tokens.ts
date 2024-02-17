@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/mysql/client';
-import { emailVerification, passwordResetToken } from '$lib/drizzle/mysql/schema';
+import { drizzleClient } from '$lib/server/drizzle/turso/client';
+import { emailVerification, passwordResetToken } from '$lib/server/drizzle/turso/schema';
 import { eq } from 'drizzle-orm';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 
@@ -68,9 +68,11 @@ const generatePasswordResetToken = async (userId: string) => {
 };
 
 const validateEmailVerificationToken = async (token: string) => {
-	const storedToken = (
-		await drizzleClient.select().from(emailVerification).where(eq(emailVerification.id, token))
-	)[0];
+	const storedToken = await drizzleClient
+		.select()
+		.from(emailVerification)
+		.where(eq(emailVerification.id, token))
+		.get();
 
 	if (!storedToken) {
 		throw new Error('Invalid token');
@@ -91,9 +93,11 @@ const validateEmailVerificationToken = async (token: string) => {
 };
 
 const validatePasswordResetToken = async (token: string) => {
-	const storedToken = (
-		await drizzleClient.select().from(passwordResetToken).where(eq(passwordResetToken.id, token))
-	)[0];
+	const storedToken = await drizzleClient
+		.select()
+		.from(passwordResetToken)
+		.where(eq(passwordResetToken.id, token))
+		.get();
 
 	if (!storedToken) {
 		throw new Error('Invalid token');

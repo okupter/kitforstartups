@@ -1,5 +1,5 @@
-import { getUserByEmail } from '$lib/drizzle/mysql/models/users';
-import { auth, githubAuth } from '$lib/lucia/mysql';
+import { getUserByEmail } from '$lib/server/drizzle/mysql/models/users';
+import { auth, githubAuth } from '$lib/server/lucia/mysql';
 import { getGitHubPrimaryEmailAddress } from '$lib/utils';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
