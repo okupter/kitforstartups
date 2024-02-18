@@ -59,7 +59,7 @@ To run the migrations for MySQL, run the following command:
 pnpm generate-migrations:mysql
 ```
 
-This will generate the SQL migrations, as well as migrations metadata files in the `./src/lib/drizzle/mysql/migrations/data` directory.
+This will generate the SQL migrations, as well as migrations metadata files in the `./src/lib/server/drizzle/mysql/migrations/data` directory.
 
 You can now run the following command to push the migrations to the database:
 
@@ -77,7 +77,7 @@ pnpm push:mysql
 
 We use MailHog to send and test emails locally. The boilerplate is configured to automatically send emails to MailHog when running in development mode.
 
-Check `./src/lib/emails/send.ts` for more details about the implementation.
+Check `./src/lib/server/emails/send.ts` for more details about the implementation.
 
 We also provide a Docker Compose file to quickly spin up a MailHog container.
 
@@ -99,8 +99,8 @@ Right now, there is no CLI or configuration file to change the database. You wil
 
 The default database is MySQL. If you want to use PostgreSQL, you will have to:
 
-- Change occurences of `$lib/lucia/mysql` to `$lib/lucia/postgres` in the `./src` directory
-- Change occurences of `$lib/drizzle/mysql/models` to `$lib/drizzle/postgres/models` in the `./src` directory
+- Change occurences of `$lib/server/lucia/mysql` to `$lib/server/lucia/postgres` in the `./src` directory
+- Change occurences of `$lib/server/drizzle/mysql/models` to `$lib/server/drizzle/postgres/models` in the `./src` directory
 
 This should be enough to get you started with PostgreSQL.
 

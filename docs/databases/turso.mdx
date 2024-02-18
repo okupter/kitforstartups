@@ -45,8 +45,8 @@ turso db tokens create my-db-name
 For the DB URL, on local environments, you can use `turso dev` to invoke a libSQL server locally. This will open a websocket server that can be accessed on `ws://127.0.0.1:8080` (this will be the value for `TURSO_DB_URL`).
 
 ```bash
-# Create a src/lib/drizzle/turso/data folder
-turso dev -f src/lib/drizzle/turso/data/data.sqlite
+# Create a src/lib/server/drizzle/turso/data folder
+turso dev -f src/lib/server/drizzle/turso/data/data.sqlite
 ```
 
 ## Push the database schema
@@ -70,4 +70,4 @@ pnpm migrate:turso
 
 In order to switch, the current option is to search and replace occurences of `drizzle/mysql` and `lucia/mysql` with `drizzle/turso` and `lucia/turso` respectively.
 
-If you are using VSCode, you can exclude the `src/lib/drizzle` and `src/lib/lucia` folders from the search.
+If you are using VSCode, you can exclude the `src/lib/server/drizzle` and `src/lib/server/lucia` folders from the search.

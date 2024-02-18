@@ -11,7 +11,7 @@ const dbClient = createClient({
 });
 const drizzleClient = drizzle(dbClient);
 
-await migrate(drizzleClient, { migrationsFolder: 'src/lib/drizzle/turso/migrations/data' })
+await migrate(drizzleClient, { migrationsFolder: 'src/lib/server/drizzle/turso/migrations/data' })
 	.then(() => {
 		console.log('Migrations completed');
 		process.exit(0);
