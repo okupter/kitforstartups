@@ -5,7 +5,7 @@ description: "Start shipping SvelteKit SaaS apps in minutes"
 
 ## 📦 Getting Started
 
-The default configuration for KitForStartups uses MySQL as a database.
+The default configuration for KitForStartups uses SQLite as a database through [Turso](https://turso.tech).
 
 ### Prerequisites
 
@@ -97,9 +97,9 @@ pnpm dev
 
 Right now, there is no CLI or configuration file to change the database. You will have to do some search and replace in the codebase to change the database.
 
-The default database is MySQL. If you want to use PostgreSQL, you will have to:
+The default database is SQLite. If you want to use PostgreSQL, you will have to:
 
-- Change occurences of `$lib/lucia/mysql` to `$lib/lucia/postgres` in the `./src` directory
+- Change occurences of `$lib/lucia/turso` to `$lib/lucia/postgres` in the `./src` directory
 - Change occurences of `$lib/drizzle/mysql/models` to `$lib/drizzle/postgres/models` in the `./src` directory
 
 This should be enough to get you started with PostgreSQL.

@@ -2,7 +2,7 @@
 
 declare global {
 	namespace Lucia {
-		type Auth = import('$lib/lucia/mysql').Auth;
+		type Auth = import('$lib/lucia/turso').Auth;
 		type DatabaseUserAttributes = {
 			email: string;
 			email_verified: boolean

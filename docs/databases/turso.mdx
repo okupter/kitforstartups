@@ -45,8 +45,7 @@ turso db tokens create my-db-name
 For the DB URL, on local environments, you can use `turso dev` to invoke a libSQL server locally. This will open a websocket server that can be accessed on `ws://127.0.0.1:8080` (this will be the value for `TURSO_DB_URL`).
 
 ```bash
-# Create a src/lib/drizzle/turso/data folder
-turso dev -f src/lib/drizzle/turso/data/data.sqlite
+turso dev -f src/lib/drizzle/turso/data.sqlite
 ```
 
 ## Push the database schema

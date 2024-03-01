@@ -1,4 +1,4 @@
-import { auth } from '$lib/lucia/mysql';
+import { auth } from '$lib/lucia/turso';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { LuciaError } from 'lucia';

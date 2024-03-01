@@ -1,8 +1,8 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
-import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
-import { updateUserProfileData } from '$lib/drizzle/mysql/models/users';
+import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
+import { updateUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
-import { auth } from '$lib/lucia/mysql';
+import { auth } from '$lib/lucia/turso';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
