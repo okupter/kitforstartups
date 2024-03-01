@@ -26,11 +26,6 @@ export const auth = new Lucia(adapter, {
 	}
 });
 
-// export const githubAuth = github(auth, githubAuthOptions);
-// export const googleAuth = google(auth, googleAuthOptions);
-
-export type Auth = typeof auth;
-
 declare module 'lucia' {
 	interface Register {
 		Lucia: typeof auth;

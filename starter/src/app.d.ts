@@ -1,20 +1,11 @@
 /// <reference types="lucia" />
 
 declare global {
-	namespace Lucia {
-		type Auth = import('$lib/lucia/turso').Auth;
-		type DatabaseUserAttributes = {
-			email: string;
-			email_verified: boolean
-			github_username?: string;
-		};
-		type DatabaseSessionAttributes = object;
-	}
-
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			auth: import('lucia').AuthRequest;
+			user: import("lucia").User | null;
+			session: import("lucia").Session | null;
 		}
 		// interface PageData {}
 		// interface Platform {}
