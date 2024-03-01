@@ -12,7 +12,7 @@ export const load = async ({ locals }) => {
 		redirect(302, '/app/email-verification');
 	}
 
-	const profile = await getUserProfileData(user.id);
+	const profile = await getUserProfileData(user?.id);
 
 	return {
 		profile
