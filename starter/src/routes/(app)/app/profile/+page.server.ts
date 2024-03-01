@@ -2,17 +2,17 @@ import { getUserProfileData } from '$lib/drizzle/turso/models/users';
 import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { user, session } = locals;
 
 	if (!session) {
 		throw redirect(302, '/auth/login');
 	}
 
-	if (!session.user.emailVerified) {
+	if (!user?.emailVerified) {
 		throw redirect(302, '/app/email-verification');
 	}
 
-	const profile = await getUserProfileData(session?.user.userId);
+	const profile = await getUserProfileData(user.id);
 
 	return {
 		profile

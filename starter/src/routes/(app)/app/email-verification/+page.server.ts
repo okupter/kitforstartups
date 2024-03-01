@@ -1,18 +1,18 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { getUserByEmail, getUserProfileData } from '$lib/drizzle/turso/models/users';
+import { getUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { session, user } = locals;
 
 	if (!session) {
 		throw redirect(302, '/auth/login');
 	}
 
-	if (session.user.emailVerified) {
+	if (!user?.emailVerified) {
 		throw redirect(302, '/app/profile');
 	}
 
@@ -21,8 +21,7 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	resendEmailVerificationLink: async ({ locals, url }) => {
-		const session = await locals.auth.validate();
-		const user = await getUserByEmail(session?.user.email);
+		const { user } = locals;
 
 		if (!user) {
 			const feedbacks = getFeedbackObjects([
@@ -38,7 +37,7 @@ export const actions = {
 			});
 		}
 
-		const profile = await getUserProfileData(session?.user.userId);
+		const profile = await getUserProfileData(user.id);
 
 		try {
 			const verificationToken = await generateEmailVerificationToken(user.id);
@@ -59,7 +58,7 @@ export const actions = {
 					feedbacks: verificationEmail
 				});
 			}
-		} catch(e) {
+		} catch (e) {
 			const feedbacks = getFeedbackObjects([
 				{
 					type: 'error',
