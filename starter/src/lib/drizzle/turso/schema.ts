@@ -18,6 +18,7 @@ const user = sqliteTable('auth_user', {
 	email: text('email').unique().notNull(),
 	emailVerified: text('email_verified').$type<boolean>().default(false).notNull(),
 	hashedPassword: text('hashed_password', { length: 512 }),
+	googleRefreshToken: text('google_refresh_token'),
 
 	// From GitHub
 	githubUsername: text('github_username', { length: 255 }).unique()

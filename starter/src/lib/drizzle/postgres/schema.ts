@@ -15,6 +15,7 @@ const user = pgTable('auth_user', {
 	email: varchar('email', { length: 255 }).unique().notNull(),
 	emailVerified: boolean('email_verified').default(false).notNull(),
 	hashedPassword: varchar('hashed_password', { length: 512 }),
+	googleRefreshToken: varchar('google_refresh_token'),
 
 	// From GitHub
 	githubUsername: varchar('github_username', { length: 255 }).unique()

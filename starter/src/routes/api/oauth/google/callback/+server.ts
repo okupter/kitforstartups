@@ -1,111 +1,98 @@
-import {
-	getUserByEmail,
-	getUserProfileData,
-	updateUserProfileData
-} from '$lib/drizzle/turso/models/users';
-import { auth, googleAuth } from '$lib/lucia/turso';
-import { OAuthRequestError } from '@lucia-auth/oauth';
-import { error } from '@sveltejs/kit';
-import { nanoid } from 'nanoid';
+import { createUser, getUserByEmail, updateUserData } from '$lib/drizzle/turso/models/users';
+import { googleAuth } from '$lib/lucia/oauth';
+import { lucia } from '$lib/lucia/turso';
+import { OAuth2RequestError, type GoogleRefreshedTokens } from 'arctic';
+import { generateId } from 'lucia';
 
-export const GET = async ({ url, cookies, locals }) => {
-	const storedState = cookies.get('google_oauth_state');
-	const state = url.searchParams.get('state');
+export const GET = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
+	const state = url.searchParams.get('state');
 
-	// Validate state
-	if (!storedState || !state || storedState !== state || !code) {
+	const savedState = cookies.get('google_oauth_state');
+	const savedCodeVerifier = cookies.get('google_oauth_code_verifier');
+
+	if (!code || !state || !savedState || !savedCodeVerifier || state !== savedState) {
+		console.error('Invalid state or code');
+
 		return new Response(null, {
-			status: 400
+			status: 400,
+			statusText: 'Bad Request'
 		});
 	}
 
 	try {
-		const { getExistingUser, googleUser, createUser, createKey } =
-			await googleAuth.validateCallback(code);
+		const tokens = await googleAuth.validateAuthorizationCode(code, savedCodeVerifier);
+		let googleRefreshToken: GoogleRefreshedTokens | undefined;
 
-		const getUser = async () => {
-			const existingUser = await getExistingUser();
-
-			if (existingUser) {
-				return existingUser;
-			}
-
-			if (!googleUser.email) {
-				throw error(400, 'Google email not found');
-			}
-
-			const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);
-
-			if (existingDatabaseUserWithEmail) {
-				const user = auth.transformDatabaseUser({
-					...existingDatabaseUserWithEmail,
-					email_verified: existingDatabaseUserWithEmail.emailVerified
-				});
-
-				await createKey(user.userId);
-
-				return user;
-			}
-
-			return await createUser({
-				attributes: {
-					email: googleUser.email,
-					email_verified: Boolean(googleUser.email_verified) || false
-				}
-			});
-		};
-
-		const user = await getUser();
-
-		// Update user attributes with Google email verified
-		if (!user.emailVerified && googleUser.email_verified) {
-			await auth.updateUserAttributes(user.userId, { email_verified: true });
+		if (tokens.refreshToken) {
+			googleRefreshToken = await googleAuth.refreshAccessToken(tokens.refreshToken);
 		}
 
-		const profileData = await getUserProfileData(user.userId);
-
-		// Update profile table with Google profile data
-		await updateUserProfileData({
-			id: nanoid(),
-			userId: user.userId,
-			firstName:
-				!profileData?.firstName || profileData?.firstName?.trim().length === 0
-					? googleUser.given_name
-					: profileData?.firstName,
-			lastName:
-				!profileData?.lastName || profileData?.lastName?.trim().length === 0
-					? googleUser.family_name
-					: profileData?.lastName,
-			picture:
-				!profileData?.picture || profileData?.picture?.trim().length === 0
-					? googleUser.picture
-					: profileData?.picture
+		const googleUserResponse = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken}`
+			}
 		});
 
-		const session = await auth.createSession({
-			userId: user.userId,
-			attributes: {}
-		});
+		const googleUser = await googleUserResponse.json();
 
-		locals.auth.setSession(session);
+		const existingUser = await getUserByEmail(googleUser.email);
+
+		if (existingUser) {
+			const session = await lucia.createSession(existingUser.id, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+
+			// Update the user's refresh token
+			await updateUserData(existingUser.id, {
+				googleRefreshToken: googleRefreshToken?.accessToken
+			});
+		} else {
+			const userId = generateId(15);
+			await createUser({
+				id: userId,
+				email: googleUser.email,
+				googleRefreshToken: googleRefreshToken?.accessToken
+			});
+
+			const session = await lucia.createSession(userId, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+		}
 
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/app/profile'
+				Location: '/'
 			}
 		});
-	} catch (e) {
-		if (e instanceof OAuthRequestError) {
-			// Invalid code
+	} catch (error) {
+		console.error('Error exchanging code for token', error);
+
+		if (error instanceof OAuth2RequestError) {
 			return new Response(null, {
-				status: 400
+				status: 400,
+				statusText: 'Bad Request'
 			});
 		}
 
 		return new Response(null, {
-			status: 500
+			status: 500,
+			statusText: 'Internal Server Error'
 		});
 	}
 };

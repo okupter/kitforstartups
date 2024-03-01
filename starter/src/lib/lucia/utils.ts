@@ -2,6 +2,7 @@ interface DatabaseUserAttributes {
 	email: string;
 	email_verified: boolean;
 	github_username?: string;
+	google_refresh_token?: string;
 }
 
 interface DatabaseSessionAttributes {

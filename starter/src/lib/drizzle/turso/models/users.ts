@@ -10,6 +10,10 @@ const getUserByEmail = async (email: string | undefined) => {
 	return await drizzleClient.select().from(user).where(eq(user.email, email)).get();
 };
 
+const createUser = async (data: typeof user.$inferInsert) => {
+	await drizzleClient.insert(user).values(data);
+};
+
 const updateUserData = async (userId: string, data: Partial<typeof user.$inferInsert>) => {
 	await drizzleClient.update(user).set(data).where(eq(user.id, userId));
 };
@@ -36,4 +40,4 @@ const getUserProfileData = async (userId: string | undefined) => {
 	return await drizzleClient.select().from(userProfile).where(eq(userProfile.userId, userId)).get();
 };
 
-export { getUserByEmail, getUserProfileData, updateUserData, updateUserProfileData };
+export { createUser, getUserByEmail, getUserProfileData, updateUserData, updateUserProfileData };
