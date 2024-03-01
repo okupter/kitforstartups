@@ -85,6 +85,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	}
 };

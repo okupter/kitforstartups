@@ -9,11 +9,11 @@ export const load = async ({ locals }) => {
 	const { session, user } = locals;
 
 	if (!session) {
-		throw redirect(302, '/auth/login');
+		redirect(302, '/auth/login');
 	}
 
 	if (!user?.emailVerified) {
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	}
 
 	return {};

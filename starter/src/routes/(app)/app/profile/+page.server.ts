@@ -5,11 +5,11 @@ export const load = async ({ locals }) => {
 	const { user, session } = locals;
 
 	if (!session) {
-		throw redirect(302, '/auth/login');
+		redirect(302, '/auth/login');
 	}
 
 	if (!user?.emailVerified) {
-		throw redirect(302, '/app/email-verification');
+		redirect(302, '/app/email-verification');
 	}
 
 	const profile = await getUserProfileData(user.id);

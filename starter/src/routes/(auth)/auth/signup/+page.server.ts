@@ -13,7 +13,7 @@ export const load = async ({ locals }) => {
 	const { session } = locals;
 
 	if (session) {
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	}
 
 	return {};
@@ -125,6 +125,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/email-verification');
+		redirect(302, '/app/email-verification');
 	}
 };

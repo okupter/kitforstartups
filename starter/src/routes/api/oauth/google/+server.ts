@@ -27,5 +27,5 @@ export const GET = async ({ cookies }) => {
 		sameSite: 'lax'
 	});
 
-	throw redirect(302, url.toString());
+	redirect(302, url.toString());
 };

@@ -9,7 +9,7 @@ export const load = async ({ locals }) => {
 	const { session } = locals;
 
 	if (session) {
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	}
 
 	return {};
@@ -108,7 +108,7 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	},
 
 	logout: async ({ cookies, locals }) => {
@@ -137,10 +137,10 @@ export const actions = {
 		});
 
 		// Remove OAuth cookies
-		cookies.delete('github_oauth_state');
-		cookies.delete('google_oauth_state');
-		cookies.delete('google_oauth_code_verifier');
+		cookies.delete('github_oauth_state', { path: '/' });
+		cookies.delete('google_oauth_state', { path: '/' });
+		cookies.delete('google_oauth_code_verifier', { path: '/' });
 
-		throw redirect(302, '/auth/login');
+		redirect(302, '/auth/login');
 	}
 };
