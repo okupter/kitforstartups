@@ -1,6 +1,6 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { createUser, updateUserProfileData } from '$lib/drizzle/turso/models/users';
+import { createUser, getUserByEmail, updateUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { lucia } from '$lib/lucia/turso.js';
 import { getFeedbackObjects } from '$lib/utils';
@@ -51,39 +51,54 @@ export const actions = {
 		const { firstName, lastName, email, password } = signupUser.data;
 
 		try {
-			const userId = generateId(15);
+			const existingUser = await getUserByEmail(email);
 
-			const user = await createUser({
-				id: userId,
-				email,
-				emailVerified: false,
-				hashedPassword: await new Argon2id().hash(password)
-			});
+			if (existingUser) {
+				const feedbacks = getFeedbackObjects([
+					{
+						type: 'error',
+						title: 'User already exists',
+						message: 'The user already exists. Please login instead.'
+					}
+				]);
 
-			// Update user profile data
-			await updateUserProfileData({
-				id: generateId(15),
-				userId: user.id,
-				firstName,
-				lastName
-			});
+				return fail(400, {
+					feedbacks
+				});
+			} else {
+				const userId = generateId(15);
 
-			const session = await lucia.createSession(user.id, {
-				created_at: new Date(),
-				updated_at: new Date()
-			});
-			const sessionCookie = lucia.createSessionCookie(session.id);
-			cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes
-			});
+				const user = await createUser({
+					id: userId,
+					email,
+					emailVerified: false,
+					hashedPassword: await new Argon2id().hash(password)
+				});
 
-			// Send verification email
-			const verificationToken = await generateEmailVerificationToken(user.id);
+				// Update user profile data
+				await updateUserProfileData({
+					id: generateId(15),
+					userId: user.id,
+					firstName,
+					lastName
+				});
 
-			const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
-			const recipient = firstName ? `${firstName}` : email;
-			const emailHtml = `Hello ${recipient},
+				const session = await lucia.createSession(user.id, {
+					created_at: new Date(),
+					updated_at: new Date()
+				});
+				const sessionCookie = lucia.createSessionCookie(session.id);
+				cookies.set(sessionCookie.name, sessionCookie.value, {
+					path: '.',
+					...sessionCookie.attributes
+				});
+
+				// Send verification email
+				const verificationToken = await generateEmailVerificationToken(user.id);
+
+				const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
+				const recipient = firstName ? `${firstName}` : email;
+				const emailHtml = `Hello ${recipient},
 			<br><br>
 			Thank you for signing up to KitForStartups! Please click the link below to verify your email address:
 			<br><br>
@@ -97,17 +112,18 @@ export const actions = {
 			<br>
 			${TRANSACTIONAL_EMAILS_SENDER}`;
 
-			const signupEmail = await sendEmail({
-				from: sender,
-				to: email,
-				subject: 'Verify Your Email Address',
-				html: emailHtml
-			});
-
-			if (signupEmail[0].type === 'error') {
-				return fail(500, {
-					feedbacks: signupEmail
+				const signupEmail = await sendEmail({
+					from: sender,
+					to: email,
+					subject: 'Verify Your Email Address',
+					html: emailHtml
 				});
+
+				if (signupEmail[0].type === 'error') {
+					return fail(500, {
+						feedbacks: signupEmail
+					});
+				}
 			}
 		} catch (e) {
 			console.error(e);

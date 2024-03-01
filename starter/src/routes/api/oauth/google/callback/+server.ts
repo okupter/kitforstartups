@@ -1,4 +1,10 @@
-import { createUser, getUserByEmail, updateUserData } from '$lib/drizzle/turso/models/users';
+import {
+	createUser,
+	getUserByEmail,
+	getUserProfileData,
+	updateUserData,
+	updateUserProfileData
+} from '$lib/drizzle/turso/models/users';
 import { googleAuth } from '$lib/lucia/oauth';
 import { lucia } from '$lib/lucia/turso';
 import { OAuth2RequestError, type GoogleRefreshedTokens } from 'arctic';
@@ -51,8 +57,20 @@ export const GET = async ({ url, cookies }) => {
 			});
 
 			// Update the user's refresh token
-			await updateUserData(existingUser.id, {
-				googleRefreshToken: googleRefreshToken?.accessToken
+			if (googleRefreshToken) {
+				await updateUserData(existingUser.id, {
+					googleRefreshToken: googleRefreshToken?.accessToken
+				});
+			}
+
+			// Update the user profile data
+			const profile = await getUserProfileData(existingUser.id);
+
+			await updateUserProfileData({
+				userId: existingUser.id,
+				firstName: profile?.firstName || googleUser.given_name,
+				lastName: profile?.lastName || googleUser.family_name,
+				picture: profile?.picture || googleUser.picture
 			});
 		} else {
 			const userId = generateId(15);
@@ -60,6 +78,13 @@ export const GET = async ({ url, cookies }) => {
 				id: userId,
 				email: googleUser.email,
 				googleRefreshToken: googleRefreshToken?.accessToken
+			});
+
+			await updateUserProfileData({
+				userId: userId,
+				firstName: googleUser.given_name,
+				lastName: googleUser.family_name,
+				picture: googleUser.picture
 			});
 
 			const session = await lucia.createSession(userId, {
@@ -77,7 +102,7 @@ export const GET = async ({ url, cookies }) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/app/profile',
+				Location: '/app/profile'
 			}
 		});
 	} catch (error) {

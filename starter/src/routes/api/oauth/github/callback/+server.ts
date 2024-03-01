@@ -1,4 +1,9 @@
-import { createUser, getUserByEmail } from '$lib/drizzle/turso/models/users';
+import {
+	createUser,
+	getUserByEmail,
+	getUserProfileData,
+	updateUserProfileData
+} from '$lib/drizzle/turso/models/users';
 import { githubAuth } from '$lib/lucia/oauth.js';
 import { lucia } from '$lib/lucia/turso';
 import { OAuth2RequestError } from 'arctic';
@@ -9,9 +14,8 @@ export const GET = async ({ url, cookies }) => {
 	const state = url.searchParams.get('state');
 
 	const savedState = cookies.get('github_oauth_state');
-	const savedCodeVerifier = cookies.get('github_oauth_code_verifier');
 
-	if (!code || !state || !savedState || !savedCodeVerifier || state !== savedState) {
+	if (!code || !state || !savedState || state !== savedState) {
 		console.error('Invalid state or code');
 
 		return new Response(null, {
@@ -39,6 +43,13 @@ export const GET = async ({ url, cookies }) => {
 			});
 		}
 
+		const githubUserResponse = await fetch('https://api.github.com/user', {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken}`
+			}
+		});
+		const githubUser: GitHubUser = await githubUserResponse.json();
+
 		const existingUser = await getUserByEmail(primaryEmailAddress);
 
 		if (existingUser) {
@@ -52,20 +63,41 @@ export const GET = async ({ url, cookies }) => {
 				path: '.',
 				...sessionCookie.attributes
 			});
-		} else {
-			const githubUserResponse = await fetch('https://api.github.com/user', {
-				headers: {
-					Authorization: `Bearer ${tokens.accessToken}`
-				}
-			});
-			const githubUser: GitHubUser = await githubUserResponse.json();
 
+			// Update the user's profile data
+			const profile = await getUserProfileData(existingUser.id);
+
+			await updateUserProfileData({
+				userId: existingUser.id,
+				firstName: profile?.firstName || githubUser.name.split(' ')[0],
+				lastName: profile?.lastName || githubUser.name.split(' ')[1],
+				picture: profile?.picture || githubUser.avatar_url
+			});
+		} else {
 			const userId = generateId(15);
 			await createUser({
 				id: userId,
 				email: primaryEmailAddress,
 				emailVerified: true,
 				githubUsername: githubUser.login
+			});
+
+			await updateUserProfileData({
+				userId: userId,
+				firstName: githubUser.name.split(' ')[0],
+				lastName: githubUser.name.split(' ')[1],
+				picture: githubUser.avatar_url
+			});
+
+			const session = await lucia.createSession(userId, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
 			});
 		}
 
