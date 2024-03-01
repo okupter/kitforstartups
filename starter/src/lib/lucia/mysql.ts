@@ -12,7 +12,7 @@ import { Lucia } from 'lucia';
 
 const adapter = new Mysql2Adapter(connectionPool, adapterOptions);
 
-export const auth = new Lucia(adapter, {
+export const lucia = new Lucia(adapter, {
 	sessionCookie: {
 		attributes: {
 			secure: !dev
@@ -28,7 +28,7 @@ export const auth = new Lucia(adapter, {
 
 declare module 'lucia' {
 	interface Register {
-		Lucia: typeof auth;
+		Lucia: typeof lucia;
 		DatabaseUserAttributes: DatabaseUserAttributes;
 		DatabaseSessionAttributes: DatabaseSessionAttributes;
 	}
