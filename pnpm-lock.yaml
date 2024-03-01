@@ -39,7 +39,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       mysql2:
-        specifier: ^3.9.2
+        specifier: ^3.6.1
         version: 3.9.2
       octokit:
         specifier: ^3.1.1

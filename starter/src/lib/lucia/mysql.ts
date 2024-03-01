@@ -5,11 +5,10 @@ import {
 	generateSessionAttributes,
 	generateUserAttributes,
 	type DatabaseSessionAttributes,
-	type DatabaseUserAttributes,
+	type DatabaseUserAttributes
 } from '$lib/lucia/utils';
-import { Mysql2Adapter } from "@lucia-auth/adapter-mysql";
+import { Mysql2Adapter } from '@lucia-auth/adapter-mysql';
 import { Lucia } from 'lucia';
-
 
 const adapter = new Mysql2Adapter(connectionPool, adapterOptions);
 
