@@ -11,7 +11,7 @@ const getUserByEmail = async (email: string | undefined) => {
 };
 
 const createUser = async (data: typeof user.$inferInsert) => {
-	await drizzleClient.insert(user).values(data);
+	return await drizzleClient.insert(user).values(data).returning().get();
 };
 
 const updateUserData = async (userId: string, data: Partial<typeof user.$inferInsert>) => {

@@ -1,14 +1,16 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { updateUserProfileData } from '$lib/drizzle/turso/models/users';
+import { createUser, updateUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
+import { lucia } from '$lib/lucia/turso.js';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
-import { nanoid } from 'nanoid';
+import { generateId } from 'lucia';
+import { Argon2id } from 'oslo/password';
 import { z } from 'zod';
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { session } = locals;
 
 	if (session) {
 		throw redirect(302, '/app/profile');
@@ -25,7 +27,7 @@ const signupUserSchema = z.object({
 });
 
 export const actions = {
-	signupUser: async ({ locals, request, url }) => {
+	signupUser: async ({ cookies, request, url }) => {
 		const formData = Object.fromEntries(await request.formData());
 		const signupUser = signupUserSchema.safeParse(formData);
 
@@ -49,36 +51,35 @@ export const actions = {
 		const { firstName, lastName, email, password } = signupUser.data;
 
 		try {
-			const user = await auth.createUser({
-				key: {
-					providerId: 'email',
-					providerUserId: email,
-					password // this is hashed by Lucia
-				},
-				attributes: {
-					email,
-					email_verified: false
-				}
+			const userId = generateId(15);
+
+			const user = await createUser({
+				id: userId,
+				email,
+				emailVerified: false,
+				hashedPassword: await new Argon2id().hash(password)
 			});
 
 			// Update user profile data
 			await updateUserProfileData({
-				id: nanoid(),
-				userId: user.userId,
+				id: generateId(15),
+				userId: user.id,
 				firstName,
 				lastName
 			});
 
-			const session = await auth.createSession({
-				userId: user.userId,
-				attributes: {}
+			const session = await lucia.createSession(user.id, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
 			});
 
-			// Set session cookie
-			locals.auth.setSession(session);
-
 			// Send verification email
-			const verificationToken = await generateEmailVerificationToken(user.userId);
+			const verificationToken = await generateEmailVerificationToken(user.id);
 
 			const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
 			const recipient = firstName ? `${firstName}` : email;

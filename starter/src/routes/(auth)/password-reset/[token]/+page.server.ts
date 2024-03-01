@@ -3,6 +3,7 @@ import { updateUserData } from '$lib/drizzle/turso/models/users';
 import { lucia } from '$lib/lucia/turso';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
+import { Argon2id } from 'oslo/password';
 import { z } from 'zod';
 
 const newPasswordSchema = z.object({
@@ -54,7 +55,7 @@ export const actions = {
 
 			// Invalidate all sessions and update the password
 			await lucia.invalidateUserSessions(user.id);
-			await updateUserData(user.id, { hashedPassword: password });
+			await updateUserData(user.id, { hashedPassword: await new Argon2id().hash(password) });
 
 			// If the user has not verified their email, verify it now
 			if (!user.emailVerified) {
