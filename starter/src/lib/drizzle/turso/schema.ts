@@ -1,4 +1,4 @@
-import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { generateId } from 'lucia';
 
 const timestamp = {
@@ -16,7 +16,7 @@ const user = sqliteTable('auth_user', {
 		.primaryKey()
 		.$defaultFn(() => generateId(15)),
 	email: text('email').unique().notNull(),
-	emailVerified: blob('email_verified', { mode: 'json' }).$type<boolean>().default(false).notNull(),
+	emailVerified: text('email_verified').$type<boolean>().default(false).notNull(),
 	hashedPassword: text('hashed_password', { length: 512 }),
 
 	// From GitHub
@@ -47,7 +47,7 @@ const emailVerification = sqliteTable('email_verification', {
 	userId: text('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expires: blob('expires', { mode: 'bigint' }).notNull()
+	expires: integer('expires').notNull()
 });
 
 const passwordResetToken = sqliteTable('password_reset_token', {
@@ -58,7 +58,7 @@ const passwordResetToken = sqliteTable('password_reset_token', {
 	userId: text('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expires: blob('expires', { mode: 'bigint' }).notNull()
+	expires: integer('expires').notNull()
 });
 
 const userSession = sqliteTable('user_session', {
