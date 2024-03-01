@@ -1,6 +1,16 @@
-import { bigint, boolean, pgTable, varchar } from 'drizzle-orm/pg-core';
+import { bigint, boolean, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
+
+const timestampValues = {
+	createdAt: timestamp('created_at', { mode: 'date' })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: timestamp('updated_at', { mode: 'date' })
+		.notNull()
+		.$defaultFn(() => new Date())
+};
 
 const user = pgTable('auth_user', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	email: varchar('email', { length: 255 }).unique().notNull(),
 	emailVerified: boolean('email_verified').default(false).notNull(),
@@ -10,6 +20,7 @@ const user = pgTable('auth_user', {
 });
 
 const userProfile = pgTable('user_profile', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.unique()
@@ -23,6 +34,7 @@ const userProfile = pgTable('user_profile', {
 });
 
 const emailVerification = pgTable('email_verification', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
@@ -31,6 +43,7 @@ const emailVerification = pgTable('email_verification', {
 });
 
 const passwordResetToken = pgTable('password_reset_token', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
@@ -39,6 +52,7 @@ const passwordResetToken = pgTable('password_reset_token', {
 });
 
 const userKey = pgTable('user_key', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
@@ -47,6 +61,7 @@ const userKey = pgTable('user_key', {
 });
 
 const userSession = pgTable('user_session', {
+	...timestampValues,
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()

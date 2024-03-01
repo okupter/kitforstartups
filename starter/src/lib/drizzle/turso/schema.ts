@@ -1,6 +1,16 @@
-import { blob, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+
+const timestamp = {
+	createdAt: integer('created_at', { mode: 'timestamp' })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer('updated_at', { mode: 'timestamp' })
+		.notNull()
+		.$defaultFn(() => new Date())
+};
 
 const user = sqliteTable('auth_user', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	email: text('email').unique().notNull(),
 	emailVerified: blob('email_verified', { mode: 'json' }).$type<boolean>().default(false).notNull(),
@@ -10,6 +20,7 @@ const user = sqliteTable('auth_user', {
 });
 
 const userProfile = sqliteTable('user_profile', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
 		.unique()
@@ -23,6 +34,7 @@ const userProfile = sqliteTable('user_profile', {
 });
 
 const emailVerification = sqliteTable('email_verification', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
 		.notNull()
@@ -31,6 +43,7 @@ const emailVerification = sqliteTable('email_verification', {
 });
 
 const passwordResetToken = sqliteTable('password_reset_token', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
 		.notNull()
@@ -39,6 +52,7 @@ const passwordResetToken = sqliteTable('password_reset_token', {
 });
 
 const userKey = sqliteTable('user_key', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
 		.notNull()
@@ -47,6 +61,7 @@ const userKey = sqliteTable('user_key', {
 });
 
 const userSession = sqliteTable('user_session', {
+	...timestamp,
 	id: text('id', { length: 255 }).primaryKey(),
 	userId: text('user_id', { length: 255 })
 		.notNull()
