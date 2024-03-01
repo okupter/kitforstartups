@@ -1,4 +1,4 @@
-import { bigint, boolean, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { bigint, boolean, integer, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 const timestampValues = {
 	createdAt: timestamp('created_at', { mode: 'date' })
@@ -14,6 +14,7 @@ const user = pgTable('auth_user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	email: varchar('email', { length: 255 }).unique().notNull(),
 	emailVerified: boolean('email_verified').default(false).notNull(),
+	hashedPassword: varchar('hashed_password', { length: 512 }),
 
 	// From GitHub
 	githubUsername: varchar('github_username', { length: 255 }).unique()
@@ -66,8 +67,7 @@ const userSession = pgTable('user_session', {
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	activeExpires: bigint('active_expires', { mode: 'bigint' }).notNull(),
-	idleExpires: bigint('idle_expires', { mode: 'bigint' }).notNull()
+	expiresAt: integer('expires_at').notNull()
 });
 
 export { emailVerification, passwordResetToken, user, userKey, userProfile, userSession };

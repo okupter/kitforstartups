@@ -1,4 +1,5 @@
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { generateId } from 'lucia';
 
 const timestamp = {
 	createdAt: integer('created_at', { mode: 'timestamp' })
@@ -11,9 +12,12 @@ const timestamp = {
 
 const user = sqliteTable('auth_user', {
 	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
+	id: text('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	email: text('email').unique().notNull(),
 	emailVerified: blob('email_verified', { mode: 'json' }).$type<boolean>().default(false).notNull(),
+	hashedPassword: text('hashed_password', { length: 512 }),
 
 	// From GitHub
 	githubUsername: text('github_username', { length: 255 }).unique()
@@ -21,7 +25,9 @@ const user = sqliteTable('auth_user', {
 
 const userProfile = sqliteTable('user_profile', {
 	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
+	id: text('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: text('user_id', { length: 255 })
 		.unique()
 		.notNull()
@@ -35,7 +41,9 @@ const userProfile = sqliteTable('user_profile', {
 
 const emailVerification = sqliteTable('email_verification', {
 	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
+	id: text('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: text('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
@@ -44,30 +52,24 @@ const emailVerification = sqliteTable('email_verification', {
 
 const passwordResetToken = sqliteTable('password_reset_token', {
 	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
+	id: text('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: text('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
 	expires: blob('expires', { mode: 'bigint' }).notNull()
 });
 
-const userKey = sqliteTable('user_key', {
-	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
-	userId: text('user_id', { length: 255 })
-		.notNull()
-		.references(() => user.id),
-	hashedPassword: text('hashed_password', { length: 255 })
-});
-
 const userSession = sqliteTable('user_session', {
 	...timestamp,
-	id: text('id', { length: 255 }).primaryKey(),
+	id: text('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: text('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	activeExpires: blob('active_expires', { mode: 'bigint' }).notNull(),
-	idleExpires: blob('idle_expires', { mode: 'bigint' }).notNull()
+	expires_at: integer('expires_at').notNull()
 });
 
-export { emailVerification, passwordResetToken, user, userKey, userProfile, userSession };
+export { emailVerification, passwordResetToken, user, userProfile, userSession };
