@@ -1,81 +1,73 @@
-import { getUserByEmail } from '$lib/drizzle/turso/models/users';
-import { auth, githubAuth } from '$lib/lucia/turso';
-import { getGitHubPrimaryEmailAddress } from '$lib/utils';
-import { OAuthRequestError } from '@lucia-auth/oauth';
-import { error } from '@sveltejs/kit';
+import { createUser, getUserByEmail } from '$lib/drizzle/turso/models/users';
+import { githubAuth } from '$lib/lucia/oauth.js';
+import { lucia } from '$lib/lucia/turso';
+import { OAuth2RequestError } from 'arctic';
+import { generateId } from 'lucia';
 
-export const GET = async ({ url, cookies, locals }) => {
-	const storedState = cookies.get('github_oauth_state');
-	const state = url.searchParams.get('state');
+export const GET = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
+	const state = url.searchParams.get('state');
 
-	// Validate state
-	if (!storedState || !state || storedState !== state || !code) {
+	const savedState = cookies.get('github_oauth_state');
+	const savedCodeVerifier = cookies.get('github_oauth_code_verifier');
+
+	if (!code || !state || !savedState || !savedCodeVerifier || state !== savedState) {
+		console.error('Invalid state or code');
+
 		return new Response(null, {
-			status: 400
+			status: 400,
+			statusText: 'Bad Request'
 		});
 	}
 
 	try {
-		const { getExistingUser, githubUser, githubTokens, createUser, createKey } =
-			await githubAuth.validateCallback(code);
-
-		const getUser = async () => {
-			const existingUser = await getExistingUser();
-
-			if (existingUser) {
-				return existingUser;
+		const tokens = await githubAuth.validateAuthorizationCode(code);
+		const githubUserEmailsResponse = await fetch('https://api.github.com/user/emails', {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken}`
 			}
+		});
+		const githubUserEmails: GitHubUserEmail[] = await githubUserEmailsResponse.json();
 
-			let githubUserEmail = githubUser.email;
+		// Get the primary email address
+		const primaryEmailAddress = githubUserEmails.find((email) => email.primary)?.email;
 
-			if (!githubUser.email) {
-				const email = await getGitHubPrimaryEmailAddress(githubTokens.accessToken);
+		if (!primaryEmailAddress) {
+			return new Response(null, {
+				status: 400,
+				statusText: 'No email provided by GitHub'
+			});
+		}
 
-				if (!email) {
-					throw error(400, 'No email provided by GitHub');
-				} else {
-					githubUserEmail = email;
-				}
-			}
+		const existingUser = await getUserByEmail(primaryEmailAddress);
 
-			const existingDatabaseUserWithEmail = await getUserByEmail(String(githubUserEmail));
+		if (existingUser) {
+			const session = await lucia.createSession(existingUser.id, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
 
-			if (existingDatabaseUserWithEmail) {
-				const user = auth.transformDatabaseUser({
-					...existingDatabaseUserWithEmail,
-					email_verified: existingDatabaseUserWithEmail.emailVerified,
-					github_username: githubUser.login
-				});
-
-				await createKey(user.userId);
-
-				return user;
-			}
-
-			return await createUser({
-				attributes: {
-					email: String(githubUserEmail),
-					email_verified: true,
-					github_username: githubUser.login
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+		} else {
+			const githubUserResponse = await fetch('https://api.github.com/user', {
+				headers: {
+					Authorization: `Bearer ${tokens.accessToken}`
 				}
 			});
-		};
+			const githubUser: GitHubUser = await githubUserResponse.json();
 
-		const user = await getUser();
-
-		// Update user attributes with GitHub username and email verified
-		await auth.updateUserAttributes(user.userId, {
-			github_username: githubUser.login,
-			email_verified: true
-		});
-
-		const session = await auth.createSession({
-			userId: user.userId,
-			attributes: {}
-		});
-
-		locals.auth.setSession(session);
+			const userId = generateId(15);
+			await createUser({
+				id: userId,
+				email: primaryEmailAddress,
+				emailVerified: true,
+				githubUsername: githubUser.login
+			});
+		}
 
 		return new Response(null, {
 			status: 302,
@@ -83,16 +75,73 @@ export const GET = async ({ url, cookies, locals }) => {
 				Location: '/app/profile'
 			}
 		});
-	} catch (e) {
-		if (e instanceof OAuthRequestError) {
-			// Invalid code
+	} catch (error) {
+		console.error('Error exchanging code for token', error);
+
+		if (error instanceof OAuth2RequestError) {
 			return new Response(null, {
-				status: 400
+				status: 400,
+				statusText: 'Bad Request'
 			});
 		}
 
 		return new Response(null, {
-			status: 500
+			status: 500,
+			statusText: 'Internal Server Error'
 		});
 	}
 };
+
+interface GitHubUser {
+	login: string;
+	id: number;
+	node_id: string;
+	avatar_url: string;
+	gravatar_id: string;
+	url: string;
+	html_url: string;
+	followers_url: string;
+	following_url: string;
+	gists_url: string;
+	starred_url: string;
+	subscriptions_url: string;
+	organizations_url: string;
+	repos_url: string;
+	events_url: string;
+	received_events_url: string;
+	type: string;
+	site_admin: boolean;
+	name: string;
+	company: string;
+	blog: string;
+	location: string;
+	email: string;
+	hireable: boolean;
+	bio: string;
+	twitter_username: string;
+	public_repos: number;
+	public_gists: number;
+	followers: number;
+	following: number;
+	created_at: string;
+	updated_at: string;
+	private_gists: number;
+	total_private_repos: number;
+	owned_private_repos: number;
+	disk_usage: number;
+	collaborators: number;
+	two_factor_authentication: boolean;
+	plan: {
+		name: string;
+		space: number;
+		private_repos: number;
+		collaborators: number;
+	};
+}
+
+interface GitHubUserEmail {
+	email: string;
+	verified: boolean;
+	primary: boolean;
+	visibility: 'public' | 'private';
+}
