@@ -1,11 +1,11 @@
 import { dev } from '$app/environment';
-import { connectionPool } from '$lib/drizzle/mysql/client';
+import { connectionPool } from '$lib/server/drizzle/mysql/client';
 import {
 	adapterOptions,
 	generateUserAttributes,
 	githubAuthOptions,
 	googleAuthOptions
-} from '$lib/lucia/utils';
+} from '$lib/server/lucia/utils';
 import { mysql2 } from '@lucia-auth/adapter-mysql';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';

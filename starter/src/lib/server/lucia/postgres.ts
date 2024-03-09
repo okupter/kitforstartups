@@ -1,11 +1,11 @@
 import { dev } from '$app/environment';
-import { connection } from '$lib/drizzle/postgres/client';
+import { connection } from '$lib/server/drizzle/postgres/client';
 import {
 	adapterOptions,
 	generateUserAttributes,
 	githubAuthOptions,
 	googleAuthOptions
-} from '$lib/lucia/utils';
+} from '$lib/server/lucia/utils';
 import { postgres } from '@lucia-auth/adapter-postgresql';
 import { github, google } from '@lucia-auth/oauth/providers';
 import { lucia } from 'lucia';

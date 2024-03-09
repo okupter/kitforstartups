@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/postgres/client';
-import { user, userProfile } from '$lib/drizzle/postgres/schema';
+import { drizzleClient } from '$lib/server/drizzle/mysql/client';
+import { user, userProfile } from '$lib/server/drizzle/mysql/schema';
 import { eq } from 'drizzle-orm';
 
 const getUserByEmail = async (email: string | undefined) => {
@@ -16,8 +16,7 @@ const updateUserProfileData = async (profileData: typeof userProfile.$inferInser
 	await drizzleClient
 		.insert(userProfile)
 		.values(profileData)
-		.onConflictDoUpdate({
-			target: userProfile.userId,
+		.onDuplicateKeyUpdate({
 			set: Object.fromEntries(
 				Object.entries(profileData).filter(([key]) => !['id', 'userId'].includes(key))
 			)

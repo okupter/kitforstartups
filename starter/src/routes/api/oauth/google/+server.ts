@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { googleAuth } from '$lib/lucia/mysql';
+import { googleAuth } from '$lib/server/lucia/mysql';
 import { redirect } from '@sveltejs/kit';
 
 export const GET = async ({ cookies }) => {

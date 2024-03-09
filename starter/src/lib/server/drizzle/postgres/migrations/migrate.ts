@@ -16,7 +16,9 @@ const connection = postgres({
 
 const drizzleClient = drizzle(connection);
 
-await migrate(drizzleClient, { migrationsFolder: 'src/lib/drizzle/postgres/migrations/data' })
+await migrate(drizzleClient, {
+	migrationsFolder: 'src/lib/server/drizzle/postgres/migrations/data'
+})
 	.then(() => {
 		console.log('Migrations completed');
 		process.exit(0);

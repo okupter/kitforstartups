@@ -1,7 +1,7 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
-import { generateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
-import { getUserByEmail, getUserProfileData } from '$lib/drizzle/mysql/models/users';
-import { sendEmail } from '$lib/emails/send';
+import { generateEmailVerificationToken } from '$lib/server/drizzle/mysql/models/tokens';
+import { getUserByEmail, getUserProfileData } from '$lib/server/drizzle/mysql/models/users';
+import { sendEmail } from '$lib/server/emails/send';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -59,7 +59,7 @@ export const actions = {
 					feedbacks: verificationEmail
 				});
 			}
-		} catch(e) {
+		} catch (e) {
 			const feedbacks = getFeedbackObjects([
 				{
 					type: 'error',

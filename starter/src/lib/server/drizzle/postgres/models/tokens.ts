@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/postgres/client';
-import { emailVerification, passwordResetToken } from '$lib/drizzle/postgres/schema';
+import { drizzleClient } from '$lib/server/drizzle/postgres/client';
+import { emailVerification, passwordResetToken } from '$lib/server/drizzle/postgres/schema';
 import { eq } from 'drizzle-orm';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 
@@ -114,9 +114,8 @@ const validatePasswordResetToken = async (token: string) => {
 };
 
 export {
-    generateEmailVerificationToken,
-    generatePasswordResetToken,
-    validateEmailVerificationToken,
-    validatePasswordResetToken
+	generateEmailVerificationToken,
+	generatePasswordResetToken,
+	validateEmailVerificationToken,
+	validatePasswordResetToken
 };
-

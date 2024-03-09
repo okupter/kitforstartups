@@ -2,8 +2,8 @@ import {
 	getUserByEmail,
 	getUserProfileData,
 	updateUserProfileData
-} from '$lib/drizzle/mysql/models/users';
-import { auth, googleAuth } from '$lib/lucia/mysql';
+} from '$lib/server/drizzle/mysql/models/users';
+import { auth, googleAuth } from '$lib/server/lucia/mysql';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';

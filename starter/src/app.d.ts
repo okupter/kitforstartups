@@ -2,10 +2,10 @@
 
 declare global {
 	namespace Lucia {
-		type Auth = import('$lib/lucia/mysql').Auth;
+		type Auth = import('$lib/server/lucia/mysql').Auth;
 		type DatabaseUserAttributes = {
 			email: string;
-			email_verified: boolean
+			email_verified: boolean;
 			github_username?: string;
 		};
 		type DatabaseSessionAttributes = object;
@@ -21,5 +21,4 @@ declare global {
 	}
 }
 
-export { };
-
+export {};

@@ -1,5 +1,5 @@
-import { validatePasswordResetToken } from '$lib/drizzle/mysql/models/tokens';
-import { auth } from '$lib/lucia/mysql';
+import { validatePasswordResetToken } from '$lib/server/drizzle/mysql/models/tokens';
+import { auth } from '$lib/server/lucia/mysql';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
