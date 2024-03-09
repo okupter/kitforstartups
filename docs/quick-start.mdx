@@ -47,7 +47,7 @@ For easy local development, there is a `./docker/mysql.yml` file that you can us
 docker-compose -f docker/mysql.yml up -d
 ```
 
-Remember to update the MYSQL\_\* environment variables in the `.env` file with your database credentials.
+<Note>Remember to update the MYSQL\_\* environment variables in the `.env` file with your database credentials.</Note>
 
 5. Run the migrations
 
@@ -86,6 +86,8 @@ docker-compose -f docker/mailhog.yml up -d
 ```
 
 The MailHog server will be available at `http://localhost:8025`.
+
+<Note> Remember to update the TRANSACTIONAL\_EMAILS\_\* environment variables in the `.env` file with your sender name and address.</Note>
 
 7. Run the app
 
