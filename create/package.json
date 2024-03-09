@@ -1,0 +1,32 @@
+{
+	"name": "@kfs/create",
+	"version": "0.0.1",
+	"private": false,
+	"description": "",
+	"bin": "build/index.js",
+	"scripts": {
+		"run": "tsc && node build/index.js",
+		"prepublishOnly": "tsc"
+	},
+	"keywords": [],
+	"license": "MIT",
+	"type": "module",
+	"devDependencies": {
+		"@types/node": "^20.6.0",
+		"typescript": "^5.2.2"
+	},
+	"files": [
+		"src",
+		"build"
+	],
+	"dependencies": {
+		"@clack/prompts": "^0.7.0",
+		"@types/command-exists": "^1.2.1",
+		"@types/shelljs": "^0.8.12",
+		"@types/degit": "^2.8.6",
+		"chalk": "^5.3.0",
+		"command-exists": "^1.2.9",
+		"shelljs": "^0.8.5",
+		"degit": "^2.8.4"
+	}
+}
