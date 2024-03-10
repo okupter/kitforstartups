@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import * as p from '@clack/prompts';
 import {get_options} from "./installation_options.js";
 import {createGitRepo, setupProject} from "./setup_project.js";
+import {configureEnvironment} from "./environment.js";
+import {configureDatabase} from "./database.js";
 
 const version = "1.0.0";
 
@@ -22,6 +24,10 @@ let {
 await setupProject(working_directory)
 
 if (create_git_repo) await createGitRepo(working_directory)
+if (setup_env) {
+    let database = await configureDatabase()
+    await configureEnvironment(docker_supported, database)
+}
 
 if (working_directory === '.') {
     p.outro(`Your project is ready! To get started:
