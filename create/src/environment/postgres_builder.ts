@@ -54,7 +54,7 @@ const builder: DynamicConfigBuilder = {
             "POSTGRES_DB_HOST=localhost",
             "POSTGRES_DB_PORT=5432",
             "POSTGRES_DB_USER=postgres",
-            "POSTGRES_DB_PASSWORD=passowrd",
+            "POSTGRES_DB_PASSWORD=password",
             "POSTGRES_DB_NAME=kitforstartups-postgres",
             "POSTGRES_MAX_CONNECTIONS=20"
         ]

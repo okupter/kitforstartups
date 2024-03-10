@@ -5,6 +5,8 @@ import {get_options} from "./installation_options.js";
 import {createGitRepo, setupProject} from "./setup_project.js";
 import {configureEnvironment} from "./environment.js";
 import {configureDatabase} from "./database.js";
+import {done, unwrap_cancellation} from "./utils.js";
+import {startup} from "./startup.js";
 
 const version = "1.0.0";
 
@@ -27,19 +29,24 @@ if (create_git_repo) await createGitRepo(working_directory)
 if (setup_env) {
     let database = await configureDatabase()
     await configureEnvironment(docker_supported, database)
+
+    if (docker_supported && unwrap_cancellation(await p.confirm({
+        message: "Setup environment now?",
+    }))) {
+        await startup(database)
+        process.exit(0)
+    }
 }
 
 if (working_directory === '.') {
-    p.outro(`Your project is ready! To get started:
-    - pnpm install
-    
-Happy coding!`
-    );
+    done("Your project is ready!", [
+        "pnpm install",
+        "pnpm dev",
+    ])
 } else {
-    p.outro(`Your project is ready! To get started:
-    - cd ${working_directory}
-    - pnpm install
-    
-Happy coding!`
-    );
+    done("Your project is ready!", [
+        `cd ${working_directory}`,
+        "pnpm install",
+        "pnpm dev",
+    ])
 }
