@@ -5,7 +5,7 @@
 	"description": "",
 	"bin": "build/index.js",
 	"scripts": {
-		"run": "tsc && node build/index.js",
+		"cli": "rm -rf test-module && tsc && node build/index.js test-module",
 		"prepublishOnly": "tsc"
 	},
 	"keywords": [],
