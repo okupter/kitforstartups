@@ -35,7 +35,7 @@ COPY --link . .
 COPY --link .env ./
 
 # Push database schema to the database
-RUN pnpm push:turso
+# RUN pnpm push:turso
 
 # Build application
 RUN pnpm build
