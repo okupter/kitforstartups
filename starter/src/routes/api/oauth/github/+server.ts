@@ -1,17 +1,19 @@
 import { dev } from '$app/environment';
-import { githubAuth } from '$lib/lucia/mysql';
+import { githubAuth } from '$lib/lucia/oauth';
 import { redirect } from '@sveltejs/kit';
+import { generateState } from 'arctic';
 
 export const GET = async ({ cookies }) => {
-	const [url, state] = await githubAuth.getAuthorizationUrl();
+	const state = generateState();
+	const url = await githubAuth.createAuthorizationURL(state);
 
-	// Store state
 	cookies.set('github_oauth_state', state, {
-		httpOnly: true,
-		secure: !dev,
 		path: '/',
-		maxAge: 60 * 60
+		secure: !dev,
+		httpOnly: true,
+		maxAge: 60 * 10,
+		sameSite: 'lax'
 	});
 
-	throw redirect(302, url.toString());
+	redirect(302, url.toString());
 };

@@ -1,7 +1,8 @@
 import { drizzleClient } from '$lib/drizzle/mysql/client';
 import { emailVerification, passwordResetToken } from '$lib/drizzle/mysql/schema';
 import { eq } from 'drizzle-orm';
-import { generateRandomString, isWithinExpiration } from 'lucia/utils';
+import { generateId } from 'lucia';
+import { isWithinExpirationDate } from 'oslo';
 
 const EXPIRES_IN = 1000 * 60 * 60 * 2; // 2 hours
 
@@ -19,7 +20,7 @@ const generateEmailVerificationToken = async (userId: string | undefined) => {
 		const reusableStoredToken = storedUserTokens.find((token) => {
 			// check if expiration is within 1 hour
 			// and reuse the token if true
-			return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+			return isWithinExpirationDate(new Date(Number(token.expires) - EXPIRES_IN / 2));
 		});
 
 		if (reusableStoredToken) {
@@ -27,7 +28,7 @@ const generateEmailVerificationToken = async (userId: string | undefined) => {
 		}
 	}
 
-	const token = generateRandomString(63);
+	const token = generateId(15);
 
 	await drizzleClient.insert(emailVerification).values({
 		id: token,
@@ -48,7 +49,7 @@ const generatePasswordResetToken = async (userId: string) => {
 		const reusableStoredToken = storedUserTokens.find((token) => {
 			// check if expiration is within 1 hour
 			// and reuse the token if true
-			return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+			return isWithinExpirationDate(new Date(Number(token.expires) - EXPIRES_IN / 2));
 		});
 
 		if (reusableStoredToken) {
@@ -56,7 +57,7 @@ const generatePasswordResetToken = async (userId: string) => {
 		}
 	}
 
-	const token = generateRandomString(63);
+	const token = generateId(15);
 
 	await drizzleClient.insert(passwordResetToken).values({
 		id: token,
@@ -83,7 +84,7 @@ const validateEmailVerificationToken = async (token: string) => {
 
 	const tokenExpires = Number(storedToken.expires);
 
-	if (!isWithinExpiration(tokenExpires)) {
+	if (!isWithinExpirationDate(new Date(tokenExpires))) {
 		throw new Error('Expired token');
 	}
 
@@ -106,7 +107,7 @@ const validatePasswordResetToken = async (token: string) => {
 
 	const tokenExpires = Number(storedToken.expires);
 
-	if (!isWithinExpiration(tokenExpires)) {
+	if (!isWithinExpirationDate(new Date(tokenExpires))) {
 		throw new Error('Expired token');
 	}
 

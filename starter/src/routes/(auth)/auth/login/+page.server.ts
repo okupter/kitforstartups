@@ -1,14 +1,15 @@
-import { auth } from '$lib/lucia/mysql';
+import { getUserByEmail } from '$lib/drizzle/turso/models/users.js';
+import { lucia } from '$lib/lucia/turso.js';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
-import { LuciaError } from 'lucia';
+import { Argon2id } from 'oslo/password';
 import { z } from 'zod';
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { session } = locals;
 
 	if (session) {
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	}
 
 	return {};
@@ -20,7 +21,7 @@ const loginUserSchema = z.object({
 });
 
 export const actions = {
-	loginUser: async ({ locals, request }) => {
+	loginUser: async ({ cookies, request }) => {
 		const formData = Object.fromEntries(await request.formData());
 		const loginUser = loginUserSchema.safeParse(formData);
 
@@ -44,19 +45,9 @@ export const actions = {
 		const { email, password } = loginUser.data;
 
 		try {
-			const user = await auth.useKey('email', email, password);
-			const session = await auth.createSession({
-				userId: user.userId,
-				attributes: {}
-			});
+			const user = await getUserByEmail(email);
 
-			// Set session cookie
-			locals.auth.setSession(session);
-		} catch (e) {
-			if (
-				e instanceof LuciaError &&
-				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
-			) {
+			if (!user) {
 				const feedbacks = getFeedbackObjects([
 					{
 						type: 'error',
@@ -68,6 +59,42 @@ export const actions = {
 				return fail(400, { feedbacks });
 			}
 
+			if (!user.hashedPassword) {
+				const feedbacks = getFeedbackObjects([
+					{
+						type: 'error',
+						title: 'Login failed',
+						message: 'Incorrect email or password.'
+					}
+				]);
+
+				return fail(400, { feedbacks });
+			}
+
+			const isPasswordValid = await new Argon2id().verify(user.hashedPassword, password);
+
+			if (!isPasswordValid) {
+				const feedbacks = getFeedbackObjects([
+					{
+						type: 'error',
+						title: 'Login failed',
+						message: 'Incorrect email or password.'
+					}
+				]);
+
+				return fail(400, { feedbacks });
+			}
+
+			const session = await lucia.createSession(user.id, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+		} catch (e) {
 			const feedbacks = getFeedbackObjects([
 				{
 					type: 'error',
@@ -81,11 +108,11 @@ export const actions = {
 			});
 		}
 
-		throw redirect(302, '/app/profile');
+		redirect(302, '/app/profile');
 	},
 
 	logout: async ({ cookies, locals }) => {
-		const session = await locals.auth.validate();
+		const { session } = locals;
 
 		if (!session) {
 			const feedbacks = getFeedbackObjects([
@@ -102,15 +129,18 @@ export const actions = {
 		}
 
 		// Invalidate session
-		await auth.invalidateSession(session.sessionId);
-
-		// Remove session cookie
-		locals.auth.setSession(null);
+		await lucia.invalidateSession(session.id);
+		const sessionCookie = lucia.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
+		});
 
 		// Remove OAuth cookies
-		cookies.delete('github_oauth_state');
-		cookies.delete('google_oauth_state');
+		cookies.delete('github_oauth_state', { path: '/' });
+		cookies.delete('google_oauth_state', { path: '/' });
+		cookies.delete('google_oauth_code_verifier', { path: '/' });
 
-		throw redirect(302, '/auth/login');
+		redirect(302, '/auth/login');
 	}
 };

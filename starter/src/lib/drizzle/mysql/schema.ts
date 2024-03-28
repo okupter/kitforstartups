@@ -1,16 +1,34 @@
-import { bigint, boolean, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
+import { bigint, boolean, int, mysqlTable, timestamp, varchar } from 'drizzle-orm/mysql-core';
+import { generateId } from 'lucia';
+
+const timestampValues = {
+	createdAt: timestamp('created_at', { mode: 'date' })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: timestamp('updated_at', { mode: 'date' })
+		.notNull()
+		.$defaultFn(() => new Date())
+};
 
 const user = mysqlTable('auth_user', {
-	id: varchar('id', { length: 255 }).primaryKey(),
+	...timestampValues,
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	email: varchar('email', { length: 255 }).unique().notNull(),
 	emailVerified: boolean('email_verified').default(false).notNull(),
+	hashedPassword: varchar('hashed_password', { length: 512 }),
+	googleRefreshToken: varchar('google_refresh_token', { length: 1024 }),
 
 	// From GitHub
 	githubUsername: varchar('github_username', { length: 255 }).unique()
 });
 
 const userProfile = mysqlTable('user_profile', {
-	id: varchar('id', { length: 255 }).primaryKey(),
+	...timestampValues,
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: varchar('user_id', { length: 255 })
 		.unique()
 		.notNull()
@@ -23,7 +41,10 @@ const userProfile = mysqlTable('user_profile', {
 });
 
 const emailVerification = mysqlTable('email_verification', {
-	id: varchar('id', { length: 255 }).primaryKey(),
+	...timestampValues,
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
@@ -31,29 +52,25 @@ const emailVerification = mysqlTable('email_verification', {
 });
 
 const passwordResetToken = mysqlTable('password_reset_token', {
-	id: varchar('id', { length: 255 }).primaryKey(),
+	...timestampValues,
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
 	expires: bigint('expires', { mode: 'bigint' }).notNull()
 });
 
-const userKey = mysqlTable('user_key', {
-	id: varchar('id', { length: 255 }).primaryKey(),
-	userId: varchar('user_id', { length: 255 })
-		.notNull()
-		.references(() => user.id),
-	hashedPassword: varchar('hashed_password', { length: 255 })
-});
-
 const userSession = mysqlTable('user_session', {
-	id: varchar('id', { length: 255 }).primaryKey(),
+	...timestamp,
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => generateId(15)),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	activeExpires: bigint('active_expires', { mode: 'bigint' }).notNull(),
-	idleExpires: bigint('idle_expires', { mode: 'bigint' }).notNull()
+	expiresAt: int('expires_at').notNull()
 });
 
-export { emailVerification, passwordResetToken, user, userKey, userProfile, userSession };
-
+export { emailVerification, passwordResetToken, user, userProfile, userSession };

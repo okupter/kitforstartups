@@ -2,26 +2,34 @@ import { dev } from '$app/environment';
 import { connectionPool } from '$lib/drizzle/mysql/client';
 import {
 	adapterOptions,
+	generateSessionAttributes,
 	generateUserAttributes,
-	githubAuthOptions,
-	googleAuthOptions
+	type DatabaseSessionAttributes,
+	type DatabaseUserAttributes
 } from '$lib/lucia/utils';
-import { mysql2 } from '@lucia-auth/adapter-mysql';
-import { github, google } from '@lucia-auth/oauth/providers';
-import { lucia } from 'lucia';
-import { sveltekit } from 'lucia/middleware';
+import { Mysql2Adapter } from '@lucia-auth/adapter-mysql';
+import { Lucia } from 'lucia';
 
-export const auth = lucia({
-	env: dev ? 'DEV' : 'PROD',
-	middleware: sveltekit(),
-	adapter: mysql2(connectionPool, adapterOptions),
+const adapter = new Mysql2Adapter(connectionPool, adapterOptions);
 
-	getUserAttributes: (data) => {
-		return generateUserAttributes(data);
+export const lucia = new Lucia(adapter, {
+	sessionCookie: {
+		attributes: {
+			secure: !dev
+		}
+	},
+	getUserAttributes: (attributes) => {
+		return generateUserAttributes(attributes);
+	},
+	getSessionAttributes: (attributes) => {
+		return generateSessionAttributes(attributes);
 	}
 });
 
-export const githubAuth = github(auth, githubAuthOptions);
-export const googleAuth = google(auth, googleAuthOptions);
-
-export type Auth = typeof auth;
+declare module 'lucia' {
+	interface Register {
+		Lucia: typeof lucia;
+		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseSessionAttributes: DatabaseSessionAttributes;
+	}
+}

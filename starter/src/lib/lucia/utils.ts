@@ -1,19 +1,21 @@
-import {
-	GITHUB_CLIENT_ID,
-	GITHUB_CLIENT_SECRET,
-	GOOGLE_OAUTH_CLIENT_ID,
-	GOOGLE_OAUTH_CLIENT_SECRET,
-	GOOGLE_OAUTH_REDIRECT_URI
-} from '$env/static/private';
-import type { UserSchema } from 'lucia';
+interface DatabaseUserAttributes {
+	email: string;
+	email_verified: boolean;
+	github_username?: string;
+	google_refresh_token?: string;
+}
+
+interface DatabaseSessionAttributes {
+	created_at: Date;
+	updated_at: Date;
+}
 
 const adapterOptions = {
 	user: 'auth_user',
-	key: 'user_key',
 	session: 'user_session'
 };
 
-const generateUserAttributes = (data: UserSchema) => {
+const generateUserAttributes = (data: DatabaseUserAttributes) => {
 	return {
 		email: data.email,
 		emailVerified: data.email_verified,
@@ -21,22 +23,17 @@ const generateUserAttributes = (data: UserSchema) => {
 	};
 };
 
-const googleAuthOptions = {
-	clientId: GOOGLE_OAUTH_CLIENT_ID,
-	clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
-	redirectUri: GOOGLE_OAUTH_REDIRECT_URI,
-	scope: [
-		'openid',
-		'https://www.googleapis.com/auth/userinfo.profile',
-		'https://www.googleapis.com/auth/userinfo.email'
-	],
-	accessType: 'offline' as 'offline' | 'online' | undefined
+const generateSessionAttributes = (data: DatabaseSessionAttributes) => {
+	return {
+		createdAt: data.created_at,
+		updatedAt: data.updated_at
+	};
 };
 
-const githubAuthOptions = {
-	clientId: GITHUB_CLIENT_ID,
-	clientSecret: GITHUB_CLIENT_SECRET,
-	scope: ['user:email']
+export {
+	adapterOptions,
+	generateSessionAttributes,
+	generateUserAttributes,
+	type DatabaseSessionAttributes,
+	type DatabaseUserAttributes
 };
-
-export { adapterOptions, generateUserAttributes, githubAuthOptions, googleAuthOptions };

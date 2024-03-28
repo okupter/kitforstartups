@@ -1,24 +1,32 @@
-import { validateEmailVerificationToken } from '$lib/drizzle/mysql/models/tokens';
-import { auth } from '$lib/lucia/mysql';
+import { validateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
+import { updateUserData } from '$lib/drizzle/turso/models/users.js';
+import { lucia } from '$lib/lucia/turso';
 
-export const GET = async ({ params, locals }) => {
+export const GET = async ({ cookies, params, locals }) => {
 	const { token } = params;
 
 	try {
 		const userId = await validateEmailVerificationToken(token);
-		const user = await auth.getUser(userId);
+		const { user } = locals;
 
-		await auth.invalidateAllUserSessions(user.userId);
-		await auth.updateUserAttributes(user.userId, {
-			email_verified: true
+		if (!user || user.id !== userId) {
+			return new Response('Invalid user', {
+				status: 400
+			});
+		}
+
+		await lucia.invalidateUserSessions(user.id);
+		await updateUserData(user.id, { emailVerified: true });
+
+		const session = await lucia.createSession(user.id, {
+			created_at: new Date(),
+			updated_at: new Date()
 		});
-
-		const session = await auth.createSession({
-			userId: user.userId,
-			attributes: {}
+		const sessionCookie = lucia.createSessionCookie(session.id);
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
 		});
-
-		locals.auth.setSession(session);
 
 		return new Response(null, {
 			status: 302,
