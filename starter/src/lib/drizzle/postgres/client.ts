@@ -1,6 +1,5 @@
 import { dev } from '$app/environment';
 import {
-	ENABLE_DRIZZLE_LOGGER,
 	POSTGRES_DB_HOST,
 	POSTGRES_DB_NAME,
 	POSTGRES_DB_PASSWORD,
@@ -21,7 +20,7 @@ const connection = postgres({
 });
 
 const drizzleClient = drizzle(connection, {
-	logger: ENABLE_DRIZZLE_LOGGER ? Boolean(ENABLE_DRIZZLE_LOGGER) : dev
+	logger: dev
 });
 
 export { connection, drizzleClient };
