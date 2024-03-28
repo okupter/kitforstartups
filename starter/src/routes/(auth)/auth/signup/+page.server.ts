@@ -126,7 +126,7 @@ export const actions = {
 				}
 			}
 		} catch (e) {
-			console.error(e);
+			console.error('Something went wrong during the signup process', e);
 
 			const feedbacks = getFeedbackObjects([
 				{
