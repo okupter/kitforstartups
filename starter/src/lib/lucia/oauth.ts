@@ -1,9 +1,10 @@
 import {
-    GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET,
-    GOOGLE_OAUTH_CLIENT_ID,
-    GOOGLE_OAUTH_CLIENT_SECRET,
-    GOOGLE_OAUTH_REDIRECT_URI
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
+	GITHUB_OAUTH_REDIRECT_URI,
+	GOOGLE_OAUTH_CLIENT_ID,
+	GOOGLE_OAUTH_CLIENT_SECRET,
+	GOOGLE_OAUTH_REDIRECT_URI
 } from '$env/static/private';
 import { GitHub, Google } from 'arctic';
 
@@ -21,7 +22,8 @@ const googleAuth = new Google(
 	GOOGLE_OAUTH_REDIRECT_URI
 );
 
-const githubAuth = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET);
+const githubAuth = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, {
+	redirectURI: GITHUB_OAUTH_REDIRECT_URI
+});
 
 export { githubAuth, githubScopes, googleAuth, googleScopes };
-
