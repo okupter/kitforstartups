@@ -99,18 +99,18 @@ export const actions = {
 				const sender = `${TRANSACTIONAL_EMAILS_SENDER} <${TRANSACTIONAL_EMAILS_ADDRESS}>`;
 				const recipient = firstName ? `${firstName}` : email;
 				const emailHtml = `Hello ${recipient},
-			<br><br>
-			Thank you for signing up to KitForStartups! Please click the link below to verify your email address:
-			<br><br>
-			<a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a>
-			<br>
-			You can also copy directly into your browser:
-			<br><br>
-			<code>${url.origin}/app/email-verification/${verificationToken}</code>
-			<br><br>
-			Thanks,
-			<br>
-			${TRANSACTIONAL_EMAILS_SENDER}`;
+				<br><br>
+				Thank you for signing up to KitForStartups! Please click the link below to verify your email address:
+				<br><br>
+				<a href="${url.origin}/app/email-verification/${verificationToken}">Verify Email Address</a>
+				<br>
+				You can also copy directly into your browser:
+				<br><br>
+				<code>${url.origin}/app/email-verification/${verificationToken}</code>
+				<br><br>
+				Thanks,
+				<br>
+				${TRANSACTIONAL_EMAILS_SENDER}`;
 
 				const signupEmail = await sendEmail({
 					from: sender,
