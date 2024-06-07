@@ -1,27 +1,40 @@
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import starlight from "@astrojs/starlight";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: {
-				github: 'https://github.com/withastro/starlight',
-			},
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', link: '/guides/example/' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
-			],
-		}),
-	],
+  integrations: [
+    starlight({
+      title: "KitForStartups Docs",
+      favicon: "/src/assets/okupter-favicon-big.svg",
+      social: {
+        github: "https://github.com/okupter/kitforstartups",
+      },
+      sidebar: [
+        {
+          label: "Roadmap",
+          link: "/roadmap",
+        },
+        {
+          label: "Introduction",
+          link: "/intro",
+        },
+        {
+          label: "Getting Started",
+          link: "/quick-start",
+        },
+        {
+          label: "Authentication",
+          items: [{ label: "GitHub OAuth", link: "/auth/github-oauth" }],
+        },
+        {
+          label: "Databases",
+          items: [
+            { label: "Overview", link: "/databases/overview" },
+            { label: "Turso", link: "/databases/turso" },
+          ],
+        },
+      ],
+    }),
+  ],
 });
