@@ -25,7 +25,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
 # Install node modules
-COPY --link .npmrc package.json pnpm-lock.yaml ./
+COPY --link .npmrc package.json ./
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
@@ -43,5 +43,5 @@ FROM base
 # Copy built application
 COPY --from=build /app /app
 
-EXPOSE 3000
-CMD [ "node", "build/index.js" ]
+EXPOSE 4321
+CMD [ "pnpm", "preview" ]
