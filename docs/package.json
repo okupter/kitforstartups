@@ -1,5 +1,5 @@
 {
-  "name": "kitforstartups-docs",
+  "name": "@kfs/docs",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
