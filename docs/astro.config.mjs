@@ -6,7 +6,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "KitForStartups Docs",
-      favicon: "/src/assets/okupter-favicon-big.svg",
+      favicon: "/okupter-favicon-big.svg",
       social: {
         github: "https://github.com/okupter/kitforstartups",
       },
