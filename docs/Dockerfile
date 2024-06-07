@@ -44,4 +44,4 @@ FROM base
 COPY --from=build /app /app
 
 EXPOSE 4321
-CMD [ "pnpm", "preview" ]
+CMD ["pnpm", "preview", "--host", "0.0.0.0", "--port", "4321"]
