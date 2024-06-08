@@ -3,9 +3,6 @@ node_modules
 /build
 /.svelte-kit
 /package
-# this is being deployed through node adapter with easypanel
-# easypanel allows creating an .env file with the environment variables
-# so we don't need to ignore it
 # .env
 .env.*
 !.env.example

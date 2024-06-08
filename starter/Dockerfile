@@ -26,19 +26,16 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY --link .npmrc package.json ./
-RUN pnpm install --no-frozen-lockfile --prod=false
+RUN pnpm install --prod=false
 
 # Copy application code
 COPY --link . .
 
-# Copy .env file
-COPY --link .env ./
-
 # Push database schema to the database
-# RUN pnpm push:turso
+RUN pnpm run push:db
 
 # Build application
-RUN pnpm build
+RUN pnpm run build
 
 # Remove development dependencies
 RUN pnpm prune --prod
