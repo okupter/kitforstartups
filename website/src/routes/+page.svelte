@@ -9,4 +9,5 @@
 <h1>KitForStartups</h1>
 
 <a href="https://docs.kitforstartups.com">Documentation</a>
+<a href="https://demo.kitforstartups.com">Demo</a>
 <a href="https://github.com/okupter/kitforstartups">GitHub</a>
