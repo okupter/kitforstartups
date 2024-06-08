@@ -31,8 +31,8 @@ RUN pnpm install --prod=false
 # Copy application code
 COPY --link . .
 
-# Push database schema to the database
-RUN pnpm run push:turso
+# # Push database schema to the database
+# RUN pnpm run push:turso
 
 # Build application
 RUN pnpm run build
