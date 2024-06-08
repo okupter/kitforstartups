@@ -32,7 +32,7 @@ RUN pnpm install --prod=false
 COPY --link . .
 
 # Push database schema to the database
-RUN pnpm run push:db
+RUN pnpm run push:turso
 
 # Build application
 RUN pnpm run build
