@@ -1,5 +1,5 @@
-import { dev } from '$app/environment';
 import {
+	ENABLE_DRIZZLE_LOGGER,
 	POSTGRES_DB_HOST,
 	POSTGRES_DB_NAME,
 	POSTGRES_DB_PASSWORD,
@@ -9,6 +9,7 @@ import {
 } from '$env/static/private';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { enableLogger } from '../utils';
 
 const connection = postgres({
 	host: POSTGRES_DB_HOST,
@@ -20,7 +21,7 @@ const connection = postgres({
 });
 
 const drizzleClient = drizzle(connection, {
-	logger: dev
+	logger: enableLogger(ENABLE_DRIZZLE_LOGGER)
 });
 
 export { connection, drizzleClient };
