@@ -1,11 +1,11 @@
-import {
-	createUser,
-	getUserByEmail,
-	getUserProfileData,
-	updateUserProfileData
-} from '$lib/drizzle/turso/models/users';
 import { githubAuth } from '$lib/lucia/oauth.js';
 import { lucia } from '$lib/lucia/turso';
+import {
+    createUser,
+    getUserByEmail,
+    getUserProfileData,
+    updateUserProfileData
+} from '$lib/server/db/turso/models/users';
 import { OAuth2RequestError } from 'arctic';
 import { generateId } from 'lucia';
 

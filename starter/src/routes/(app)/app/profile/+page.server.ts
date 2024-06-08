@@ -1,4 +1,4 @@
-import { getUserProfileData } from '$lib/drizzle/turso/models/users';
+import { getUserProfileData } from '$lib/server/db/turso/models/users';
 import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {

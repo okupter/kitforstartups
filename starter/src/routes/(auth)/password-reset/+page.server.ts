@@ -1,7 +1,7 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
-import { generatePasswordResetToken } from '$lib/drizzle/turso/models/tokens';
-import { getUserByEmail, getUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
+import { generatePasswordResetToken } from '$lib/server/db/turso/models/tokens';
+import { getUserByEmail, getUserProfileData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
 import { z } from 'zod';

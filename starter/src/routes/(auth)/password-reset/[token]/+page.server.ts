@@ -1,6 +1,6 @@
-import { validatePasswordResetToken } from '$lib/drizzle/turso/models/tokens';
-import { updateUserData } from '$lib/drizzle/turso/models/users';
 import { lucia } from '$lib/lucia/turso';
+import { validatePasswordResetToken } from '$lib/server/db/turso/models/tokens';
+import { updateUserData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';

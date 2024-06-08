@@ -1,5 +1,4 @@
 import { dev } from '$app/environment';
-import { connectionPool } from '$lib/drizzle/mysql/client';
 import {
 	adapterOptions,
 	generateSessionAttributes,
@@ -7,6 +6,7 @@ import {
 	type DatabaseSessionAttributes,
 	type DatabaseUserAttributes
 } from '$lib/lucia/utils';
+import { connectionPool } from '$lib/server/db/mysql/client';
 import { Mysql2Adapter } from '@lucia-auth/adapter-mysql';
 import { Lucia } from 'lucia';
 

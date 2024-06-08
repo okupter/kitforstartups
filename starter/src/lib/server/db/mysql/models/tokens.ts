@@ -1,5 +1,5 @@
-import { drizzleClient } from '$lib/drizzle/postgres/client';
-import { emailVerification, passwordResetToken } from '$lib/drizzle/postgres/schema';
+import { drizzleClient } from '$lib/server/db/mysql/client';
+import { emailVerification, passwordResetToken } from '$lib/server/db/mysql/schema';
 import { eq } from 'drizzle-orm';
 import { generateId } from 'lucia';
 import { isWithinExpirationDate } from 'oslo';
@@ -115,8 +115,9 @@ const validatePasswordResetToken = async (token: string) => {
 };
 
 export {
-	generateEmailVerificationToken,
-	generatePasswordResetToken,
-	validateEmailVerificationToken,
-	validatePasswordResetToken
+    generateEmailVerificationToken,
+    generatePasswordResetToken,
+    validateEmailVerificationToken,
+    validatePasswordResetToken
 };
+

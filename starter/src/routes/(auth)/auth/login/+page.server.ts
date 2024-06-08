@@ -1,5 +1,5 @@
-import { getUserByEmail } from '$lib/drizzle/turso/models/users.js';
 import { lucia } from '$lib/lucia/turso.js';
+import { getUserByEmail } from '$lib/server/db/turso/models/users.js';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';

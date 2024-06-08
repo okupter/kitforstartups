@@ -4,7 +4,7 @@ import type { Config } from 'drizzle-kit';
 dotenv.config();
 
 export default {
-	schema: './src/lib/drizzle/mysql/schema.ts',
+	schema: './src/lib/server/db/mysql/schema.ts',
 	driver: 'mysql2',
 	dbCredentials: {
 		host: process.env.MYSQL_DB_HOST as string,
@@ -12,5 +12,5 @@ export default {
 		password: process.env.MYSQL_DB_PASSWORD as string,
 		database: process.env.MYSQL_DB_NAME as string
 	},
-	out: './src/lib/drizzle/mysql/migrations/data'
+	out: './src/lib/server/db/mysql/migrations/data'
 } satisfies Config;

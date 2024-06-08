@@ -1,6 +1,6 @@
-import { validateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { updateUserData } from '$lib/drizzle/turso/models/users.js';
 import { lucia } from '$lib/lucia/turso';
+import { validateEmailVerificationToken } from '$lib/server/db/turso/models/tokens';
+import { updateUserData } from '$lib/server/db/turso/models/users.js';
 
 export const GET = async ({ cookies, params, locals }) => {
 	const { token } = params;

@@ -1,8 +1,8 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
-import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { createUser, getUserByEmail, updateUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
 import { lucia } from '$lib/lucia/turso.js';
+import { generateEmailVerificationToken } from '$lib/server/db/turso/models/tokens';
+import { createUser, getUserByEmail, updateUserProfileData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { generateId } from 'lucia';

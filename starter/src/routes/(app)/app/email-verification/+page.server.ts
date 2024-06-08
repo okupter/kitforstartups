@@ -1,7 +1,7 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
-import { generateEmailVerificationToken } from '$lib/drizzle/turso/models/tokens';
-import { getUserProfileData } from '$lib/drizzle/turso/models/users';
 import { sendEmail } from '$lib/emails/send';
+import { generateEmailVerificationToken } from '$lib/server/db/turso/models/tokens';
+import { getUserProfileData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 

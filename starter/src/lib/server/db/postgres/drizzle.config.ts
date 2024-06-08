@@ -4,7 +4,7 @@ import type { Config } from 'drizzle-kit';
 dotenv.config();
 
 export default {
-	schema: './src/lib/drizzle/postgres/schema.ts',
+	schema: './src/lib/server/db/postgres/schema.ts',
 	driver: 'pg',
 	dbCredentials: {
 		host: process.env.POSTGRES_DB_HOST as string,
@@ -13,5 +13,5 @@ export default {
 		password: process.env.POSTGRES_DB_PASSWORD as string,
 		database: process.env.POSTGRES_DB_NAME as string
 	},
-	out: './src/lib/drizzle/postgres/migrations/data'
+	out: './src/lib/server/db/postgres/migrations/data'
 } satisfies Config;

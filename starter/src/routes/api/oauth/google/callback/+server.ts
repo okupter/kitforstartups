@@ -1,12 +1,12 @@
-import {
-	createUser,
-	getUserByEmail,
-	getUserProfileData,
-	updateUserData,
-	updateUserProfileData
-} from '$lib/drizzle/turso/models/users';
 import { googleAuth } from '$lib/lucia/oauth';
 import { lucia } from '$lib/lucia/turso';
+import {
+    createUser,
+    getUserByEmail,
+    getUserProfileData,
+    updateUserData,
+    updateUserProfileData
+} from '$lib/server/db/turso/models/users';
 import { OAuth2RequestError, type GoogleRefreshedTokens } from 'arctic';
 import { generateId } from 'lucia';
 

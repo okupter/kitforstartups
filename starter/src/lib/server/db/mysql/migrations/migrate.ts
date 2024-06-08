@@ -14,7 +14,7 @@ const connection = mysql.createPool({
 
 const drizzleClient = drizzle(connection);
 
-await migrate(drizzleClient, { migrationsFolder: 'src/lib/drizzle/mysql/migrations/data' })
+await migrate(drizzleClient, { migrationsFolder: 'src/lib/server/db/mysql/migrations/data' })
 	.then(() => {
 		console.log('Migrations completed');
 		process.exit(0);

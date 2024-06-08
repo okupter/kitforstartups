@@ -1,12 +1,12 @@
 import { dev } from '$app/environment';
-import { dbClient } from '$lib/drizzle/turso/client';
 import {
-	adapterOptions,
-	generateSessionAttributes,
-	generateUserAttributes,
-	type DatabaseSessionAttributes,
-	type DatabaseUserAttributes
+    adapterOptions,
+    generateSessionAttributes,
+    generateUserAttributes,
+    type DatabaseSessionAttributes,
+    type DatabaseUserAttributes
 } from '$lib/lucia/utils';
+import { dbClient } from '$lib/server/db/turso/client';
 import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
 import { Lucia } from 'lucia';
 

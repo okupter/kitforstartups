@@ -62,7 +62,7 @@ To run the migrations for MySQL, run the following command:
 pnpm generate-migrations:mysql
 ```
 
-This will generate the SQL migrations, as well as migrations metadata files in the `./src/lib/drizzle/mysql/migrations/data` directory.
+This will generate the SQL migrations, as well as migrations metadata files in the `./src/lib/server/db/mysql/migrations/data` directory.
 
 You can now run the following command to push the migrations to the database:
 
@@ -105,7 +105,7 @@ Right now, there is no CLI or configuration file to change the database. You wil
 The default database is SQLite. If you want to use PostgreSQL, you will have to:
 
 - Change occurences of `$lib/lucia/turso` to `$lib/lucia/postgres` in the `./src` directory
-- Change occurences of `$lib/drizzle/mysql/models` to `$lib/drizzle/postgres/models` in the `./src` directory
+- Change occurences of `$lib/server/db/mysql/models` to `$lib/server/db/postgres/models` in the `./src` directory
 
 This should be enough to get you started with PostgreSQL.
 
