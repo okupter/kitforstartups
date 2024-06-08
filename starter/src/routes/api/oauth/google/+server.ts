@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { googleAuth, googleScopes } from '$lib/lucia/oauth';
+import { googleAuth, googleScopes } from '$lib/server/auth/lucia/oauth';
 import { redirect } from '@sveltejs/kit';
 import { generateState } from 'arctic';
 import { alphabet, generateRandomString } from 'oslo/crypto';

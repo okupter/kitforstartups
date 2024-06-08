@@ -1,6 +1,6 @@
 import { TRANSACTIONAL_EMAILS_ADDRESS, TRANSACTIONAL_EMAILS_SENDER } from '$env/static/private';
 import { sendEmail } from '$lib/emails/send';
-import { lucia } from '$lib/lucia/turso.js';
+import { lucia } from '$lib/server/auth/lucia/turso.js';
 import { generateEmailVerificationToken } from '$lib/server/db/turso/models/tokens';
 import { createUser, getUserByEmail, updateUserProfileData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';

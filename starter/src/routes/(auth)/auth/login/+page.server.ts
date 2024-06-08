@@ -1,4 +1,4 @@
-import { lucia } from '$lib/lucia/turso.js';
+import { lucia } from '$lib/server/auth/lucia/turso.js';
 import { getUserByEmail } from '$lib/server/db/turso/models/users.js';
 import { getFeedbackObjects } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';

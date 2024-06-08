@@ -1,4 +1,4 @@
-import { lucia } from '$lib/lucia/turso';
+import { lucia } from '$lib/server/auth/lucia/turso';
 import { validatePasswordResetToken } from '$lib/server/db/turso/models/tokens';
 import { updateUserData } from '$lib/server/db/turso/models/users';
 import { getFeedbackObjects } from '$lib/utils';

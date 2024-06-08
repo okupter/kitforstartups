@@ -1,5 +1,5 @@
-import { googleAuth } from '$lib/lucia/oauth';
-import { lucia } from '$lib/lucia/turso';
+import { googleAuth } from '$lib/server/auth/lucia/oauth';
+import { lucia } from '$lib/server/auth/lucia/turso';
 import {
     createUser,
     getUserByEmail,

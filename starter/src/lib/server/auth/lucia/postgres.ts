@@ -5,12 +5,12 @@ import {
     generateUserAttributes,
     type DatabaseSessionAttributes,
     type DatabaseUserAttributes
-} from '$lib/lucia/utils';
-import { dbClient } from '$lib/server/db/turso/client';
-import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
+} from '$lib/server/auth/lucia/utils';
+import { connection } from '$lib/server/db/postgres/client';
+import { PostgresJsAdapter } from '@lucia-auth/adapter-postgresql';
 import { Lucia } from 'lucia';
 
-const adapter = new LibSQLAdapter(dbClient, adapterOptions);
+const adapter = new PostgresJsAdapter(connection, adapterOptions);
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {

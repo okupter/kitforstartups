@@ -1,16 +1,16 @@
 import { dev } from '$app/environment';
 import {
-	adapterOptions,
-	generateSessionAttributes,
-	generateUserAttributes,
-	type DatabaseSessionAttributes,
-	type DatabaseUserAttributes
-} from '$lib/lucia/utils';
-import { connectionPool } from '$lib/server/db/mysql/client';
-import { Mysql2Adapter } from '@lucia-auth/adapter-mysql';
+    adapterOptions,
+    generateSessionAttributes,
+    generateUserAttributes,
+    type DatabaseSessionAttributes,
+    type DatabaseUserAttributes
+} from '$lib/server/auth/lucia/utils';
+import { dbClient } from '$lib/server/db/turso/client';
+import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
 import { Lucia } from 'lucia';
 
-const adapter = new Mysql2Adapter(connectionPool, adapterOptions);
+const adapter = new LibSQLAdapter(dbClient, adapterOptions);
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {

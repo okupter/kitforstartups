@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { githubAuth } from '$lib/lucia/oauth';
+import { githubAuth } from '$lib/server/auth/lucia/oauth';
 import { redirect } from '@sveltejs/kit';
 import { generateState } from 'arctic';
 

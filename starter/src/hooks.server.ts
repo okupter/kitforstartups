@@ -1,4 +1,4 @@
-import { lucia } from '$lib/lucia/turso';
+import { lucia } from '$lib/server/auth/lucia/turso';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 

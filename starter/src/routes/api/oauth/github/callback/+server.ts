@@ -1,5 +1,5 @@
-import { githubAuth } from '$lib/lucia/oauth.js';
-import { lucia } from '$lib/lucia/turso';
+import { githubAuth } from '$lib/server/auth/lucia/oauth.js';
+import { lucia } from '$lib/server/auth/lucia/turso';
 import {
     createUser,
     getUserByEmail,
